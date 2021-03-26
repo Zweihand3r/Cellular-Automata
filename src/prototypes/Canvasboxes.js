@@ -44,13 +44,13 @@ window.getLiveNeighbours = (x, y) => {
 
 window.updateNeighbour = (x, y, d, v) => {
   switch (d) {
-    case 'l':   pop[y]    [x - 1] = v; break
+    case 'l':   pop[  y  ][x - 1] = v; break
     case 'lt':  pop[y - 1][x - 1] = v; break
-    case 't':   pop[y - 1][x]     = v; break
+    case 't':   pop[y - 1][  x  ] = v; break
     case 'tr':  pop[y - 1][x + 1] = v; break
-    case 'r':   pop[y]    [x + 1] = v; break
+    case 'r':   pop[  y  ][x + 1] = v; break
     case 'rb':  pop[y + 1][x + 1] = v; break
-    case 'b':   pop[y + 1][x] = v = v; break
+    case 'b':   pop[y + 1][  x  ] = v; break
     case 'bl':  pop[y + 1][x - 1] = v; break
   }
 }
