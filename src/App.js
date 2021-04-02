@@ -1,8 +1,10 @@
 import Prototype from './prototypes/Prototype'
+import World from './components/World'
 
 function App() {
   return (
-    <Prototype />
+    // <Prototype />
+    <World />
   );
 }
 
