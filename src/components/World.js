@@ -1,5 +1,10 @@
+import Controls from './controls/Controls'
+import MouseReceiver from './receivers/MouseReceiver'
+
 import { useRef, useEffect } from 'react'
-import { initGrid, updateGrid, drawGrid } from './grid.js'
+import { initGrid, updateGrid, drawGrid, drawOnGrid, eraseOnGrid } from './grid.js'
+
+import './world.css'
 
 const speed = 4
 
@@ -40,16 +45,31 @@ const World = (props) => {
 
   return (
     <div className='world'>
-      <canvas ref={canvasRef} {...props} />
+      <canvas ref={canvasRef} {...props} onClick={() => console.log('canvas clicked')} />
+
+      <Controls
+        onIsPlayingChanged={isPlayingChanged} 
+        onDraw={drawOnGrid}
+        onErase={eraseOnGrid}
+      />
     </div>
   )
 }
+
+/* --- CONTROLS --- */
+
+const isPlayingChanged = (isPlaying) => {
+  update = isPlaying ? _update : () => {}
+}
+
+
+/* --- EXT FUNCTIONS --- */
 
 const initExt = () => {
   initGrid()
 }
 
-const update = (findex) => {
+const _update = (findex) => {
   if (findex % speed === 0) {
     /* All updates go here */
 
@@ -57,9 +77,12 @@ const update = (findex) => {
   }
 }
 
+let update = _update
+
 const draw = (ctx) => {
   drawGrid(ctx)
 }
+
 
 initExt()
 

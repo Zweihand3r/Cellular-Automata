@@ -1,0 +1,97 @@
+.base {
+  z-index: 2;
+  margin: auto;
+  width: 324px;
+  height: 44px;
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 44px;
+  border: 2px solid #a2a2a2;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, .8);
+}
+
+.base-in {
+  animation: base-in-anim 240ms ease-in 0ms 1 normal forwards, base-in-anim-p2 240ms ease-in 220ms 1 normal forwards;
+}
+
+.base-out {
+  animation: base-out-anim 240ms ease-in 0ms 1 normal forwards, base-out-anim-p2 240ms ease-in 220ms 1 normal forwards;
+}
+
+.con {
+  width: 324px;
+  height: 44px;
+}
+
+@keyframes base-in-anim {
+  0% { transform: scale(0); width: 44px; }
+  100% { transform: scale(1); width: 44px; }
+}
+
+@keyframes base-in-anim-p2 {
+  0% { width: 44px; }
+  100% { width: 324px; }
+}
+
+@keyframes base-out-anim {
+  0% { width: 324px }
+  100% { width: 44px }
+}
+
+@keyframes base-out-anim-p2 {
+  0% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+
+/* --- qa-buttons --- */
+
+.qa-btn-con {
+  width: 44px;
+  height: 44px;
+  float: left;
+  position: relative;
+  color: #a2a2a2;
+  cursor: pointer;
+  transform: scale(0);
+  /* border: 1px solid red; */
+}
+
+.qa-btn-con:hover {
+  color: #ffffff
+}
+
+.qa-btn-in {
+  animation-name: qa-btn-in-anim;
+  animation-duration: 240ms;
+  animation-fill-mode: forwards;
+}
+
+.qa-btn-out {
+  animation-name: qa-btn-out-anim;
+  animation-duration: 240ms;
+}
+
+.qa-draw { width: 22px; height: 22px; }
+.qa-speed { width: 22px; height: 22px; }
+.qa-shapes { width: 24px; height: 24px; }
+.qa-rules { width: 22px; height: 22px; }
+.qa-colors { width: 24px; height: 24px; }
+.qa-close { width: 24px; height: 24px; }
+
+.qa-padding {
+  float: left;
+  width: 8px;
+  height: 44px;
+}
+
+@keyframes qa-btn-in-anim {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+@keyframes qa-btn-out-anim {
+  0% { transform: scale(1); }
+  100% { transform: scale(0); }
+}

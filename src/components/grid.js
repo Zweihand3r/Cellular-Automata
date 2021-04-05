@@ -4,13 +4,8 @@ import { checkSurvival, checkBirth } from './rules'
 let gridW, gridH, size
 let grid, neighbours, shades
 
-window.aliveCount = (x, y) => {
-  let alive = 0
-  for (let n of neighbours[y][x]) {
-    alive += n(x, y)
-  }
-  return alive
-}
+
+/* --- Exports --- */
 
 const initGrid = () => {
   size = 5
@@ -52,6 +47,20 @@ const drawGrid = (ctx) => {
     }
   }
 }
+
+const drawOnGrid = (x, y) => {
+  const gX = Math.min(Math.floor(x / size), gridW - 1)
+  const gY = Math.min(Math.floor(y / size), gridH - 1)
+  grid[gY][gX] = 1
+}
+
+const eraseOnGrid = (x, y) => {
+  const gX = Math.min(Math.floor(x / size), gridW - 1)
+  const gY = Math.min(Math.floor(y / size), gridH - 1)
+  grid[gY][gX] = 0
+}
+
+/* --- End Exports --- */
 
 const setDimensions = (_gridW, _gridH) => {
   gridW = _gridW
@@ -109,4 +118,4 @@ const n_left = [top, topRt, right, botRt, bottom]
 const n_topLt = [right, botRt, bottom]
 const n_center = [top, topRt, right, botRt, bottom, botLt, left, topLt]
 
-export { initGrid, updateGrid, drawGrid }
+export { initGrid, updateGrid, drawGrid, drawOnGrid, eraseOnGrid }

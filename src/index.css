@@ -17,3 +17,12 @@ code {
   height: 100%;
   position: absolute;
 }
+
+.center {
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+
+  /* check dimensions */
+  /* border: 1px #000 solid */
+}
