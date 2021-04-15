@@ -8,11 +8,28 @@ import './controls.css'
 let hideTimeoutIndex, mouseMoveIndex
 
 const Controls = ({ onIsPlayingChanged, onDraw, onErase }) => {
-  const [qaHidden, setQaHidden] = useState(false)
-  const [qaMinimised, setQaMinimised] = useState(false)
+  const [qaState, setQaState] = useState({
+    prev: 'out', next: 'in', hide: false, exp: false
+  })
 
   const [isPlaying, setIsPlaying] = useState(true)
   const [isDrawing, setIsDrawing] = useState(false)
+
+  const updateQaHidden = (qaHidden) => {
+    if (qaHidden) {
+      setQaState({ ...qaState, prev: 'in', next: 'out', hide: true })
+    } else {
+      setQaState({ ...qaState, prev: 'out', next: 'in', hide: false })
+    }
+  }
+
+  const updateQaExpanded = (qaExpanded) => {
+    if (qaExpanded) {
+      setQaState({ ...qaState, prev: 'in', next: 'ex', exp: true })
+    } else {
+      setQaState({ ...qaState, prev: 'ex', next: 'in', exp: false })
+    }
+  }
 
   const updateToggleState = (value, setter, event) => {
     setter(value)
@@ -24,26 +41,35 @@ const Controls = ({ onIsPlayingChanged, onDraw, onErase }) => {
 
   const mouseMove = () => {
     /* Maybe do it a different way. This just seems like cheating */
-    if (qaHidden) {
-      setQaHidden(false)
-      hideTimeoutIndex = setTimeout(() => setQaHidden(true), 5000)
-    } else {
-      if (mouseMoveIndex % 20 === 0) {
-        clearTimeout(hideTimeoutIndex)
-        hideTimeoutIndex = setTimeout(() => setQaHidden(true), 5000)
+    if (!qaState.exp) {
+      if (qaState.hide) {
+        updateQaHidden(false)
+        hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+      } else {
+        if (mouseMoveIndex % 20 === 0) {
+          clearTimeout(hideTimeoutIndex)
+          hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+        }
+        mouseMoveIndex += 1
       }
-      mouseMoveIndex += 1
     }
   }
 
   const qaHoverChanged = (hovered) => {
     if (hovered) clearTimeout(hideTimeoutIndex)
-    else hideTimeoutIndex = setTimeout(() => setQaHidden(true), 5000)
+    else if (!qaState.exp) {
+      hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+    }
   }
 
   useEffect(() => {
     mouseMoveIndex = 0
   }, [])
+  
+  /* qaState Log. TBR */
+  console.log(qaState)
+
+  const { prev, next, hide, exp } = qaState
 
   return (
     <div className='controls-base'>
@@ -55,10 +81,13 @@ const Controls = ({ onIsPlayingChanged, onDraw, onErase }) => {
       />
 
       <QuickAccess
-        qaHidden={qaHidden}
+        animId={`${prev}2${next}`}
+        qaHidden={hide}
+        qaExpanded={exp}
         isPlaying={isPlaying}
         isDrawing={isDrawing}
         onQaHoverChanged={qaHoverChanged}
+        onQaExpanded={updateQaExpanded}
         onPlayClicked={updateIsPlaying} 
         onDrawClicked={updateIsDrawing}
       />

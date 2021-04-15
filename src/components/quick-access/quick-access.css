@@ -12,37 +12,57 @@
   background: rgba(0, 0, 0, .8);
 }
 
-.base-in {
-  animation: base-in-anim 240ms ease-in 0ms 1 normal forwards, base-in-anim-p2 240ms ease-in 220ms 1 normal forwards;
+.base-out2in {
+  animation: out2in-anim 240ms ease-in 0ms 1 normal forwards, out2in-anim-p2 240ms ease-in 220ms 1 normal forwards;
 }
 
-.base-out {
-  animation: base-out-anim 240ms ease-in 0ms 1 normal forwards, base-out-anim-p2 240ms ease-in 220ms 1 normal forwards;
+.base-in2out {
+  animation: in2out-anim 240ms ease-in 0ms 1 normal forwards, in2out-anim-p2 240ms ease-in 220ms 1 normal forwards;
+}
+
+.base-in2ex {
+  animation: in2ex-anim 240ms ease-in 0ms 1 normal forwards
+}
+
+.base-ex2in {
+  animation: ex2in-anim 240ms ease-in 0ms 1 normal forwards
 }
 
 .con {
   width: 324px;
   height: 44px;
+  bottom: 0px;
+  position: absolute;
 }
 
-@keyframes base-in-anim {
+@keyframes out2in-anim {
   0% { transform: scale(0); width: 44px; }
   100% { transform: scale(1); width: 44px; }
 }
 
-@keyframes base-in-anim-p2 {
+@keyframes out2in-anim-p2 {
   0% { width: 44px; }
   100% { width: 324px; }
 }
 
-@keyframes base-out-anim {
+@keyframes in2out-anim {
   0% { width: 324px }
   100% { width: 44px }
 }
 
-@keyframes base-out-anim-p2 {
+@keyframes in2out-anim-p2 {
   0% { transform: scale(1); }
   100% { transform: scale(0); }
+}
+
+@keyframes in2ex-anim {
+  0% { height: 44px; }
+  100% { height: 444px; }
+}
+
+@keyframes ex2in-anim {
+  0% { height: 444px; }
+  100% { height: 44px; }
 }
 
 /* --- qa-buttons --- */
@@ -94,4 +114,154 @@
 @keyframes qa-btn-out-anim {
   0% { transform: scale(1); }
   100% { transform: scale(0); }
+}
+
+
+/* --- EX --- */
+
+.ex-base {
+  opacity: 0;
+  width: 100%;
+  height: 400px;
+  position: absolute;
+}
+
+.ex-base-in2ex {
+  animation: ex-in2ex-anim 240ms ease-in 60ms 1 normal forwards;
+}
+
+.ex-base-ex2in {
+  animation: ex-ex2in-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
+.ex-indic {
+  height: 444px;
+  position: absolute;
+  transition: left 120ms;
+  background-color: #00000000;
+}
+
+.ex-con {
+  opacity: 0;
+  width: 100%;
+  height: 400px;
+  position: absolute;
+}
+
+.ex-con-in {
+  z-index: 1;
+  animation: excon-in-anim 120ms ease-in 60ms 1 normal forwards;
+}
+
+.ex-con-out {
+  animation: excon-out-anim 60ms ease-in 0ms 1 normal forwards;
+}
+
+.ex-title {
+  height: 44px;
+  font-size: 29px;
+  font-weight: 200;
+  color: #a2a2a2;
+  padding-top: 2px;
+  text-align: center;
+  box-sizing: border-box;
+  border-bottom: 2px solid #a2a2a2;
+}
+
+.ex-flick {
+  height: 356px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #a2a2a2 #00000000;
+}
+
+@keyframes ex-in2ex-anim {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes ex-ex2in-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes excon-in-anim {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes excon-out-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+
+/* --- ExShapes --- */
+
+.shape-item {
+  cursor: pointer;
+  color: #a2a2a2;
+  font-size: 21px;
+  text-align: center;
+  border-radius: 4px;
+  margin: 2px 10px 2px 10px;
+  padding: 4px 0px 4px 0px;
+  border: 1px solid #ffffff00;
+}
+
+.shape-item:hover {
+  color: #ffffff;
+  border-color: #ffffff
+  /* background-color: #ffffff; */
+}
+
+.shape-item:active {
+  color: #2a2a2a;
+  background-color: #ffffff;
+}
+
+.shape-item-pad {
+  height: 6px;
+}
+
+
+/* --- ExRules --- */
+
+.rule-item-con {
+  cursor: pointer;
+  color: #a2a2a2;
+  font-size: 21px;
+  text-align: center;
+  margin: 4px 0px 4px 10px;
+}
+
+.rule-item-con:hover {
+  color: #ffffff;
+}
+
+.rule-item-name {
+  font-size: 15px;
+  border: 1px solid #00000000;
+  border-bottom-style: none;
+  border-radius: 4px 4px 0px 0px;
+  transition: color 120ms, background-color 120ms, border-color 120ms ;
+}
+
+.rule-item-name-sel {
+  color: #000000;
+  border-color: #a2a2a2;
+  background-color: #a2a2a2;
+}
+
+.rule-item-rule {
+  font-weight: 300;
+  padding-bottom: 2px;
+  border: 1px solid #00000000;
+  border-radius: 0px 0px 4px 4px;
+  transition: color 120ms, border-color 120ms;
+}
+
+.rule-item-rule-sel {
+  color: #a2a2a2;
+  border-color: #a2a2a2;
 }

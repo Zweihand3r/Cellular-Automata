@@ -36,41 +36,41 @@ const Draw = ({ isDrawing, unhide, animDelay, onClick }) => {
   )
 }
 
-const Speed = ({ unhide, animDelay }) => {
+const Speed = ({ unhide, animDelay, onClick }) => {
   return (
-    <QaButton unhide={unhide} animDelay={animDelay}>
+    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
       <IoSpeedometer className='center qa-speed' />
     </QaButton>
   )
 }
 
-const Shapes = ({ unhide, animDelay }) => {
+const Shapes = ({ unhide, animDelay, onClick }) => {
   return (
-    <QaButton unhide={unhide} animDelay={animDelay}>
+    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
       <CgExtension className='center qa-shapes' />
     </QaButton>
   )
 }
 
-const Rules = ({ unhide, animDelay }) => {
+const Rules = ({ unhide, animDelay, onClick }) => {
   return (
-    <QaButton unhide={unhide} animDelay={animDelay}>
+    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
       <RiHeartPulseFill className='center qa-rules' />
     </QaButton>
   )
 }
 
-const Colors = ({ unhide, animDelay }) => {
+const Colors = ({ unhide, animDelay, onClick }) => {
   return (
-    <QaButton unhide={unhide} animDelay={animDelay}>
+    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
       <IoIosColorPalette className='center qa-colors' />
     </QaButton>
   )
 }
 
-const Close = ({ unhide, animDelay }) => {
+const Close = ({ unhide, animDelay, onClick }) => {
   return (
-    <QaButton unhide={unhide} animDelay={animDelay}>
+    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
       <IoMdCloseCircle className='center qa-close' />
     </QaButton>
   )
