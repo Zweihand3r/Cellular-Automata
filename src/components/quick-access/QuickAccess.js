@@ -10,7 +10,8 @@ import './quick-access.css'
 
 const QuickAccess = ({ 
   animId, qaHidden, qaExpanded, isPlaying, isDrawing, 
-  onQaHoverChanged, onQaExpanded, onPlayClicked, onDrawClicked 
+  onQaHoverChanged, onQaExpanded, onPlayClicked, onDrawClicked,
+  onShapeSelect, onRuleSelect, onShadesSelect 
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
 
@@ -31,9 +32,9 @@ const QuickAccess = ({
       <div className={`ex-base ex-base-${animId}`}>
         <ExIndicator selectedIndex={qaIndex} />
 
-        <ExShapes isCurrent={qaIndex === 2} />
-        <ExRules isCurrent={qaIndex === 3} />
-        <ExPalette isCurrent={qaIndex === 4} />
+        <ExShapes isCurrent={qaIndex === 2} onSelect={onShapeSelect} />
+        <ExRules isCurrent={qaIndex === 3} onSelect={onRuleSelect} />
+        <ExPalette isCurrent={qaIndex === 4} onSelect={onShadesSelect} />
       </div>
 
       <div className='con'>

@@ -6,7 +6,7 @@ const ExCon = ({ title, isCurrent, children }) => {
       <div className='ex-title'>
         {title.split('').join(' ').toUpperCase()}
       </div>
-      <div className='ex-flick'>
+      <div className='ex-cont'>
         {children}
       </div>
     </div>

@@ -1,8 +1,10 @@
-import { shapes, setBounds } from './shapes.js'
-import { checkSurvival, checkBirth } from './rules'
+import { createHelpers } from './helpers'
+import { setBounds, createGrid } from './shapes'
+import { setRule, checkSurvival, checkBirth } from './rules'
+import { monoShade, getShade, setShades, resetAges, updateAge } from './shades'
 
 let gridW, gridH, size
-let grid, neighbours, shades
+let grid, neighbours
 
 
 /* --- Exports --- */
@@ -11,37 +13,63 @@ const initGrid = () => {
   size = 5
   calculateDimensions()
 
-  grid = shapes.random()
+  grid = createGrid({ shape: 'random', grid })
+  setShades({ shadeSeq: ['#ffffff'], grid })
+
   generateNeighbours(gridW, gridH)
 }
 
 const updateGrid = () => {
   const pop = []
+  // const nGrid = []
   for (let yi = 0; yi < grid.length; yi++) {
     const row = []
+    // const nRow = []
     for (let xi = 0; xi < grid[yi].length; xi++) {
-      let alive = 0
+      let alive = 0, isAlive
       for (let n of neighbours[yi][xi]) {
         alive += n(xi, yi)
+        // console.log(xi, yi, n.toString(), n(xi, yi))
       }
 
+      // nRow.push(alive)
+
       if (grid[yi][xi]) {
-        row.push(checkSurvival(alive, xi, yi))
+        isAlive = checkSurvival(alive, xi, yi)
       } else {
-        row.push(checkBirth(alive, xi, yi))
+        isAlive = checkBirth(alive, xi, yi)
       }
+
+      row.push(isAlive)
+      updateAge(isAlive, xi, yi)
     }
+    // nGrid.push(nRow)
     pop.push(row)
   }
   grid = pop
+
+  // print2dArray(nGrid)
+  // print2dArray(grid)
 }
 
 const drawGrid = (ctx) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-  ctx.fillStyle = '#ffffff'
+  ctx.fillStyle = monoShade
   for (let yi = 0; yi < grid.length; yi++) {
     for (let xi = 0; xi < grid[yi].length; xi++) {
       if (grid[yi][xi]) {
+        ctx.fillRect(xi * size, yi * size, size, size)
+      }
+    }
+  }
+}
+
+const drawShaded = (ctx) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  for (let yi = 0; yi < grid.length; yi++) {
+    for (let xi = 0; xi < grid[yi].length; xi++) {
+      if (grid[yi][xi]) {
+        ctx.fillStyle = getShade(xi, yi)
         ctx.fillRect(xi * size, yi * size, size, size)
       }
     }
@@ -58,6 +86,15 @@ const eraseOnGrid = (x, y) => {
   const gX = Math.min(Math.floor(x / size), gridW - 1)
   const gY = Math.min(Math.floor(y / size), gridH - 1)
   grid[gY][gX] = 0
+}
+
+const setShape = (shape) => {
+  grid = createGrid({ shape, grid })
+  resetAges()
+}
+
+const setShadeSeq = (shadeSeq) => {
+  setShades({ shadeSeq, grid })
 }
 
 /* --- End Exports --- */
@@ -118,4 +155,9 @@ const n_left = [top, topRt, right, botRt, bottom]
 const n_topLt = [right, botRt, bottom]
 const n_center = [top, topRt, right, botRt, bottom, botLt, left, topLt]
 
-export { initGrid, updateGrid, drawGrid, drawOnGrid, eraseOnGrid }
+createHelpers([top, topRt, right, botRt, bottom, botLt, left, topLt])
+
+export { 
+  initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
+  setShape, setRule, setShadeSeq
+}

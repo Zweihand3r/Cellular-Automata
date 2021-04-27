@@ -1,5 +1,10 @@
-const global_S = [2, 3]
-const global_B = [3]
+let global_S = [2, 3]
+let global_B = [3]
+
+const setRule = ({ b, s }) => {
+  global_B = b.split('').map(i => parseInt(i))
+  global_S = s.split('').map(i => parseInt(i))
+}
 
 const globalSurvivalTrigger = (alive, x, y) => {
   return global_S.indexOf(alive) > -1 ? 1 : 0
@@ -20,4 +25,4 @@ const localBirthTrigger = (alive, x, y) => {
 let checkSurvival = globalSurvivalTrigger
 let checkBirth = globalBirthTrigger
 
-export { checkSurvival, checkBirth }
+export { setRule, checkSurvival, checkBirth }

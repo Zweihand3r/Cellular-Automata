@@ -168,8 +168,12 @@
   border-bottom: 2px solid #a2a2a2;
 }
 
-.ex-flick {
+.ex-cont {
   height: 356px;
+}
+
+.ex-flick {
+  height: 100%;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: #a2a2a2 #00000000;
@@ -211,8 +215,7 @@
 
 .shape-item:hover {
   color: #ffffff;
-  border-color: #ffffff
-  /* background-color: #ffffff; */
+  border-color: #ffffff;
 }
 
 .shape-item:active {
@@ -264,4 +267,130 @@
 .rule-item-rule-sel {
   color: #a2a2a2;
   border-color: #a2a2a2;
+}
+
+
+/* --- ExPalette --- */
+
+.palette-list {
+  height: 312px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #a2a2a2 #00000000;
+}
+
+.palette-footer {
+  height: 44px;
+  box-sizing: border-box;
+  padding: 8px 4px 8px 4px;
+  /* border-top: 2px solid #a2a2a2; */
+}
+
+.palette-btn {
+  float: left;
+  width: 71px; /* 150 for 2 items */
+  height: 100%;
+  color: #a2a2a2;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0px 4px 0px 4px;
+  padding: 3px 0px 3px 0px;
+  border: 1px solid #a2a2a2;
+}
+
+.palette-btn:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.palette-btn:active {
+  color: #000;
+  border-color: #fff;
+  background-color: #fff;
+}
+
+.palette-tf {
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  background: #ffffff00;
+}
+
+.tint-con {
+  height: 28px;
+  position: relative;
+  margin: 4px 10px 4px 10px;
+}
+
+.tint-tf {
+  height: 28px;
+  border: none;
+  font-size: 17px;
+  font-weight: 300;
+}
+
+.tint-tf:focus {
+  outline: none;
+}
+
+.tint-input {
+  opacity: 0;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.tint-icon-con {
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.tint-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.tint-trash-con {
+  right: 0px;
+}
+
+.step-con {
+  color: #a2a2a2;
+  text-align: center;
+  position: relative;
+  margin: 4px 10px 4px 10px;
+}
+
+.step-tf {
+  height: 30px;
+  font-size: 21px;
+  font-weight: 300;
+  color: #a2a2a2;
+  border: 2px solid;
+  border-image-slice: 1;
+}
+
+.step-tf:focus {
+  outline: none;
+  color: #ffffff;
+}
+
+.step-arrow {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  color: #a2a2a2;
+  position: absolute;
+}
+
+.step-arrow:hover {
+  color: #ffffff;
+}
+
+.step-right {
+  right: 0px;
 }

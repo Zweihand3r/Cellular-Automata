@@ -7,7 +7,10 @@ import './controls.css'
 
 let hideTimeoutIndex, mouseMoveIndex
 
-const Controls = ({ onIsPlayingChanged, onDraw, onErase }) => {
+const Controls = ({ 
+  onIsPlayingChanged, onDraw, onErase,
+  onShapeSelect, onRuleSelect, onShadesSelect
+}) => {
   const [qaState, setQaState] = useState({
     prev: 'out', next: 'in', hide: false, exp: false
   })
@@ -90,6 +93,9 @@ const Controls = ({ onIsPlayingChanged, onDraw, onErase }) => {
         onQaExpanded={updateQaExpanded}
         onPlayClicked={updateIsPlaying} 
         onDrawClicked={updateIsDrawing}
+        onShapeSelect={onShapeSelect}
+        onRuleSelect={onRuleSelect}
+        onShadesSelect={onShadesSelect}
       />
     </div>
   )

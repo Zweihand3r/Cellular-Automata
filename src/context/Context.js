@@ -18,15 +18,15 @@ const initialState = {
   ],
 
   shapes: [
-    { name: 'Fill', func: 'fill' },
-    { name: 'Clear', func: 'clear' },
-    { name: 'Invert', func: 'invert' },
-    { name: 'Random', func: 'random' },
-    { name: 'Vertical Stripes', func: 'vstripes' },
-    { name: 'Horizontal Stripes', func: 'hstripes' },
-    { name: 'Rectangle', func: 'rect' },
-    { name: 'Checkered', func: 'checkered' },
-    { name: 'Cross', func: 'cross' },
+    { name: 'Fill', shape: 'fill' },
+    { name: 'Clear', shape: 'clear' },
+    { name: 'Invert', shape: 'invert' },
+    { name: 'Random', shape: 'random' },
+    { name: 'Vertical Stripes', shape: 'vstripes' },
+    { name: 'Horizontal Stripes', shape: 'hstripes' },
+    { name: 'Rectangle', shape: 'rect' },
+    { name: 'Checkered', shape: 'checkered' },
+    { name: 'Cross', shape: 'cross' },
   ]
 }
 

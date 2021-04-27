@@ -3,14 +3,22 @@ import { Context } from '../../context/Context'
 
 import { ExCon } from './ex-comps'
 
-const ExRules = ({ isCurrent }) => {
+const ExRules = ({ isCurrent, onSelect }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const { rules } = useContext(Context)
 
+  const clickAction = (index) => {
+    const rule = rules[index]
+    setCurrentIndex(index)
+    onSelect(rule)
+  }
+
   return (
     <ExCon title='Rules' isCurrent={isCurrent}>
-      {rules.map(({name, b, s}, index) => 
-      <RuleCell selected={currentIndex === index} name={name} b={b} s={s} onClick={() => setCurrentIndex(index)} />)}
+      <div className='ex-flick'>
+        {rules.map(({name, b, s}, index) => 
+        <RuleCell key={index} selected={currentIndex === index} name={name} b={b} s={s} onClick={() => clickAction(index)} />)}
+      </div>
     </ExCon>
   )
 }
