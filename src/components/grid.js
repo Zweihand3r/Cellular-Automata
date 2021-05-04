@@ -1,7 +1,7 @@
 import { createHelpers } from './helpers'
-import { setBounds, createGrid } from './shapes'
+import { setBounds, createGrid, reCreateGrid } from './shapes'
 import { setRule, checkSurvival, checkBirth } from './rules'
-import { monoShade, getShade, setShades, resetAges, updateAge } from './shades'
+import { monoShade, getShade, setShades, updateShades, resetAges, updateAge } from './shades'
 
 let gridW, gridH, size
 let grid, neighbours
@@ -21,18 +21,13 @@ const initGrid = () => {
 
 const updateGrid = () => {
   const pop = []
-  // const nGrid = []
   for (let yi = 0; yi < grid.length; yi++) {
     const row = []
-    // const nRow = []
     for (let xi = 0; xi < grid[yi].length; xi++) {
       let alive = 0, isAlive
       for (let n of neighbours[yi][xi]) {
         alive += n(xi, yi)
-        // console.log(xi, yi, n.toString(), n(xi, yi))
       }
-
-      // nRow.push(alive)
 
       if (grid[yi][xi]) {
         isAlive = checkSurvival(alive, xi, yi)
@@ -43,13 +38,9 @@ const updateGrid = () => {
       row.push(isAlive)
       updateAge(isAlive, xi, yi)
     }
-    // nGrid.push(nRow)
     pop.push(row)
   }
   grid = pop
-
-  // print2dArray(nGrid)
-  // print2dArray(grid)
 }
 
 const drawGrid = (ctx) => {
@@ -86,6 +77,16 @@ const eraseOnGrid = (x, y) => {
   const gX = Math.min(Math.floor(x / size), gridW - 1)
   const gY = Math.min(Math.floor(y / size), gridH - 1)
   grid[gY][gX] = 0
+}
+
+const setSize = (sz) => {
+  if (sz !== size) {
+    size = sz
+    calculateDimensions()
+    grid = reCreateGrid({ grid })
+    updateShades({ grid })
+    generateNeighbours(gridW, gridH)
+  }
 }
 
 const setShape = (shape) => {
@@ -159,5 +160,5 @@ createHelpers([top, topRt, right, botRt, bottom, botLt, left, topLt])
 
 export { 
   initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setShape, setRule, setShadeSeq
+  setSize, setShape, setRule, setShadeSeq
 }

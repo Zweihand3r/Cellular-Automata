@@ -9,10 +9,11 @@ let hideTimeoutIndex, mouseMoveIndex
 
 const Controls = ({ 
   onIsPlayingChanged, onDraw, onErase,
-  onShapeSelect, onRuleSelect, onShadesSelect
+  onShapeSelect, onRuleSelect, onShadesSelect,
+  onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
   const [qaState, setQaState] = useState({
-    prev: 'out', next: 'in', hide: false, exp: false
+    prev: 'out', next: 'in', hide: false, exp: false, slide: false
   })
 
   const [isPlaying, setIsPlaying] = useState(true)
@@ -34,6 +35,18 @@ const Controls = ({
     }
   }
 
+  const updateQaSlider = (qaSlider) => {
+    if (qaSlider) {
+      if (qaState.exp) {
+        setQaState({ ...qaState, prev: 'ex', next: 'sl', exp: false, slide: true })
+      } else {
+        setQaState({ ...qaState, prev: 'in', next: 'sl', slide: true })
+      }
+    } else {
+      setQaState({ ...qaState, prev: 'sl', next: 'in', slide: false })
+    }
+  }
+
   const updateToggleState = (value, setter, event) => {
     setter(value)
     event(value)
@@ -44,7 +57,7 @@ const Controls = ({
 
   const mouseMove = () => {
     /* Maybe do it a different way. This just seems like cheating */
-    if (!qaState.exp) {
+    if (!(qaState.exp || qaState.slide)) {
       if (qaState.hide) {
         updateQaHidden(false)
         hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
@@ -60,7 +73,7 @@ const Controls = ({
 
   const qaHoverChanged = (hovered) => {
     if (hovered) clearTimeout(hideTimeoutIndex)
-    else if (!qaState.exp) {
+    else if (!(qaState.exp || qaState.slide)) {
       hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
     }
   }
@@ -72,7 +85,7 @@ const Controls = ({
   /* qaState Log. TBR */
   console.log(qaState)
 
-  const { prev, next, hide, exp } = qaState
+  const { prev, next, hide, exp, slide } = qaState
 
   return (
     <div className='controls-base'>
@@ -87,15 +100,20 @@ const Controls = ({
         animId={`${prev}2${next}`}
         qaHidden={hide}
         qaExpanded={exp}
+        qaSlider={slide}
         isPlaying={isPlaying}
         isDrawing={isDrawing}
         onQaHoverChanged={qaHoverChanged}
         onQaExpanded={updateQaExpanded}
+        onQaSlider={updateQaSlider}
         onPlayClicked={updateIsPlaying} 
         onDrawClicked={updateIsDrawing}
         onShapeSelect={onShapeSelect}
         onRuleSelect={onRuleSelect}
         onShadesSelect={onShadesSelect}
+        onBrushChanged={() => {}}
+        onSizeChanged={onSizeChanged}
+        onSpeedChanged={onSpeedChanged}
       />
     </div>
   )

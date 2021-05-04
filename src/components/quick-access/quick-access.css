@@ -28,6 +28,10 @@
   animation: ex2in-anim 240ms ease-in 0ms 1 normal forwards
 }
 
+.base-ex2sl {
+  animation: ex2in-anim 240ms ease-in 0ms 1 normal forwards
+}
+
 .con {
   width: 324px;
   height: 44px;
@@ -114,6 +118,80 @@
 @keyframes qa-btn-out-anim {
   0% { transform: scale(1); }
   100% { transform: scale(0); }
+}
+
+
+/* --- QaSlider --- */
+
+.qa-sl-con {
+  width: 0px;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  transition: width 300ms;
+}
+
+.qa-sl-in { width: 100%; }
+
+.qa-sl-track-con {
+  top: 4px;
+  left: 4px;
+  width: 316px;
+  height: 36px;
+  overflow: hidden;
+  position: absolute;
+  border-radius: 18px;
+}
+
+.qa-sl-track {
+  height: 100%;
+  width: 100px;
+  position: absolute;
+  background: #a2a2a2;
+}
+
+.qa-sl-thumb {
+  width: 44px;
+  height: 44px;
+  position: absolute;
+  border-radius: 50%;
+  background: #a2a2a2;
+  box-sizing: border-box;
+  border: 3px solid #000000;
+  transition: background-color 180ms;
+}
+
+.qa-sl-thumb-hov {
+  background: #ffffff;
+}
+
+.qa-sl-receiver {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  cursor: ew-resize;
+}
+
+.qa-sl-lbl {
+  opacity: 0;
+  width: 40px;
+  height: 40px;
+  bottom: 48px;
+  padding-top: 6px;
+  font-size: 22px;
+  font-weight: 200;
+  position: fixed;
+  text-align: center;
+  border-radius: 50%;
+  background: #ffffff;
+  box-sizing: border-box;
+  transition: bottom 120ms, opacity 120ms, transform 120ms;
+}
+
+.qa-sl-lbl-pressed {
+  opacity: 1;
+  bottom: 112px;
+  transform: scale(1.5);
 }
 
 

@@ -1,8 +1,19 @@
-let monoShade, shades, ages, ageMax, updateAge
+let monoShade, shades, ages, ageMax, updateAge, selectedShadesSeq
 
 const getShade = (x, y) => shades[ages[y][x]]
 
 const setShades = ({ shadeSeq, grid }) => {
+  selectedShadesSeq = shadeSeq
+  constructShades(shadeSeq, grid)
+}
+
+const updateShades = ({ grid }) => {
+  constructShades(selectedShadesSeq, grid)
+}
+
+const resetAges = () => ages = ages ? ages.map(row => row.map(_ => 0)) : []
+
+const constructShades = (shadeSeq, grid) => {
   if (shadeSeq.length > 1) {
     shades = ['age starts from index 1', ...shadeSeq]
     ageMax = shades.length - 1
@@ -13,8 +24,6 @@ const setShades = ({ shadeSeq, grid }) => {
     updateAge = () => {}
   }
 }
-
-const resetAges = () => ages = ages.map(row => row.map(_ => 0))
 
 const _incrementAge = (x, y) => {
   if (ages[y][x] < ageMax) {
@@ -33,4 +42,4 @@ const _updateAge = (isAlive, x, y) => {
   else _resetAge(x, y)
 }
 
-export { monoShade, getShade, setShades, resetAges, updateAge }
+export { monoShade, getShade, setShades, updateShades, resetAges, updateAge }

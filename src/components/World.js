@@ -1,17 +1,18 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { 
   initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setShape, setRule, setShadeSeq
+  setSize, setShape, setRule, setShadeSeq
 } from './grid.js'
 
 import Controls from './controls/Controls'
 
 import './world.css'
 
-const speed = 4
+let speed = 4
 const drawSpeed = speed
 
 const World = (props) => {
+  const [fps, setFps] = useState(0)
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const World = (props) => {
     const context = canvas.getContext('2d')
 
     const startTime = Date.now()
-    let findex, animationFrameId, fps, fpsAvg, fLogIndex, fLogTime
+    let findex, animationFrameId, fLogIndex, fLogTime
 
     const init = () => {
       findex = 0
@@ -42,12 +43,10 @@ const World = (props) => {
 
     const logFps = () => {
       const now = Date.now()
-      fpsAvg = findex / (now - startTime) * 1000
 
       if (now - fLogTime < 1000) fLogIndex += 1
       else {
-        fps = fLogIndex / (now - fLogTime) * 1000
-        console.log(`FPS: ${fps} | FPS Avg: ${fpsAvg}`)
+        setFps(Math.floor(fLogIndex / (now - fLogTime) * 1000))
 
         fLogTime = now
         fLogIndex = 0
@@ -65,6 +64,7 @@ const World = (props) => {
   return (
     <div className='world'>
       <canvas ref={canvasRef} {...props} onClick={() => console.log('canvas clicked')} />
+      <div className='fpsCounter'>{fps}</div>
 
       <Controls
         onIsPlayingChanged={isPlayingChanged} 
@@ -74,6 +74,9 @@ const World = (props) => {
         onShapeSelect={setShape}
         onRuleSelect={setRule}
         onShadesSelect={shadesSelected}
+
+        onSizeChanged={sizeChanged}
+        onSpeedChanged={speedChanged}
       />
     </div>
   )
@@ -89,6 +92,9 @@ const shadesSelected = (shades) => {
   draw = shades.length > 1 ? fastDraw : drawGrid
   setShadeSeq(shades)
 }
+
+const speedChanged = (spd) => speed = 101 - spd
+const sizeChanged = (size) => setSize(size)
 
 
 /* --- EXT FUNCTIONS --- */

@@ -5,14 +5,18 @@ import { RiHeartPulseFill } from 'react-icons/ri'
 import { RiBrushFill, RiBrushLine } from 'react-icons/ri'
 import { IoIosColorPalette, IoMdCloseCircle } from 'react-icons/io'
 
-const QaButton = ({ children, unhide, animDelay, onClick }) => {
+const QaButton = ({ children, unhide, animDelay, onClick, onRightClick }) => {
+  const rightClick = (e) => {
+    e.preventDefault()
+    onRightClick ? onRightClick() : () => {}
+  }
+
   return (
     <div 
       className={`qa-btn-con ${unhide ? 'qa-btn-in' : 'qa-btn-out'}`} 
       style={{ animationDelay: unhide ? `${animDelay}ms` : '0ms' }}
-      onClick={onClick}>
-      {children}
-    </div>
+      onClick={onClick} onContextMenu={rightClick}
+    >{children}</div>
   )
 }
 
@@ -26,12 +30,10 @@ const Play = ({ isPlaying, unhide, animDelay, onClick }) => {
   )
 }
 
-const Draw = ({ isDrawing, unhide, animDelay, onClick }) => {
+const Draw = ({ isDrawing, unhide, animDelay, onClick, onRightClick }) => {
   return (
-    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
-      {isDrawing ?
-      <RiBrushFill className='center qa-draw' /> :
-      <RiBrushLine className='center qa-draw' />}
+    <QaButton onClick={onClick} onRightClick={onRightClick} unhide={unhide} animDelay={animDelay}>
+      {isDrawing ? <RiBrushFill className='center qa-draw' /> : <BrushIcon />}
     </QaButton>
   )
 }
@@ -39,15 +41,15 @@ const Draw = ({ isDrawing, unhide, animDelay, onClick }) => {
 const Speed = ({ unhide, animDelay, onClick }) => {
   return (
     <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
-      <IoSpeedometer className='center qa-speed' />
+      <SpeedIcon />
     </QaButton>
   )
 }
 
-const Shapes = ({ unhide, animDelay, onClick }) => {
+const Shapes = ({ unhide, animDelay, onClick, onRightClick }) => {
   return (
-    <QaButton onClick={onClick} unhide={unhide} animDelay={animDelay}>
-      <CgExtension className='center qa-shapes' />
+    <QaButton onClick={onClick} onRightClick={onRightClick} unhide={unhide} animDelay={animDelay}>
+      <GridIcon />
     </QaButton>
   )
 }
@@ -76,4 +78,11 @@ const Close = ({ unhide, animDelay, onClick }) => {
   )
 }
 
-export { Play, Draw, Speed, Shapes, Rules, Colors, Close }
+const BrushIcon = () => <RiBrushLine className='center qa-draw' />
+const GridIcon = () => <CgExtension className='center qa-shapes' />
+const SpeedIcon = () => <IoSpeedometer className='center qa-speed' />
+
+export { 
+  Play, Draw, Speed, Shapes, Rules, Colors, Close,
+  BrushIcon, GridIcon, SpeedIcon
+}

@@ -39,7 +39,6 @@ code {
   /* border: 1px #000 solid */
 }
 
-
 ::-webkit-scrollbar {
   width: 10px;  /* width of the entire scrollbar */
 }
@@ -56,4 +55,14 @@ code {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #ffffff;  /* color of the tracking area */
+}
+
+
+/* --- World --- */
+
+.fpsCounter {
+  top: 0px;
+  color: red;
+  position: absolute;
+  background: #000000cd;
 }

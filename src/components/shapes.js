@@ -1,4 +1,4 @@
-let bX, bY
+let bX, bY, selectedShape
 
 const setBounds = (x, y) => {
   bX = x
@@ -6,6 +6,15 @@ const setBounds = (x, y) => {
 }
 
 const createGrid = ({ shape, grid }) => {
+  selectedShape = shape
+  return constructGrid(shape, grid)
+}
+
+const reCreateGrid = ({ grid }) => {
+  return constructGrid(selectedShape, grid)
+}
+
+const constructGrid = (shape, grid) => {
   switch (shape) {
     case 'clear': return clear()
     case 'fill': return fill()
@@ -40,4 +49,4 @@ const create2dArray = (func) => {
   return array
 }
 
-export { setBounds, createGrid }
+export { setBounds, createGrid, reCreateGrid }
