@@ -62,7 +62,8 @@ code {
 
 .fpsCounter {
   top: 0px;
-  color: red;
+  font-weight: 100;
+  color: #ffffff;
   position: absolute;
   background: #000000cd;
 }

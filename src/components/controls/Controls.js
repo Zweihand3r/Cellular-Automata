@@ -5,6 +5,7 @@ import MouseReceiver from '../receivers/MouseReceiver'
 
 import './controls.css'
 
+let qaEnabled = true
 let hideTimeoutIndex, mouseMoveIndex
 
 const Controls = ({ 
@@ -59,8 +60,10 @@ const Controls = ({
     /* Maybe do it a different way. This just seems like cheating */
     if (!(qaState.exp || qaState.slide)) {
       if (qaState.hide) {
-        updateQaHidden(false)
-        hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+        if (qaEnabled) {
+          updateQaHidden(false)
+          hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+        }
       } else {
         if (mouseMoveIndex % 20 === 0) {
           clearTimeout(hideTimeoutIndex)
@@ -74,8 +77,16 @@ const Controls = ({
   const qaHoverChanged = (hovered) => {
     if (hovered) clearTimeout(hideTimeoutIndex)
     else if (!(qaState.exp || qaState.slide)) {
-      hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+      if (qaEnabled) {
+        hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
+      }
     }
+  }
+
+  const hideQa = () => {
+    updateQaHidden(true)
+    qaEnabled = false
+    setTimeout(() => qaEnabled = true, 1000)
   }
 
   useEffect(() => {
@@ -108,6 +119,7 @@ const Controls = ({
         onQaSlider={updateQaSlider}
         onPlayClicked={updateIsPlaying} 
         onDrawClicked={updateIsDrawing}
+        onQaClose={hideQa}
         onShapeSelect={onShapeSelect}
         onRuleSelect={onRuleSelect}
         onShadesSelect={onShadesSelect}

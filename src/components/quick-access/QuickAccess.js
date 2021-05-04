@@ -16,19 +16,25 @@ let sliderValue = 0
 
 const QuickAccess = ({ 
   animId, qaHidden, qaExpanded, qaSlider, isPlaying, isDrawing, 
-  onQaHoverChanged, onQaExpanded, onQaSlider, onPlayClicked, onDrawClicked,
-  onShapeSelect, onRuleSelect, onShadesSelect,
-  onBrushChanged, onSizeChanged, onSpeedChanged
+  onQaHoverChanged, onQaExpanded, onQaSlider, onPlayClicked, onDrawClicked, onQaClose,
+  onShapeSelect, onRuleSelect, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
   const [slideId, setSlideId] = useState('na')
 
   const qaExAction = (index) => {
-    if (!qaExpanded) {
+    if (qaExpanded && qaIndex === index) {
+      onQaExpanded(false)
+    } else {
       onQaExpanded(true)
     }
 
     setQaIndex(index)
+  }
+
+  const closeAction = () => {
+    if (qaExpanded) onQaExpanded(false)
+    else onQaClose()
   }
 
   const showSlider = (id) => {
@@ -113,7 +119,7 @@ const QuickAccess = ({
 
         <Close 
           unhide={unhide} animDelay={animdelays[6]} 
-          onClick={_ => onQaExpanded(false)} 
+          onClick={closeAction} 
         />
 
         <div className='qa-padding' />

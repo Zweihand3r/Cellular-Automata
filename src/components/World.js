@@ -13,6 +13,7 @@ const drawSpeed = speed
 
 const World = (props) => {
   const [fps, setFps] = useState(0)
+  const [showFps, setShowFps] = useState(true)
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -37,19 +38,20 @@ const World = (props) => {
       update(findex)
       draw(context, findex)
 
-      // logFps()
+      logFps()
       animationFrameId = window.requestAnimationFrame(render)
     }
 
     const logFps = () => {
-      const now = Date.now()
-
-      if (now - fLogTime < 1000) fLogIndex += 1
-      else {
-        setFps(Math.floor(fLogIndex / (now - fLogTime) * 1000))
-
-        fLogTime = now
-        fLogIndex = 0
+      if (showFps) {
+        const now = Date.now()
+        if (now - fLogTime < 1000) {
+          fLogIndex += 1
+        } else {
+          setFps(Math.floor(fLogIndex / (now - fLogTime) * 1000))
+          fLogTime = now
+          fLogIndex = 0
+        }
       }
     }
 
@@ -64,7 +66,7 @@ const World = (props) => {
   return (
     <div className='world'>
       <canvas ref={canvasRef} {...props} onClick={() => console.log('canvas clicked')} />
-      <div className='fpsCounter'>{fps}</div>
+      {showFps ? <div className='fpsCounter'>{fps}</div> : <div />}
 
       <Controls
         onIsPlayingChanged={isPlayingChanged} 
