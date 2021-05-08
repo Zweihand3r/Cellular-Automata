@@ -55,6 +55,7 @@ const QuickAccess = ({
     
     switch (slideId) {
       case 'speed': onSpeedChanged(value); break
+      case 'brush': onBrushChanged(value); break
     }
   }
 
@@ -94,7 +95,7 @@ const QuickAccess = ({
 
         <Draw 
           isDrawing={isDrawing} unhide={unhide} animDelay={animdelays[1]} 
-          onClick={onDrawClicked} // onRightClick={_ => showSlider('brush')} 
+          onClick={onDrawClicked} onRightClick={_ => showSlider('brush')} 
         />
         
         <Shapes 
@@ -140,7 +141,7 @@ const animdelaysJson = {
 
 const sdat = {
   na: { value: -1, range: [0, 1], icon: <div /> },
-  brush: { value: 1, range: [1, 10], icon: <BrushIcon /> },
+  brush: { value: 1, range: [1, 50], icon: <BrushIcon /> },
   grid: { value: 5, range: [1, 50], icon: <GridIcon /> },
   speed: { value: 97, range: [1, 100], icon: <SpeedIcon /> }
 }

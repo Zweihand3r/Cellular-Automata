@@ -1,5 +1,7 @@
 let bX, bY, selectedShape
 
+const randomInit = ['random', 'vstripes', 'hstripes', 'rect', 'cross']
+
 const setBounds = (x, y) => {
   bX = x
   bY = y
@@ -8,6 +10,11 @@ const setBounds = (x, y) => {
 const createGrid = ({ shape, grid }) => {
   selectedShape = shape
   return constructGrid(shape, grid)
+}
+
+const createRandom = ({ grid }) => {
+  const shape = randomInit[Math.floor(Math.random() * randomInit.length)]
+  return createGrid({ shape, grid })
 }
 
 const reCreateGrid = ({ grid }) => {
@@ -49,4 +56,4 @@ const create2dArray = (func) => {
   return array
 }
 
-export { setBounds, createGrid, reCreateGrid }
+export { setBounds, createGrid, reCreateGrid, createRandom }

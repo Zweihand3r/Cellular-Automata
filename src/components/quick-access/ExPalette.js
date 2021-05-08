@@ -44,9 +44,11 @@ const ExPalette = ({ isCurrent, onSelect }) => {
   ])
 
   const deleteAtIndex = (index) => {
-    const deleteIndices = [index]
-    if (!list[index - 1].isTint) deleteIndices.push(index - 1)
-    setList(list.filter((_, index) => deleteIndices.indexOf(index) < 0))
+    if (list.length > 1) {
+      const deleteIndices = [index]
+      if (index > 0 && !list[index - 1].isTint) deleteIndices.push(index - 1)
+      setList(list.filter((_, index) => deleteIndices.indexOf(index) < 0))
+    }
   }
 
   const apply = () => onSelect(generateShades(list))

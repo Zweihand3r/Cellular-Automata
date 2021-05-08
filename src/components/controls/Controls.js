@@ -92,9 +92,6 @@ const Controls = ({
   useEffect(() => {
     mouseMoveIndex = 0
   }, [])
-  
-  /* qaState Log. TBR */
-  console.log(qaState)
 
   const { prev, next, hide, exp, slide } = qaState
 
@@ -123,7 +120,7 @@ const Controls = ({
         onShapeSelect={onShapeSelect}
         onRuleSelect={onRuleSelect}
         onShadesSelect={onShadesSelect}
-        onBrushChanged={() => {}}
+        onBrushChanged={onBrushChanged}
         onSizeChanged={onSizeChanged}
         onSpeedChanged={onSpeedChanged}
       />

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { 
   initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setSize, setShape, setRule, setShadeSeq
+  setBrushSize, setSize, setShape, setRule, setShadeSeq
 } from './grid.js'
 
 import Controls from './controls/Controls'
@@ -79,6 +79,7 @@ const World = (props) => {
 
         onSizeChanged={sizeChanged}
         onSpeedChanged={speedChanged}
+        onBrushChanged={setBrushSize}
       />
     </div>
   )

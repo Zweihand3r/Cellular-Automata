@@ -13,10 +13,6 @@ const MouseReceiver = ({ isDrawing, onDraw, onErase, onMouseMove }) => {
     drawHook = () => {}
   }
   
-  let drawStartHook = () => {}
-  let drawEndHook = () => {}
-  let drawHook = () => {}
-  
   const mouseMove = (e) => {
     drawHook(e)
     onMouseMove()
@@ -44,5 +40,9 @@ const MouseReceiver = ({ isDrawing, onDraw, onErase, onMouseMove }) => {
     />
   )
 }
+  
+let drawStartHook = () => {}
+let drawEndHook = () => {}
+let drawHook = () => {}
 
 export default MouseReceiver

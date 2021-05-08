@@ -1,9 +1,9 @@
 import { createHelpers } from './helpers'
-import { setBounds, createGrid, reCreateGrid } from './shapes'
+import { setBounds, createGrid, reCreateGrid, createRandom } from './shapes'
 import { setRule, checkSurvival, checkBirth } from './rules'
 import { monoShade, getShade, setShades, updateShades, resetAges, updateAge } from './shades'
 
-let gridW, gridH, size
+let gridW, gridH, size, brushSize
 let grid, neighbours
 
 
@@ -11,9 +11,10 @@ let grid, neighbours
 
 const initGrid = () => {
   size = 5
+  brushSize = 1
   calculateDimensions()
 
-  grid = createGrid({ shape: 'random', grid })
+  grid = createRandom({ grid })
   setShades({ shadeSeq: ['#ffffff'], grid })
 
   generateNeighbours(gridW, gridH)
@@ -67,17 +68,10 @@ const drawShaded = (ctx) => {
   }
 }
 
-const drawOnGrid = (x, y) => {
-  const gX = Math.min(Math.floor(x / size), gridW - 1)
-  const gY = Math.min(Math.floor(y / size), gridH - 1)
-  grid[gY][gX] = 1
-}
+const drawOnGrid = (x, y) => applyBrush(x, y, 1)
+const eraseOnGrid = (x, y) => applyBrush(x, y, 0)
 
-const eraseOnGrid = (x, y) => {
-  const gX = Math.min(Math.floor(x / size), gridW - 1)
-  const gY = Math.min(Math.floor(y / size), gridH - 1)
-  grid[gY][gX] = 0
-}
+const setBrushSize = bsz => brushSize = bsz
 
 const setSize = (sz) => {
   if (sz !== size) {
@@ -114,6 +108,28 @@ const calculateDimensions = () => {
   )
 
   console.log(`Calculated gridW: ${gridW}, gridH: ${gridH}`)
+}
+
+const applyBrush = (x, y, b) => {
+  const bsz = Math.max(1, Math.floor(brushSize / size))
+  const cx = Math.min(Math.floor(x / size), gridW - 1)
+  const cy = Math.min(Math.floor(y / size), gridH - 1)
+  if (bsz > 1) {
+    const hf = Math.floor(bsz / 2)
+    const ox = cx - hf
+    const oy = cy - hf
+    for (let xi = 0; xi < bsz; xi++) {
+      for (let yi = 0; yi < bsz; yi++) {
+        const _x = ox + xi
+        const _y = oy + yi
+        if (checkBounds(_x, _y)) {
+          grid[_y][_x] = b
+        }
+      }
+    }
+  } else {
+    grid[cy][cx] = b
+  }
 }
 
 const generateNeighbours = (bX, bY) => {
@@ -156,9 +172,11 @@ const n_left = [top, topRt, right, botRt, bottom]
 const n_topLt = [right, botRt, bottom]
 const n_center = [top, topRt, right, botRt, bottom, botLt, left, topLt]
 
+const checkBounds = (x, y) => x > -1 && y > -1 && x < gridW && y < gridH
+
 createHelpers([top, topRt, right, botRt, bottom, botLt, left, topLt])
 
 export { 
   initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setSize, setShape, setRule, setShadeSeq
+  setBrushSize, setSize, setShape, setRule, setShadeSeq
 }
