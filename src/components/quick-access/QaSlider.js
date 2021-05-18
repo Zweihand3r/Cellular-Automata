@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { IoMdClose, IoMdCloseCircle } from 'react-icons/io'
 
 let liveValue = 0
 const offsetX = window.innerWidth / 2 - 162
@@ -56,6 +57,7 @@ const QaSlider = ({ unhide, icon, value, range, onChange, onDismiss }) => {
   const conClass = `qa-sl-con ${unhide ? 'qa-sl-in' : ''}`
   const thumbClass = `qa-sl-thumb ${isHovered ? 'qa-sl-thumb-hov' : ''}`
   const labelClass = `qa-sl-lbl ${isPressed ? 'qa-sl-lbl-pressed' : ''}`
+  const closeClass = `qa-sl-x ${unhide ? 'qa-sl-x-in' : 'qa-sl-x-out'}`
 
   return (
     <div className={conClass}>
@@ -77,6 +79,10 @@ const QaSlider = ({ unhide, icon, value, range, onChange, onDismiss }) => {
         onClick={mouseClick}
       >
         <div className={labelClass} style={labelStyle}>{liveValue}</div>
+      </div>
+
+      <div className={closeClass} onClick={onDismiss}>
+        <IoMdCloseCircle className='qa-sl-x-ico' />
       </div>
     </div>
   )

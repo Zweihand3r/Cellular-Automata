@@ -88,13 +88,11 @@
 
 .qa-btn-in {
   animation-name: qa-btn-in-anim;
-  animation-duration: 240ms;
   animation-fill-mode: forwards;
 }
 
 .qa-btn-out {
   animation-name: qa-btn-out-anim;
-  animation-duration: 240ms;
 }
 
 .qa-draw { width: 22px; height: 22px; }
@@ -118,6 +116,45 @@
 @keyframes qa-btn-out-anim {
   0% { transform: scale(1); }
   100% { transform: scale(0); }
+}
+
+
+/* --- QaTooltip --- */
+
+.qa-tt-con {
+  z-index: 4;
+  opacity: 0;
+  height: 38px;
+  position: absolute;
+  pointer-events: none;
+  left: 0px; bottom: 0px; right: 0px;
+  transition: opacity 240ms;
+}
+
+.qa-tt-con-in {
+  opacity: 1;
+}
+
+.qa-tt-svg {
+  height: 6px;
+  width: 100%;
+  display: block;
+}
+
+.qa-tt-msg-con {
+  width: fit-content;
+  position: absolute;
+}
+
+.qa-tt-msg {
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  text-align: center;
+  background: #ffffffdf;
+  padding: 5px 8px 5px 8px;
+  transform: translateX(-50%);
 }
 
 
@@ -192,6 +229,41 @@
   opacity: 1;
   bottom: 112px;
   transform: scale(1.5);
+}
+
+.qa-sl-x {
+  width: 24px;
+  height: 24px;
+  position: fixed;
+  color: #a2a2a2;
+  cursor: pointer;
+  border-radius: 50%;
+  transform: translate(282px, 10px);
+  transition: transform 240ms, background-color 240ms;
+}
+
+.qa-sl-x:hover {
+  color: #ffffff;
+}
+
+.qa-sl-x-in {
+  opacity: 1;
+  background-color: #000000;
+  transform: translate(344px, 10px) scale(1.36) rotateZ(180deg);
+}
+
+.qa-sl-x-out {
+  animation: qa-sl-x-dummy-anim 0ms linear 240ms 1 normal forwards;
+}
+
+.qa-sl-x-ico {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes qa-sl-x-dummy-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 
@@ -395,10 +467,19 @@
   background: #ffffff00;
 }
 
+.pc-con { 
+  margin: 4px 10px 4px 10px;
+  animation: pc-in-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
+.pc-scrl { 
+  margin: 4px 0px 4px 10px;
+  animation: pc-in-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
 .tint-con {
   height: 28px;
   position: relative;
-  margin: 4px 10px 4px 10px;
 }
 
 .tint-tf {
@@ -440,7 +521,6 @@
   color: #a2a2a2;
   text-align: center;
   position: relative;
-  margin: 4px 10px 4px 10px;
 }
 
 .step-tf {
@@ -471,4 +551,9 @@
 
 .step-right {
   right: 0px;
+}
+
+@keyframes pc-in-anim {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
 }

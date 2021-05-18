@@ -5,6 +5,7 @@ import {
   BrushIcon, GridIcon, SpeedIcon 
 } from './qa-buttons'
 
+import QaTooltip from './QaTooltip'
 import QaSlider from './QaSlider'
 import ExRules from './ExRules'
 import ExShapes from './ExShapes'
@@ -21,6 +22,8 @@ const QuickAccess = ({
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
   const [slideId, setSlideId] = useState('na')
+  const [tipIndex, setTipIndex] = useState(0)
+  const [tipVis, setTipVis] = useState(false)
 
   const qaExAction = (index) => {
     if (qaExpanded && qaIndex === index) {
@@ -59,83 +62,100 @@ const QuickAccess = ({
     }
   }
 
+  const hoverChangedAtIndex = (hovered, index) => {
+    setTipVis(hovered)
+    if (hovered) setTipIndex(index)
+  }
+
   const unhide = !qaHidden && !qaSlider
   const animdelays = animdelaysJson[animId]
+  const closeAnimDuration = animId === 'sl2in' || animId === 'in2sl' ? 0 : 240
 
   return (
-    <div 
-      className={`base base-${animId}`}
-      onMouseEnter={() => onQaHoverChanged(true)}
-      onMouseLeave={() => onQaHoverChanged(false)}
-    >
-      <div className={`ex-base ex-base-${animId}`}>
-        <ExIndicator selectedIndex={qaIndex} />
+    <div className='root'>
+      <div 
+        className={`base base-${animId}`}
+        onMouseEnter={() => onQaHoverChanged(true)}
+        onMouseLeave={() => onQaHoverChanged(false)}
+      >
+        <div className={`ex-base ex-base-${animId}`}>
+          <ExIndicator selectedIndex={qaIndex} />
 
-        <ExShapes isCurrent={qaIndex === 2} onSelect={onShapeSelect} />
-        <ExRules isCurrent={qaIndex === 3} onSelect={onRuleSelect} />
-        <ExPalette isCurrent={qaIndex === 4} onSelect={onShadesSelect} />
+          <ExShapes isCurrent={qaIndex === 2} onSelect={onShapeSelect} />
+          <ExRules isCurrent={qaIndex === 3} onSelect={onRuleSelect} />
+          <ExPalette isCurrent={qaIndex === 4} onSelect={onShadesSelect} />
+        </div>
+
+        <div className='con'>
+          <QaSlider 
+            unhide={qaSlider} 
+            icon={sdat[slideId].icon} 
+            value={sdat[slideId].value}
+            range={sdat[slideId].range}
+            onChange={sliderValueChanged}
+            onDismiss={dismissSlider} 
+          />
+
+          <div className='qa-padding' />
+
+          <Play 
+            isPlaying={isPlaying} unhide={unhide} animDelay={animdelays[0]} 
+            onClick={onPlayClicked} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 0)}
+          />
+
+          <Draw 
+            isDrawing={isDrawing} unhide={unhide} animDelay={animdelays[1]} 
+            onClick={onDrawClicked} onRightClick={_ => showSlider('brush')} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 1)}
+          />
+          
+          <Shapes 
+            unhide={unhide} animDelay={animdelays[2]} 
+            onClick={_ => qaExAction(2)} onRightClick={_ => showSlider('grid')} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 2)}
+          />
+
+          <Rules 
+            unhide={unhide} animDelay={animdelays[3]} 
+            onClick={_ => qaExAction(3)} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 3)}
+          />
+
+          <Colors 
+            unhide={unhide} animDelay={animdelays[4]} 
+            onClick={_ => qaExAction(4)} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 4)}
+          />
+
+          <Speed 
+            unhide={unhide} animDelay={animdelays[5]} 
+            onClick={_ => showSlider('speed')} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 5)}
+          />
+
+          <Close 
+            unhide={unhide} animDelay={animdelays[6]} animDuration={closeAnimDuration}
+            onClick={closeAction} 
+            onHoverChanged={h => hoverChangedAtIndex(h, 6)}
+          />
+
+          <div className='qa-padding' />
+        </div>
       </div>
 
-      <div className='con'>
-        <div className='qa-padding' />
-
-        <QaSlider 
-          unhide={qaSlider} 
-          icon={sdat[slideId].icon} 
-          value={sdat[slideId].value}
-          range={sdat[slideId].range}
-          onChange={sliderValueChanged}
-          onDismiss={dismissSlider} 
-        />
-
-        <Play 
-          isPlaying={isPlaying} unhide={unhide} animDelay={animdelays[0]} 
-          onClick={onPlayClicked} 
-        />
-
-        <Draw 
-          isDrawing={isDrawing} unhide={unhide} animDelay={animdelays[1]} 
-          onClick={onDrawClicked} onRightClick={_ => showSlider('brush')} 
-        />
-        
-        <Shapes 
-          unhide={unhide} animDelay={animdelays[2]} 
-          onClick={_ => qaExAction(2)} onRightClick={_ => showSlider('grid')} 
-        />
-
-        <Rules 
-          unhide={unhide} animDelay={animdelays[3]} 
-          onClick={_ => qaExAction(3)} 
-        />
-
-        <Colors 
-          unhide={unhide} animDelay={animdelays[4]} 
-          onClick={_ => qaExAction(4)} 
-        />
-
-        <Speed 
-          unhide={unhide} animDelay={animdelays[5]} 
-          onClick={_ => showSlider('speed')} 
-        />
-
-        <Close 
-          unhide={unhide} animDelay={animdelays[6]} 
-          onClick={closeAction} 
-        />
-
-        <div className='qa-padding' />
-      </div>
+      <QaTooltip vis={tipVis} index={tipIndex} />
     </div>
   )
 }
 
 const animdelaysJson = {
-  'out2in': [280, 340, 400, 460, 520, 580, 640],
+  'out2in': [280, 320, 360, 400, 440, 480, 520],
   'in2out': [0, 0, 0, 0, 0, 0, 0],
   'in2ex': [0, 0, 0, 0, 0, 0, 0],
   'ex2in': [0, 0, 0, 0, 0, 0, 0],
   'ex2sl': [0, 0, 0, 0, 0, 0, 0],
-  'sl2in': [240, 200, 160, 120, 80, 40, 0],
+  'sl2in': [240, 200, 160, 120, 80, 40, 240],
   'in2sl': [0, 0, 0, 0, 0, 0, 0]
 }
 

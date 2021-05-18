@@ -13,7 +13,7 @@ const drawSpeed = speed
 
 const World = (props) => {
   const [fps, setFps] = useState(0)
-  const [showFps, setShowFps] = useState(true)
+  const [showFps, setShowFps] = useState(false)
   const canvasRef = useRef(null)
 
   useEffect(() => {

@@ -53,13 +53,25 @@ const ExPalette = ({ isCurrent, onSelect }) => {
 
   const apply = () => onSelect(generateShades(list))
 
+  const isScrollable = list.length > 9
+
   return (
     <ExCon title='Palette' isCurrent={isCurrent}>
       <div className='palette-list'>
         {list.map(({ isTint, value }, index) => (
           isTint ? 
-          <TintCell color={value} onChange={e => updateTint({ index, value: e.target.value })} onDelete={() => deleteAtIndex(index)} /> : 
-          <StepCell steps={value} gradient={createGradient(index)} onChange={value => updateSteps({ index, value })} />
+          <TintCell 
+            color={value} 
+            isScrollable={isScrollable}
+            onChange={e => updateTint({ index, value: e.target.value })} 
+            onDelete={() => deleteAtIndex(index)} 
+          /> : 
+          <StepCell 
+            steps={value} 
+            isScrollable={isScrollable}
+            gradient={createGradient(index)} 
+            onChange={value => updateSteps({ index, value })} 
+          />
         ))}
       </div>
       <div className='palette-footer'>
@@ -72,7 +84,7 @@ const ExPalette = ({ isCurrent, onSelect }) => {
   )
 }
 
-const TintCell = ({ color, onChange, onDelete }) => {
+const TintCell = ({ color, isScrollable, onChange, onDelete }) => {
   const style = { backgroundColor: color }
 
   const getAccent = () => {
@@ -82,9 +94,10 @@ const TintCell = ({ color, onChange, onDelete }) => {
   }
 
   const contentStyle = { color: getAccent() }
+  const className = `tint-con pc-${isScrollable ? 'scrl' : 'con'}`
 
   return (
-    <div className='tint-con' style={style}>
+    <div className={className} style={style}>
       <div className='tint-icon-con'>
         <IoColorPaletteOutline className='tint-icon center' style={contentStyle} />
         <input className='tint-input' type='color' value={color} onChange={onChange} />
@@ -102,15 +115,17 @@ const TintCell = ({ color, onChange, onDelete }) => {
   )
 }
 
-const StepCell = ({ steps, gradient, onChange }) => {
+const StepCell = ({ steps, isScrollable, gradient, onChange }) => {
   const style = { borderImageSource: gradient }
   
   const stepper = (diff) => {
     onChange(`${steps + diff}`)
   }
 
+  const className = `step-con pc-${isScrollable ? 'scrl' : 'con'}`
+
   return (
-    <div className='step-con'>
+    <div className={className}>
       <VscChevronLeft className='step-arrow' onClick={_ => stepper(-1)} />
       <VscChevronRight className='step-arrow step-right' onClick={_ => stepper(1)} />
 
