@@ -1,12 +1,20 @@
 import { VscChevronLeft, VscChevronRight, VscTrash } from 'react-icons/vsc'
 import { IoColorPaletteOutline } from 'react-icons/io5'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ExCon } from './ex-comps'
+
+let animActive = false, scrollListenerAttached = false
+let lastApplied = { isLoop: false, list: [{ isTint: true, value: '#ffffff', outId: '' }] }
 
 const ExPalette = ({ isCurrent, onSelect }) => {
   const [list, setList] = useState([
-    { isTint: true, value: '#ffffff' }
+    { isTint: true, value: '#ffffff', outId: '' }
   ])
+
+  const [isLoop, setIsLoop] = useState(false)
+  const [scrollAtEnd, setScrollAtEnd] = useState(false)
+
+  const listRef = useRef(null)
 
   const updateTint = ({ index, value }) => {
     const updatedList = [...list]
@@ -23,69 +31,215 @@ const ExPalette = ({ isCurrent, onSelect }) => {
   }
 
   const createGradient = (index) => {
-    const g1 = list[index - 1].value
-    const g2 = list[index + 1].value
+    const g1 = list[index - 1] ? list[index - 1].value : '#ffffff'
+    const g2 = list[index + 1] ? list[index + 1].value : '#ffffff'
     return `linear-gradient(${g1}, ${g2})`
   }
 
-  const clear = () => setList([
-    { isTint: true, value: '#ffffff' }
-  ])
+  const scrollToEnd = _ => {
+    setTimeout(_ => {
+      listRef.current.scroll({ top: listRef.current.scrollHeight, behavior: 'smooth' })
+    }, 60)
+  }
 
-  const addTint = () => setList([
-    ...list, 
-    { isTint: true, value: '#ffffff' }
-  ])
+  const scrollListener = () => {
+    setScrollAtEnd(listRef.current.scrollTop < listRef.current.scrollHeight - listRef.current.clientHeight)
+  }
 
-  const addGradient = () => setList([
-    ...list,
-    { isTint: false, value: 20 },
-    { isTint: true, value: '#ffffff' }
-  ])
+  /* --- Footer Actions --- */
 
-  const deleteAtIndex = (index) => {
-    if (list.length > 1) {
-      const deleteIndices = [index]
-      if (index > 0 && !list[index - 1].isTint) deleteIndices.push(index - 1)
-      setList(list.filter((_, index) => deleteIndices.indexOf(index) < 0))
+  const clear = () => {
+    listRef.current.scrollTop = listRef.current.scrollHeight
+    setList([{ isTint: true, value: '#ffffff', outId: '' }])
+    setIsLoop(false)
+  }
+
+  const reset = () => {
+    listRef.current.scrollTop = listRef.current.scrollHeight
+    setIsLoop(lastApplied.isLoop)
+
+    /* 
+     * --- Some Bizarre react bug (Or prolly me being ignorant of how react works) ---
+     * 
+     * The following lines seem to set a reference of lastApplied.list to list instead of setting a copy of the lastApplied.list:
+     * setList(lastApplied.list) -> This seems obvious
+     * setList([...lastApplied.list]) -> Isnt this supposed to create a new array with elements of lastApplied.list?
+     * setList(lastApplied.list.slice()) -> Isnt this supposed to create a copy of lastApplied.list?
+     * setList(lastApplied.list.map(item => item)) -> Again isnt this supposed to be a completely new array?
+     * Seriously WTF is going on?
+     * 
+     * Only the line below seems to create a copy. I could really use some explaination on this.
+     */
+    setList(lastApplied.list.map(({ isTint, value, outId }) => ({ isTint, value, outId })))
+  }
+
+  const addTint = () => {
+    if (!animActive) {
+      setList([...list, { isTint: true, value: '#ffffff', outId: '' }])
+      scrollToEnd()
     }
   }
 
-  const apply = () => onSelect(generateShades(list))
+  const addGradient = () => {
+    if (!animActive) {
+      animActive = true
 
-  const isScrollable = list.length > 9
+      const _list = [...list, { isTint: false, value: 20, outId: '' }]
+      setList(_list)
+
+      setTimeout(_ => {
+        setList([..._list, { isTint: true, value: '#ffffff', outId: '' }])
+        scrollToEnd()
+        animActive = false
+      }, 60)
+    }
+  }
+
+  const addLoop = () => setIsLoop(!isLoop)
+
+  const deleteQueuedAtIndex = index => {
+    if (list.length > 1 && !animActive) {
+      const deleteIndices = [index]
+      if (index > 0 && !list[index - 1].isTint) {
+        deleteIndices.push(index - 1)
+      } else if (index == 0 && !list[index + 1].isTint) {
+        deleteIndices.push(index + 1)
+      }
+
+      const _list = [...list]
+      _list[deleteIndices[0]].outId = 'pc-out'
+      if (deleteIndices.length > 1) {
+        _list[deleteIndices[1]].outId = 'pc-out'
+      }
+      setList(_list)
+    }
+  }
+
+  const deleteAtIndex = () => {
+    setList(list.filter(({ outId }) => outId != 'pc-out'))
+  }
+
+  const apply = () => {
+    lastApplied = { isLoop, list }
+    onSelect({ isLoop, shades: generateShades(list)})
+  }
+
+  useEffect(() => {
+    if (isCurrent) {
+      reset()
+    
+      if (!scrollListenerAttached) {
+        listRef.current.addEventListener('scroll', scrollListener)
+        scrollListenerAttached = true
+      }
+    }
+    return () => {
+      if (scrollListenerAttached) {
+        listRef.current.removeEventListener('scroll', scrollListener)
+        scrollListenerAttached = false
+      }
+    }
+  }, [isCurrent])
+
+  const isScrollable = list.length > 8
 
   return (
     <ExCon title='Palette' isCurrent={isCurrent}>
-      <div className='palette-list'>
-        {list.map(({ isTint, value }, index) => (
+      <div className='palette-list' ref={listRef}>
+        {isLoop ? <LoopCell isStart={true} isScrollable={isScrollable} /> : <div />}
+
+        {list.map(({ isTint, outId, value }, index) => (
           isTint ? 
           <TintCell 
-            color={value} 
+            color={value} outId={outId}
             isScrollable={isScrollable}
-            onChange={e => updateTint({ index, value: e.target.value })} 
-            onDelete={() => deleteAtIndex(index)} 
+            onChange={v => updateTint({ index, value: v })} 
+            onDeleteQueue={_ => deleteQueuedAtIndex(index)}
+            onDeleteFinish={_ => deleteAtIndex(index)}
           /> : 
           <StepCell 
-            steps={value} 
+            steps={value} outId={outId}
             isScrollable={isScrollable}
             gradient={createGradient(index)} 
             onChange={value => updateSteps({ index, value })} 
           />
         ))}
+
+        {isLoop ? <LoopCell isStart={false} isScrollable={isScrollable} /> : <div />}
+        <div style={{ height: isScrollable ? 65 : 0 }} />
       </div>
-      <div className='palette-footer'>
-        <div className='palette-btn' onClick={clear}>Clear</div>
-        <div className='palette-btn' onClick={addTint}>+ Tint</div>
-        <div className='palette-btn' onClick={addGradient}>+ Grad</div>
-        <div className='palette-btn' onClick={apply}>Apply</div>
-      </div>
+
+      <Footer 
+        hasBg={isScrollable && scrollAtEnd}
+        isLoop={isLoop}
+        onClear={clear} onReset={reset} onApply={apply}
+        onAddGradient={addGradient} onAddTint={addTint} onAddLoop={addLoop}
+      />
     </ExCon>
   )
 }
 
-const TintCell = ({ color, isScrollable, onChange, onDelete }) => {
-  const style = { backgroundColor: color }
+const Footer = ({ 
+  hasBg, isLoop,
+  onClear, onReset, onApply,
+  onAddTint, onAddGradient, onAddLoop 
+}) => {
+  const [isAdd, setIsAdd] = useState(false)
+
+  const className = `palette-footer ${hasBg ? 'pf-bg' : ''}`
+  const loopName = `${isLoop ? '-' : '+'} Loop`
+
+  return (
+    <div className={className}>
+      <FooterButton name='+ Add' isControl={true} isIn={!isAdd} x={100} onClick={_ => setIsAdd(true)} />
+      <FooterButton name='Clear' isControl={true} isIn={!isAdd} x={1} y={21} onClick={onClear} />
+      <FooterButton name='Reset' isControl={true} isIn={!isAdd} x={199} y={21} onClick={onReset} />
+      <FooterButton name='Apply' isControl={true} isIn={!isAdd} x={100} y={37} onClick={onApply} />
+
+      <FooterButton name='< Controls' isControl={false} isIn={isAdd} x={100} onClick={_ => setIsAdd(false)} />
+      <FooterButton name='+ Color'    isControl={false} isIn={isAdd} x={1} y={21} onClick={onAddTint} />
+      <FooterButton name='+ Gradient' isControl={false} isIn={isAdd} x={199} y={21} onClick={onAddGradient} />
+      <FooterButton name={loopName}   isControl={false} isIn={isAdd} x={100} y={37} onClick={onAddLoop} />
+    </div>
+  )
+}
+
+const FooterButton = ({ name, isControl, isIn, x, y, onClick }) => {
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
+  const fill = pressed ? '#fff' : '#00000000'
+  const stroke = hovered ? '#fff' : '#a2a2a2'
+  const textStyle = { color: pressed ? '#000' : stroke }
+
+  const id = isControl ? 1 : 2
+  const className = `fb-con fb-${id}-${isIn ? 'in' : 'out'}`
+
+  const mouseLeave = _ => {
+    setHovered(false)
+    setPressed(false)
+  }
+
+  return (
+    <div 
+      className={className}
+      style={{left: x, top: y}}
+      onClick={onClick}
+      onMouseEnter={_ => setHovered(true)}
+      onMouseLeave={mouseLeave}
+      onMouseDown={_ => setPressed(true)}
+      onMouseUp={_ => setPressed(false)}
+    >
+      <svg className='fb-svg'>
+        <path d='M 0 13 L 10 0 L 94 0 L 104 13 L 94 26 L 10 26 Z' stroke={stroke} fill={fill} />
+      </svg>
+      <div className='fb-lbl center' style={textStyle}>{name}</div>
+    </div>
+  )
+}
+
+const TintCell = ({ color, isScrollable, outId, onChange, onDeleteQueue, onDeleteFinish }) => {
+  const [hex, setHex] = useState('#FFFFFF')
 
   const getAccent = () => {
     const { r, g, b } = hex2rgb(color)
@@ -93,36 +247,66 @@ const TintCell = ({ color, isScrollable, onChange, onDelete }) => {
     return bright < 140 ? '#ffffff' : '#000000'
   }
 
+  const animEnded = event => {
+    if (event.animationName == 'pc-out-anim') {
+      onDeleteFinish()
+    }
+  }
+
+  const updateHex = e => {
+    const text = e.target.value
+    if (text.length > hex.length && text.length < 8) {
+      const last = text.substring(text.length - 1, text.length)
+      if (/[0-9A-Fa-f]/.test(last)) setHex(text)
+      if (text.length === 7) onChange(text)
+    } else if (text.length < hex.length && text.length > 0) {
+      setHex(text)
+    }
+  }
+
+  const editingComplete = () => {
+    let _hex = hex
+    const padding = 7 - _hex.length
+    for (let i = 0; i < padding; i++) {
+      _hex += "0"
+    }
+    setHex(_hex)
+    onChange(_hex)
+  }
+
+  useEffect(() => setHex(color), [color])
+
+  const style = { backgroundColor: color }
   const contentStyle = { color: getAccent() }
-  const className = `tint-con pc-${isScrollable ? 'scrl' : 'con'}`
+  const className = `tint-con pc-${isScrollable ? 'scrl' : 'con'} ${outId}`
 
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} onAnimationEnd={animEnded}>
       <div className='tint-icon-con'>
         <IoColorPaletteOutline className='tint-icon center' style={contentStyle} />
-        <input className='tint-input' type='color' value={color} onChange={onChange} />
+        <input className='tint-input' type='color' value={color} onChange={e => onChange(e.target.value)} />
       </div>
-      <div className='tint-icon-con tint-trash-con' onClick={onDelete}>
+      <div className='tint-icon-con tint-trash-con' onClick={onDeleteQueue}>
         <VscTrash className='tint-icon center' style={contentStyle} />
       </div>
 
       <input 
         className='palette-tf tint-tf' type='input' 
-        value={color.toUpperCase()} style={contentStyle} 
-        onChange={e => {}}
+        value={hex.toUpperCase()} style={contentStyle} 
+        onChange={updateHex} onBlur={editingComplete}
       />
     </div>
   )
 }
 
-const StepCell = ({ steps, isScrollable, gradient, onChange }) => {
+const StepCell = ({ steps, isScrollable, outId, gradient, onChange }) => {
   const style = { borderImageSource: gradient }
   
   const stepper = (diff) => {
     onChange(`${steps + diff}`)
   }
 
-  const className = `step-con pc-${isScrollable ? 'scrl' : 'con'}`
+  const className = `step-con pc-${isScrollable ? 'scrl' : 'con'} ${outId}`
 
   return (
     <div className={className}>
@@ -134,6 +318,20 @@ const StepCell = ({ steps, isScrollable, gradient, onChange }) => {
         value={steps} style={style} 
         onChange={e => onChange(e.target.value)}
       />
+    </div>
+  )
+}
+
+const LoopCell = ({ isStart, isScrollable }) => {
+  const className = `loop-con pc-${isScrollable ? 'scrl' : 'con'}`
+  const hrLeftStyle = { left: 0, width: isStart ? 118 : 122 }
+  const hrRightStyle = { right: 0, width: isStart ? 118 : 122 }
+
+  return (
+    <div className={className}>
+      <div className='loop-hr' style={hrLeftStyle} />
+      <div className='loop-lbl'>LOOP {isStart ? 'START' : 'END'}</div>
+      <div className='loop-hr' style={hrRightStyle} />
     </div>
   )
 }

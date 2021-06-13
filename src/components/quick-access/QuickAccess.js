@@ -13,6 +13,15 @@ import ExPalette from './ExPalette'
 
 import './quick-access.css'
 
+/* 
+TODO: 
+1. Fix palette first cell delete when second cell is step cell (*)
+2. Add border-radius to palette cells. (**) tried but not possible to add border radius to border image
+3. Implement textfields of palette cells (*)
+4. Add limits to palette cells
+5. Add Next as right click of Play/Pause
+*/
+
 let sliderValue = 0
 
 const QuickAccess = ({ 
@@ -69,7 +78,7 @@ const QuickAccess = ({
 
   const unhide = !qaHidden && !qaSlider
   const animdelays = animdelaysJson[animId]
-  const closeAnimDuration = animId === 'sl2in' || animId === 'in2sl' ? 0 : 240
+  const closeAnimDuration = animId === 'sl2in' || animId === 'in2sl' || animId === 'ex2sl' ? 0 : 240
 
   return (
     <div className='root'>

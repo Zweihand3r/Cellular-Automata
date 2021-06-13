@@ -91,9 +91,9 @@ const isPlayingChanged = (isPlaying) => {
   update = isPlaying ? _update : () => {}
 }
 
-const shadesSelected = (shades) => {
+const shadesSelected = ({ shades, isLoop }) => {
   draw = shades.length > 1 ? fastDraw : drawGrid
-  setShadeSeq(shades)
+  setShadeSeq({ shades, isLoop })
 }
 
 const speedChanged = (spd) => speed = 101 - spd

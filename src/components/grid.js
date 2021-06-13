@@ -88,8 +88,8 @@ const setShape = (shape) => {
   resetAges()
 }
 
-const setShadeSeq = (shadeSeq) => {
-  setShades({ shadeSeq, grid })
+const setShadeSeq = ({ shades, isLoop }) => {
+  setShades({ shadeSeq: shades, isLoop, grid })
 }
 
 /* --- End Exports --- */
