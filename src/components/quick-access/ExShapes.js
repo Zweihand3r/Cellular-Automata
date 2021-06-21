@@ -7,13 +7,15 @@ const ExShapes = ({ isCurrent, onSelect }) => {
   const { shapes } = useContext(Context)
 
   return (
-    <ExCon title='Shapes' isCurrent={isCurrent}>
-      <div className='shape-item-pad' />
+    <ExCon title='Patterns' isCurrent={isCurrent}>
+      <div className='shape-con'>
+        <div className='shape-item-pad' />
 
-      {shapes.map(({ name, shape }, index) => 
-      <div key={index} className='shape-item' onClick={() => onSelect(shape)}>{name}</div>)}
+        {shapes.map(({ name, shape }, index) => 
+        <div key={index} className='shape-item' onClick={() => onSelect(shape)}>{name}</div>)}
 
-      <div className='shape-item-pad' />
+        <div className='shape-item-pad' />
+      </div>
     </ExCon>
   )
 }

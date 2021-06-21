@@ -20,6 +20,8 @@ TODO:
 3. Implement textfields of palette cells (*)
 4. Add limits to palette cells
 5. Add Next as right click of Play/Pause
+6. Add wrap to grid
+7. Add trailing palette (Start palette once cell dies to black)
 */
 
 let sliderValue = 0

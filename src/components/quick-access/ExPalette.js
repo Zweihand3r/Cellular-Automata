@@ -23,9 +23,9 @@ const ExPalette = ({ isCurrent, onSelect }) => {
   }
 
   const updateSteps = ({ index, value }) => {
-    if (/^\d*\.?\d*$/.test(value)) {
+    if (/^\d*\.?\d*$/.test(value) && value.length < 5) {
       const updatedList = [...list]
-      updatedList[index]['value'] = parseInt(value)
+      updatedList[index]['value'] = value === '' ? 0 : parseInt(value)
       setList(updatedList)
     }
   }
@@ -192,12 +192,12 @@ const Footer = ({
   return (
     <div className={className}>
       <FooterButton name='+ Add' isControl={true} isIn={!isAdd} x={100} onClick={_ => setIsAdd(true)} />
-      <FooterButton name='Clear' isControl={true} isIn={!isAdd} x={1} y={21} onClick={onClear} />
+      <FooterButton name='Clear' isControl={true} isIn={!isAdd} x={1} y={22} onClick={onClear} />
       <FooterButton name='Reset' isControl={true} isIn={!isAdd} x={199} y={21} onClick={onReset} />
       <FooterButton name='Apply' isControl={true} isIn={!isAdd} x={100} y={37} onClick={onApply} />
 
       <FooterButton name='< Controls' isControl={false} isIn={isAdd} x={100} onClick={_ => setIsAdd(false)} />
-      <FooterButton name='+ Color'    isControl={false} isIn={isAdd} x={1} y={21} onClick={onAddTint} />
+      <FooterButton name='+ Color'    isControl={false} isIn={isAdd} x={1} y={22} onClick={onAddTint} />
       <FooterButton name='+ Gradient' isControl={false} isIn={isAdd} x={199} y={21} onClick={onAddGradient} />
       <FooterButton name={loopName}   isControl={false} isIn={isAdd} x={100} y={37} onClick={onAddLoop} />
     </div>
@@ -231,7 +231,9 @@ const FooterButton = ({ name, isControl, isIn, x, y, onClick }) => {
       onMouseUp={_ => setPressed(false)}
     >
       <svg className='fb-svg'>
-        <path d='M 0 13 L 10 0 L 94 0 L 104 13 L 94 26 L 10 26 Z' stroke={stroke} fill={fill} />
+        <path d='M 0 13 L 10 0 L 94 0 L 104 13 L 94 26 L 10 26 Z' fill={fill} />
+        <path d='M 1 13 L 10 0 M 93 0 L 103 13 L 93 26 M 10 26 L 0 13' strokeWidth={1.5} stroke={stroke} fill='#00000000' />
+        <path d='M 10 0 L 94 0 M 93 26 L 10 26' strokeWidth={2.5} stroke={stroke} />
       </svg>
       <div className='fb-lbl center' style={textStyle}>{name}</div>
     </div>

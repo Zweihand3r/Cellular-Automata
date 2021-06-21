@@ -43,7 +43,18 @@ const vstripes = () => create2dArray(({ x }) => x % 2)
 const hstripes = () => create2dArray(({ y }) => y % 2)
 const rect = () => create2dArray(({ x, y }) => x === 0 || y === 0 || x === bX - 1 || y === bY - 1 ? 1 : 0)
 const cross = () => create2dArray(({ x, y }) => x === Math.floor(bX / 2) || y === Math.floor(bY / 2) ? 1 : 0)
-const checkered = (grid) => grid
+const checkered = (grid) => {
+  let check = 0
+  const _grid = []
+  for (let yi = 0; yi < grid.length; yi++) {
+    _grid[yi] = []
+    for (let xi = 0; xi < grid[yi].length; xi++) {
+      check = yi > 0 && xi === 0 ? 1 - _grid[yi - 1][0] : 1 - check
+      _grid[yi][xi] = check
+    }
+  }
+  return _grid
+}
 
 const create2dArray = (func) => {
   const array = []
