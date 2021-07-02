@@ -6,8 +6,6 @@ import {
 
 import Controls from './controls/Controls'
 
-import './world.css'
-
 let speed = 4
 const drawSpeed = speed
 
