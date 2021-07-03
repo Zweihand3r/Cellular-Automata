@@ -47,4 +47,20 @@ const ExIndicator = (props) => {
   )
 }
 
-export { ExCon, ExIndicator }
+const ExSubTitle = ({ 
+  subtitle, width, 
+  isScrollable = false, 
+  left = 0, right = 0 
+}) => {
+  const className = `ex-st-con ex-item-${isScrollable ? 'scrl' : 'con'}`
+
+  return (
+    <div className={className}>
+      <div className='ex-st-hr' style={{ width, left }} />
+      <div className='ex-st-lbl'>{subtitle.toUpperCase()}</div>
+      <div className='ex-st-hr' style={{ width, right }} />
+    </div>
+  )
+}
+
+export { ExCon, ExIndicator, ExSubTitle }

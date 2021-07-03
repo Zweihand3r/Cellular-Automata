@@ -81,10 +81,12 @@ const setSize = (sz) => {
     updateShades({ grid })
     generateNeighbours(gridW, gridH)
   }
+
+  return { gridW, gridH }
 }
 
-const setShape = (shape) => {
-  grid = createGrid({ shape, grid })
+const setFill = (fill, args) => {
+  grid = createGrid({ fill, grid, args })
   resetAges()
 }
 
@@ -178,5 +180,5 @@ createHelpers([top, topRt, right, botRt, bottom, botLt, left, topLt])
 
 export { 
   initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setBrushSize, setSize, setShape, setRule, setShadeSeq
+  setBrushSize, setSize, setFill, setRule, setShadeSeq
 }

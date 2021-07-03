@@ -5,12 +5,12 @@ import MouseReceiver from '../receivers/MouseReceiver'
 
 import './controls.css'
 
-let qaEnabled = true
+let qaEnabled = true, isTempPause = false
 let hideTimeoutIndex, mouseMoveIndex
 
 const Controls = ({ 
   onIsPlayingChanged, onDraw, onErase,
-  onShapeSelect, onRuleSelect, onShadesSelect,
+  onShapeSelect, onFillSelect, onRuleSelect, onShadesSelect,
   onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
   const [qaState, setQaState] = useState({
@@ -89,6 +89,18 @@ const Controls = ({
     setTimeout(() => qaEnabled = true, 1000)
   }
 
+  const tempPause = (pause) => {
+    if (isPlaying) {
+      updateIsPlaying()
+      isTempPause = true 
+    } else {
+      if (isTempPause) {
+        updateIsPlaying()
+        isTempPause = false
+      }
+    }
+  }
+
   useEffect(() => {
     mouseMoveIndex = 0
   }, [])
@@ -117,7 +129,9 @@ const Controls = ({
         onPlayClicked={updateIsPlaying} 
         onDrawClicked={updateIsDrawing}
         onQaClose={hideQa}
+        onTempPause={tempPause}
         onShapeSelect={onShapeSelect}
+        onFillSelect={onFillSelect}
         onRuleSelect={onRuleSelect}
         onShadesSelect={onShadesSelect}
         onBrushChanged={onBrushChanged}

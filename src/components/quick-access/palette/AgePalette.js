@@ -1,7 +1,7 @@
 import { VscChevronLeft, VscChevronRight, VscTrash } from 'react-icons/vsc'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { useState, useRef, useEffect } from 'react'
-import { ExCon } from './ex-comps'
+import { ExCon, ExSubTitle } from '../ex-comps'
 
 let animActive = false, scrollListenerAttached = false
 let lastApplied = { isLoop: false, list: [{ isTint: true, value: '#ffffff', outId: '' }] }
@@ -144,13 +144,14 @@ const ExPalette = ({ isCurrent, onSelect }) => {
   const isScrollable = list.length > 8
 
   return (
-    <ExCon title='Palette' isCurrent={isCurrent}>
+    <div className='ap-con'>
       <div className='palette-list' ref={listRef}>
         {isLoop ? <LoopCell isStart={true} isScrollable={isScrollable} /> : <div />}
 
         {list.map(({ isTint, outId, value }, index) => (
           isTint ? 
           <TintCell 
+            key={index}
             color={value} outId={outId}
             isScrollable={isScrollable}
             onChange={v => updateTint({ index, value: v })} 
@@ -158,6 +159,7 @@ const ExPalette = ({ isCurrent, onSelect }) => {
             onDeleteFinish={_ => deleteAtIndex(index)}
           /> : 
           <StepCell 
+            key={index}
             steps={value} outId={outId}
             isScrollable={isScrollable}
             gradient={createGradient(index)} 
@@ -175,7 +177,7 @@ const ExPalette = ({ isCurrent, onSelect }) => {
         onClear={clear} onReset={reset} onApply={apply}
         onAddGradient={addGradient} onAddTint={addTint} onAddLoop={addLoop}
       />
-    </ExCon>
+    </div>
   )
 }
 
@@ -324,19 +326,10 @@ const StepCell = ({ steps, isScrollable, outId, gradient, onChange }) => {
   )
 }
 
-const LoopCell = ({ isStart, isScrollable }) => {
-  const className = `loop-con pc-${isScrollable ? 'scrl' : 'con'}`
-  const hrLeftStyle = { left: 0, width: isStart ? 118 : 122 }
-  const hrRightStyle = { right: 0, width: isStart ? 118 : 122 }
-
-  return (
-    <div className={className}>
-      <div className='loop-hr' style={hrLeftStyle} />
-      <div className='loop-lbl'>LOOP {isStart ? 'START' : 'END'}</div>
-      <div className='loop-hr' style={hrRightStyle} />
-    </div>
-  )
-}
+const LoopCell = ({ isStart, isScrollable }) => <ExSubTitle 
+  subtitle={`LOOP ${isStart ? 'START' : 'END'}`} 
+  width={isStart ? 118 : 122} isScrollable={isScrollable}
+/>
 
 const generateShades = (list) => {
   const shades = []

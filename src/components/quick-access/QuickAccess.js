@@ -9,7 +9,7 @@ import QaTooltip from './QaTooltip'
 import QaSlider from './QaSlider'
 import ExRules from './ExRules'
 import ExShapes from './ExShapes'
-import ExPalette from './ExPalette'
+import ExPalette from './palette/ExPalette'
 
 import './quick-access.css'
 
@@ -22,14 +22,19 @@ TODO:
 5. Add Next as right click of Play/Pause
 6. Add wrap to grid
 7. Add trailing palette (Start palette once cell dies to black)
+6. Divide grid into different rules
+  a. Add different colors for different rules
+7. Add background image / gradient and alive cells are transparent
+8. Option to 'Keep' earlier iterations in grid (Dont clear canvas)
+9. Add X, Y offsets to all fillers (like Cross)
 */
 
 let sliderValue = 0
 
 const QuickAccess = ({ 
   animId, qaHidden, qaExpanded, qaSlider, isPlaying, isDrawing, 
-  onQaHoverChanged, onQaExpanded, onQaSlider, onPlayClicked, onDrawClicked, onQaClose,
-  onShapeSelect, onRuleSelect, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged
+  onQaHoverChanged, onQaExpanded, onQaSlider, onPlayClicked, onDrawClicked, onQaClose, onTempPause,
+  onShapeSelect, onFillSelect, onRuleSelect, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged, 
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
   const [slideId, setSlideId] = useState('na')
@@ -92,7 +97,13 @@ const QuickAccess = ({
         <div className={`ex-base ex-base-${animId}`}>
           <ExIndicator selectedIndex={qaIndex} />
 
-          <ExShapes isCurrent={qaIndex === 2} onSelect={onShapeSelect} />
+          <ExShapes 
+            isCurrent={qaIndex === 2} 
+            onShapeSelect={onShapeSelect} 
+            onFillSelect={onFillSelect}
+            onSliding={onTempPause} 
+          />
+
           <ExRules isCurrent={qaIndex === 3} onSelect={onRuleSelect} />
           <ExPalette isCurrent={qaIndex === 4} onSelect={onShadesSelect} />
         </div>

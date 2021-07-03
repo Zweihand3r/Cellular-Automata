@@ -11,7 +11,7 @@ const QaTooltip = ({ vis, index }) => {
   return (
     <div className={className}>
       <svg className='qa-tt-svg'>
-        <path d={path} fill='#ffffffdf' />
+        <path d={path} fill='#dfdfdf' />
       </svg>
       <div className='qa-tt-msg-con' style={msgConStyle}>
         <div className='qa-tt-msg'>{tip}</div>

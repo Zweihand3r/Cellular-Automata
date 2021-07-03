@@ -1,10 +1,11 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useContext } from 'react'
 import { 
   initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setBrushSize, setSize, setShape, setRule, setShadeSeq
+  setBrushSize, setSize, setFill, setRule, setShadeSeq
 } from './grid.js'
 
 import Controls from './controls/Controls'
+import { Context } from '../context/Context'
 
 let speed = 4
 const drawSpeed = speed
@@ -13,6 +14,13 @@ const World = (props) => {
   const [fps, setFps] = useState(0)
   const [showFps, setShowFps] = useState(false)
   const canvasRef = useRef(null)
+  
+  const { setDimensions } = useContext(Context)
+
+  const sizeChanged = size => {
+    const { gridW, gridH } = setSize(size)
+    setDimensions(gridW, gridH)
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -59,11 +67,11 @@ const World = (props) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [draw])
+  }, [])
 
   return (
     <div className='world'>
-      <canvas ref={canvasRef} {...props} onClick={() => console.log('canvas clicked')} />
+      <canvas ref={canvasRef} {...props} />
       {showFps ? <div className='fpsCounter'>{fps}</div> : <div />}
 
       <Controls
@@ -71,7 +79,8 @@ const World = (props) => {
         onDraw={drawOnGrid}
         onErase={eraseOnGrid}
 
-        onShapeSelect={setShape}
+        onShapeSelect={() => {}}
+        onFillSelect={setFill}
         onRuleSelect={setRule}
         onShadesSelect={shadesSelected}
 
@@ -95,7 +104,7 @@ const shadesSelected = ({ shades, isLoop }) => {
 }
 
 const speedChanged = (spd) => speed = 101 - spd
-const sizeChanged = (size) => setSize(size)
+/*const sizeChanged = (size) => setSize(size)*/
 
 
 /* --- EXT FUNCTIONS --- */

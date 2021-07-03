@@ -1,0 +1,213 @@
+.palette-con {
+  width: 648px;
+  height: 356px;
+  position: absolute;
+}
+
+
+/* AgePalette */
+
+.ap-con {
+  width: 324px;
+  height: 356px;
+  position: absolute;
+}
+
+.palette-list {
+  height: calc(100% - 1px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #a2a2a2 #00000000;
+}
+
+.palette-footer {
+  bottom: 0;
+  height: 61px;
+  width: 304px;
+  position: absolute;
+  padding: 6px 0 1px 0;
+  margin: 0 10px 1px 10px;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 240ms;
+}
+
+.pf-bg {
+  background-color: rgba(0, 0, 0, .86);
+}
+
+.fb-con {
+  width: 104px;
+  height: 26px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.fb-1-in {
+  z-index: 2;
+  animation: fb-1-in-anim 360ms ease-in 0ms 1 normal forwards;
+}
+
+.fb-1-out {
+  z-index: 1;
+  animation: fb-1-out-anim 240ms ease-in 0ms 1 normal forwards;
+}
+
+.fb-2-in {
+  z-index: 2;
+  animation: fb-2-in-anim 360ms ease-in 0ms 1 normal forwards;
+}
+
+.fb-2-out {
+  z-index: 1;
+  animation: fb-2-out-anim 240ms ease-in 0ms 1 normal forwards;
+}
+
+.fb-svg {
+  width: 104px;
+  height: 26px;
+  position: absolute;
+}
+
+.fb-lbl {
+  font-size: 14px;
+  font-weight: 600;
+  padding-top: 3px;
+  width: fit-content;
+  position: absolute;
+}
+
+.palette-tf {
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  background: #ffffff00;
+}
+
+.pc-con { 
+  margin: 4px 10px 4px 10px;
+  animation: pc-in-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
+.pc-scrl { 
+  margin: 4px 0px 4px 10px;
+  animation: pc-in-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
+.pc-out {
+  animation: pc-out-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
+.tint-con {
+  height: 28px;
+  position: relative;
+}
+
+.tint-tf {
+  height: 28px;
+  border: none;
+  font-size: 17px;
+  font-weight: 300;
+}
+
+.tint-tf:focus {
+  outline: none;
+}
+
+.tint-input {
+  opacity: 0;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.tint-icon-con {
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  position: absolute;
+  transition: transform 80ms;
+}
+
+.tint-icon-con:hover {
+  transform: scale(1.25);
+}
+
+.tint-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.tint-trash-con {
+  right: 0px;
+}
+
+.step-con {
+  color: #a2a2a2;
+  text-align: center;
+  position: relative;
+}
+
+.step-tf {
+  height: 30px;
+  font-size: 21px;
+  font-weight: 300;
+  color: #a2a2a2;
+  border: 2px solid;
+  border-image-slice: 1;
+}
+
+.step-tf:focus {
+  outline: none;
+  color: #ffffff;
+}
+
+.step-arrow {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  color: #a2a2a2;
+  position: absolute;
+}
+
+.step-arrow:hover {
+  color: #ffffff;
+}
+
+.step-right {
+  right: 0px;
+}
+
+@keyframes fb-1-in-anim {
+  0% { transform: scale(.8); opacity: 0; }
+  33% { transform: scale(.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fb-1-out-anim {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(.8); opacity: 0; }
+}
+
+@keyframes fb-2-in-anim {
+  0% { transform: scale(1.2); opacity: 0; }
+  33% { transform: scale(1.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fb-2-out-anim {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+@keyframes pc-in-anim {
+  0% { transform: scaleX(.85); opacity: 0; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes pc-out-anim {
+  0% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(.85); opacity: 0; }
+}
