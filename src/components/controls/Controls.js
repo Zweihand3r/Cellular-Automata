@@ -14,17 +14,18 @@ const Controls = ({
   onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
   const [qaState, setQaState] = useState({
-    prev: 'out', next: 'in', hide: false, exp: false, slide: false
+    prev: 'out', next: 'in', hide: false, exp: false, slide: false, min: false
   })
 
   const [isPlaying, setIsPlaying] = useState(true)
   const [isDrawing, setIsDrawing] = useState(false)
 
   const updateQaHidden = (qaHidden) => {
+    const inState = qaState.min ? 'min' : 'in'
     if (qaHidden) {
-      setQaState({ ...qaState, prev: 'in', next: 'out', hide: true })
+      setQaState({ ...qaState, prev: inState, next: 'out', hide: true })
     } else {
-      setQaState({ ...qaState, prev: 'out', next: 'in', hide: false })
+      setQaState({ ...qaState, prev: 'out', next: inState, hide: false })
     }
   }
 
@@ -45,6 +46,15 @@ const Controls = ({
       }
     } else {
       setQaState({ ...qaState, prev: 'sl', next: 'in', slide: false })
+    }
+  }
+
+  const updateQaMinimised = (qaMinimised) => {
+    if (qaMinimised) {
+      const inState = qaState.exp ? 'ex' : 'in'
+      setQaState({ ...qaState, prev: inState, next: 'min', min: true, exp: false })
+    } else {
+      setQaState({ ...qaState, prev: 'min', next: 'in', min: false })
     }
   }
 
@@ -105,7 +115,7 @@ const Controls = ({
     mouseMoveIndex = 0
   }, [])
 
-  const { prev, next, hide, exp, slide } = qaState
+  const { prev, next, hide, exp, slide, min } = qaState
 
   return (
     <div className='controls-base'>
@@ -120,11 +130,13 @@ const Controls = ({
         animId={`${prev}2${next}`}
         qaHidden={hide}
         qaExpanded={exp}
+        qaMinimised={min}
         qaSlider={slide}
         isPlaying={isPlaying}
         isDrawing={isDrawing}
         onQaHoverChanged={qaHoverChanged}
         onQaExpanded={updateQaExpanded}
+        onQaMinimised={updateQaMinimised}
         onQaSlider={updateQaSlider}
         onPlayClicked={updateIsPlaying} 
         onDrawClicked={updateIsDrawing}

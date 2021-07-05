@@ -27,13 +27,14 @@ TODO:
 7. Add background image / gradient and alive cells are transparent
 8. Option to 'Keep' earlier iterations in grid (Dont clear canvas)
 9. Add X, Y offsets to all fillers (like Cross)
+10. Replace LMB and RMB with icons
 */
 
 let sliderValue = 0
 
 const QuickAccess = ({ 
-  animId, qaHidden, qaExpanded, qaSlider, isPlaying, isDrawing, 
-  onQaHoverChanged, onQaExpanded, onQaSlider, onPlayClicked, onDrawClicked, onQaClose, onTempPause,
+  animId, qaHidden, qaExpanded, qaMinimised, qaSlider, isPlaying, isDrawing, 
+  onQaHoverChanged, onQaExpanded, onQaMinimised, onQaSlider, onPlayClicked, onDrawClicked, onQaClose, onTempPause,
   onShapeSelect, onFillSelect, onRuleSelect, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged, 
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
@@ -54,6 +55,12 @@ const QuickAccess = ({
   const closeAction = () => {
     if (qaExpanded) onQaExpanded(false)
     else onQaClose()
+  }
+
+  const minimise = () => onQaMinimised(true)
+
+  const maximise = () => {
+    if (qaMinimised) onQaMinimised(false)
   }
 
   const showSlider = (id) => {
@@ -83,14 +90,15 @@ const QuickAccess = ({
     if (hovered) setTipIndex(index)
   }
 
-  const unhide = !qaHidden && !qaSlider
   const animdelays = animdelaysJson[animId]
+  const unhide = !qaHidden && !qaSlider && !qaMinimised
   const closeAnimDuration = animId === 'sl2in' || animId === 'in2sl' || animId === 'ex2sl' ? 0 : 240
 
   return (
-    <div className='root'>
+    <div className='qa-root'>
       <div 
         className={`base base-${animId}`}
+        onClick={maximise}
         onMouseEnter={() => onQaHoverChanged(true)}
         onMouseLeave={() => onQaHoverChanged(false)}
       >
@@ -158,7 +166,7 @@ const QuickAccess = ({
 
           <Close 
             unhide={unhide} animDelay={animdelays[6]} animDuration={closeAnimDuration}
-            onClick={closeAction} 
+            onClick={closeAction} onRightClick={minimise}
             onHoverChanged={h => hoverChangedAtIndex(h, 6)}
           />
 
@@ -174,9 +182,14 @@ const QuickAccess = ({
 const animdelaysJson = {
   'out2in': [280, 320, 360, 400, 440, 480, 520],
   'in2out': [0, 0, 0, 0, 0, 0, 0],
+  'min2out': [0, 0, 0, 0, 0, 0, 0],
+  'out2min': [0, 0, 0, 0, 0, 0, 0],
+  'in2min': [0, 0, 0, 0, 0, 0, 0],
+  'min2in': [280, 320, 360, 400, 440, 480, 520],
   'in2ex': [0, 0, 0, 0, 0, 0, 0],
   'ex2in': [0, 0, 0, 0, 0, 0, 0],
   'ex2sl': [0, 0, 0, 0, 0, 0, 0],
+  'ex2min': [0, 0, 0, 0, 0, 0, 0],
   'sl2in': [240, 200, 160, 120, 80, 40, 240],
   'in2sl': [0, 0, 0, 0, 0, 0, 0]
 }

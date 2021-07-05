@@ -27,7 +27,7 @@ const tips = {
   3: ['Sim Rule List'],
   4: ['Color Palette'],
   5: ['Sim Speed'],
-  6: ['Close all open panels']
+  6: ['LMB: Close | RMB: Minimise']
 }
 
 export default QaTooltip

@@ -129,10 +129,11 @@ const Colors = ({ unhide, animDelay, onClick, onHoverChanged }) => {
   )
 }
 
-const Close = ({ unhide, animDelay, animDuration, onClick, onHoverChanged }) => {
+const Close = ({ unhide, animDelay, animDuration, onClick, onRightClick, onHoverChanged }) => {
   return (
     <QaButton 
       onClick={onClick} 
+      onRightClick={onRightClick}
       unhide={unhide} 
       animDelay={animDelay} 
       animDuration={animDuration}

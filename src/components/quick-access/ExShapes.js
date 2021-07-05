@@ -18,8 +18,8 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
         <Shapes shapes={fillers} onSelect={onFillSelect} onSliding={onSliding} />
 
         <div className='shape-mid'>
-          <MidButton name='Clear'   x={1}   y={6} onClick={() => onSelect('clear')} />
-          <MidButton name='Invert'  x={159} y={6} onClick={() => onSelect('invert')} />
+          <MidButton name='Clear'   x={1}   y={6} onClick={() => onFillSelect('clear')} />
+          <MidButton name='Invert'  x={159} y={6} onClick={() => onFillSelect('invert')} />
 
           <MidIndic y={4} visible={!isShapes} onClick={_ => setIsShapes(true)} paths={[
             'M 1 1 L 10 12 L 19 1', 'M 0 0 L 20 0'
