@@ -166,6 +166,7 @@ const reconfigureDraw = () => {
  * Changed draw implemention to only use draw-on-each-render (not fast) for:
  * 1. When in brush mode and mouse is held down
  * 2. When previewing a shape for placement
+ * 3. When previewing the filler modifiers
  */
 
 let _draw = drawGrid
