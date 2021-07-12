@@ -24,8 +24,9 @@ TODO:
 7. Add trailing palette (Start palette once cell dies to black)
 6. Divide grid into different rules
   a. Add different colors for different rules
-7. Add background image / gradient and alive cells are transparent
+7. Add background image / gradient and alive cells are transparent / dead cells are black (better perormance)
 8. Option to 'Keep' earlier iterations in grid (Dont clear canvas)
+  a. Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;)
 9. Add X, Y offsets to all fillers (like Cross)
 10. Replace LMB and RMB with icons
 */

@@ -509,6 +509,28 @@
   height: 13px;
 }
 
+.sc-con {
+  height: 26px;
+  cursor: pointer;
+  font-size: 19px;
+  color: #a2a2a2;
+  padding-top: 2px;
+  text-align: center;
+  border-radius: 4px;
+  margin: 2px 0 2px 10px;
+  border: 1px solid #00000000;
+}
+
+.sc-con:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.sc-con:active {
+  color: #000000;
+  background-color: #ffffff;
+}
+
 .fc-con {
   color: #a2a2a2;
   overflow-y: hidden;

@@ -1,14 +1,14 @@
 import { useRef, useState, useEffect, useContext } from 'react'
 import { 
-  initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setBrushSize, setSize, setFill, setRule, setShadeSeq
+  initGrid, updateGrid, drawGrid, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
+  setBrushSize, setSize, setupPreview, setFill, setRule, setShadeSeq
 } from './grid.js'
 
 import Controls from './controls/Controls'
 import { Context } from '../context/Context'
 
-let speed = 4
-const drawSpeed = speed
+let speed = 4, drawSpeed = speed
+let isBrushDown = false, isAgeShades = false, isShapeShades = false
 
 const World = (props) => {
   const [fps, setFps] = useState(0)
@@ -76,10 +76,14 @@ const World = (props) => {
 
       <Controls
         onIsPlayingChanged={isPlayingChanged} 
+        onBrushDownChanged={brushDownChanged}
         onDraw={drawOnGrid}
         onErase={eraseOnGrid}
+        onPaint={paint}
+        onPreview={preview}
 
-        onShapeSelect={() => {}}
+        onPreviewStart={startPreview}
+        onPreviewEnd={endPreview}
         onFillSelect={setFill}
         onRuleSelect={setRule}
         onShadesSelect={shadesSelected}
@@ -98,13 +102,37 @@ const isPlayingChanged = (isPlaying) => {
   update = isPlaying ? _update : () => {}
 }
 
-const shadesSelected = ({ shades, isLoop }) => {
-  draw = shades.length > 1 ? fastDraw : drawGrid
-  setShadeSeq({ shades, isLoop })
+const brushDownChanged = (_isBrushDown) => {
+  isBrushDown = _isBrushDown
+  reconfigureDraw()
 }
 
-const speedChanged = (spd) => speed = 101 - spd
-/*const sizeChanged = (size) => setSize(size)*/
+const shadesSelected = ({ shades, isLoop }) => {
+  isAgeShades = shades.length > 1
+  setShadeSeq({ shades, isLoop })
+  reconfigureDraw()
+}
+
+const speedChanged = (spd) => {
+  speed = 101 - spd
+  drawSpeed = speed
+  reconfigureDraw()
+}
+
+const startPreview = shape => {
+  setupPreview(shape)
+  previewConfig({ isStart: true })
+}
+
+const endPreview = () => {
+  previewConfig({ isStart: false })
+}
+
+const previewConfig = ({ isStart }) => {
+  isBrushDown = isStart
+  isShapeShades = isStart
+  reconfigureDraw()
+}
 
 
 /* --- EXT FUNCTIONS --- */
@@ -112,6 +140,8 @@ const speedChanged = (spd) => speed = 101 - spd
 const initExt = () => {
   initGrid()
 }
+
+/* - UPDATE - */
 
 const _update = (findex) => {
   if (findex % speed === 0) {
@@ -121,14 +151,32 @@ const _update = (findex) => {
   }
 }
 
-const fastDraw = (ctx, findex) => {
+let update = _update
+
+const reconfigureDraw = () => {
+  if (isShapeShades) _draw = drawShapes
+  else if (isAgeShades) _draw = drawShaded
+  else _draw = drawGrid
+
+  draw = isBrushDown || drawSpeed === 1 ? _draw : _fdraw
+}
+
+/* - DRAW - */
+/*
+ * Changed draw implemention to only use draw-on-each-render (not fast) for:
+ * 1. When in brush mode and mouse is held down
+ * 2. When previewing a shape for placement
+ */
+
+let _draw = drawGrid
+
+const _fdraw = (ctx, findex) => {
   if (findex % drawSpeed === 0) {
-    drawShaded(ctx)
+    _draw(ctx)
   }
 }
 
-let update = _update
-let draw = drawGrid
+let draw = _fdraw
 
 initExt()
 

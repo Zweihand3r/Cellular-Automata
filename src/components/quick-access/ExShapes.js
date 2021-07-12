@@ -15,7 +15,7 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
   return (
     <ExCon title='Patterns' isCurrent={isCurrent}>
       <div className={className}>
-        <Shapes shapes={fillers} onSelect={onFillSelect} onSliding={onSliding} />
+        <Shapes shapes={shapes} onSelect={onShapeSelect} />
 
         <div className='shape-mid'>
           <MidButton name='Clear'   x={1}   y={6} onClick={() => onFillSelect('clear')} />
@@ -37,23 +37,20 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
   )
 }
 
-const Shapes = ({ shapes, onSelect, onSliding }) => {
-  const [currentIndex, setCurrentIndex] = useState(-1)
-
-  const exAction = (index) => setCurrentIndex(index === currentIndex ? -1 : index)
-
+const Shapes = ({ shapes, onSelect }) => {
   return (
     <div className='shape-l1 shape-scroll'>
-      {shapes.map(({ name, fill, config }, index) =>
-        <FillCell 
-          key={index}
-          name={name} 
-          config={config} 
-          ex={currentIndex === index} 
-          onSelect={args => onSelect(fill, args)} 
-          onSliding={onSliding}
-          onExpanded={() => exAction(index)}
-        />)}
+      {shapes.map(({ name, shapes }, icat) => (
+        <div key={icat}>
+          <div className='shape-item-pad' />
+          <ExSubTitle subtitle={name} width={120} isScrollable={true} />
+
+          {shapes.map(({ name, shape }, ishape) => (
+            <div className='sc-con' key={ishape} onClick={() => onSelect(shape)} >{name}</div>
+          ))}
+        </div>
+      ))}
+
     </div>
   )
 }
@@ -83,11 +80,13 @@ const Fillers = ({ fillers, onSelect, onSliding }) => {
 
 const FillCell = ({ name, config, ex, onSelect, onSliding, onExpanded }) => {
   const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
   const args = useRef(config.map(({init}) => init))
 
   const style = {
     height: ex ? 32 + 24 * config.length : 30,
-    color: ex ? '#000000' : (hovered ? '#ffffff' : '#a2a2a2'),
+    backgroundColor: pressed && !ex ? '#ffffff' : '#00000000',
+    color: ex || pressed ? '#000000' : (hovered ? '#ffffff' : '#a2a2a2'),
     borderColor: ex ? '#a2a2a2' : (hovered ? '#ffffff' : '#00000000')
   }
 
@@ -112,12 +111,14 @@ const FillCell = ({ name, config, ex, onSelect, onSliding, onExpanded }) => {
       style={style} 
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
     >
       <div className={labelClass} onClick={select}>{name}</div>
       
       {ex ? 
       <IoChevronUp className={iconClass} onClick={configAction} /> :
-      <HiOutlineAdjustments className={iconClass} onClick={configAction} />}
+      <HiOutlineAdjustments className={iconClass} onClick={configAction} onMouseDown={e => e.stopPropagation()} />}
 
       <div className='fc-ex'>
         {config.map(({ name, init, range }, index) => <FSlide 

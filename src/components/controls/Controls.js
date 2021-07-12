@@ -9,8 +9,8 @@ let qaEnabled = true, isTempPause = false
 let hideTimeoutIndex, mouseMoveIndex
 
 const Controls = ({ 
-  onIsPlayingChanged, onDraw, onErase,
-  onShapeSelect, onFillSelect, onRuleSelect, onShadesSelect,
+  onIsPlayingChanged, onBrushDownChanged, onDraw, onErase, onPaint, onPreview,
+  onPreviewStart, onPreviewEnd, onFillSelect, onRuleSelect, onShadesSelect,
   onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
   const [qaState, setQaState] = useState({
@@ -19,6 +19,7 @@ const Controls = ({
 
   const [isPlaying, setIsPlaying] = useState(true)
   const [isDrawing, setIsDrawing] = useState(false)
+  const [isPainting, setIsPainting] = useState(false)
 
   const updateQaHidden = (qaHidden) => {
     const inState = qaState.min ? 'min' : 'in'
@@ -55,6 +56,7 @@ const Controls = ({
       setQaState({ ...qaState, prev: inState, next: 'min', min: true, exp: false })
     } else {
       setQaState({ ...qaState, prev: 'min', next: 'in', min: false })
+      endPreviewIfIsPainting()
     }
   }
 
@@ -99,15 +101,31 @@ const Controls = ({
     setTimeout(() => qaEnabled = true, 1000)
   }
 
+  /* Hooking brushDownChanged to trigger draw-on-every-update when sliding filler modifiers */
   const tempPause = (pause) => {
     if (isPlaying) {
       updateIsPlaying()
+      onBrushDownChanged(true)
       isTempPause = true 
     } else {
       if (isTempPause) {
         updateIsPlaying()
+        onBrushDownChanged(false)
         isTempPause = false
       }
+    }
+  }
+
+  const shapeSelected = shape => {
+    setIsPainting(true)
+    updateQaMinimised(true)
+    onPreviewStart(shape)
+  }
+
+  const endPreviewIfIsPainting = () => {
+    if (isPainting) {
+      setIsPainting(false)
+      onPreviewEnd()
     }
   }
 
@@ -121,8 +139,13 @@ const Controls = ({
     <div className='controls-base'>
       <MouseReceiver 
         isDrawing={isDrawing} 
+        isPainting={isPainting}
+        onBrushDown={() => onBrushDownChanged(true)}
+        onBrushUp={() => onBrushDownChanged(false)}
         onDraw={onDraw}
         onErase={onErase}
+        onPaint={onPaint}
+        onPreview={onPreview}
         onMouseMove={mouseMove}
       />
 
@@ -142,7 +165,7 @@ const Controls = ({
         onDrawClicked={updateIsDrawing}
         onQaClose={hideQa}
         onTempPause={tempPause}
-        onShapeSelect={onShapeSelect}
+        onShapeSelect={shapeSelected}
         onFillSelect={onFillSelect}
         onRuleSelect={onRuleSelect}
         onShadesSelect={onShadesSelect}

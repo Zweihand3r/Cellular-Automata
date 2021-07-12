@@ -1,4 +1,4 @@
-let bX, bY, selectedFill
+let bX, bY, selectedShape, selectedFill
 
 const randomInit = [
   'random', 'vstripes', 'hstripes', 'dstripes', 
@@ -8,6 +8,28 @@ const randomInit = [
 const setBounds = (x, y) => {
   bX = x
   bY = y
+}
+
+const setShape = shape => {
+  selectedShape = shape
+}
+
+const getShape = (gX, gY) => {
+  const cells = []
+  let outOfBounds = false
+  for (let [offX, offY] of selectedShape) {
+    const x = gX + offX
+    const y = gY + offY
+    if (checkBounds(x, y)) {
+      cells.push([x, y])
+    } else {
+      if (!outOfBounds) {
+        outOfBounds = true
+      }
+    }
+  }
+
+  return { cells, outOfBounds }
 }
 
 const createGrid = ({ fill, grid, args }) => {
@@ -210,4 +232,7 @@ const create2dArray = (func, yiter = () => {}) => {
   return array
 }
 
-export { setBounds, createGrid, reCreateGrid, createRandom }
+/* Yes this is a duplicate of grid.js checkBounds */
+const checkBounds = (x, y) => x > -1 && y > -1 && x < bX && y < bY
+
+export { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom }

@@ -1,16 +1,25 @@
-const MouseReceiver = ({ isDrawing, onDraw, onErase, onMouseMove }) => {
+const MouseReceiver = ({ 
+  isDrawing, isPainting, 
+  onBrushDown, onBrushUp,
+  onDraw, onErase, onPaint, onMouseMove, onPreview 
+}) => {
+
+  /* Hooked onPreview to drawHook */
   
   const draw = (e) => onDraw(e.clientX, e.clientY)
   const erase = (e) => onErase(e.clientX, e.clientY)
+  const preview = e => onPreview(e.clientX, e.clientY)
   
   const drawStart = (e) => {
     if (e.button === 0) drawHook = draw
     else if (e.button === 2) drawHook = erase
+    onBrushDown()
   }
   
   const drawEnd = (e) => {
     drawHook(e)
     drawHook = () => {}
+    onBrushUp()
   }
   
   const mouseMove = (e) => {
@@ -18,10 +27,23 @@ const MouseReceiver = ({ isDrawing, onDraw, onErase, onMouseMove }) => {
     onMouseMove()
   }
 
+  const clickAction = () => {
+    if (isPainting) onPaint()
+  }
+
+  const contextAction = e => {
+    e.preventDefault()
+  }
+
   /* --- Init --- */
-  if (isDrawing) {
+  if (isPainting) {
+    drawStartHook = () => {}
+    drawEndHook = () => {}
+    drawHook = preview
+  } else if (isDrawing) {
     drawStartHook = drawStart
     drawEndHook = drawEnd
+    drawHook = () => {}
   } else {
     drawStartHook = () => {}
     drawEndHook = () => {}
@@ -30,9 +52,10 @@ const MouseReceiver = ({ isDrawing, onDraw, onErase, onMouseMove }) => {
 
   return (
     <div 
-      className={`receiver${isDrawing ? ' receiver-active' : ''}`}
+      className={`receiver${isDrawing || isPainting ? ' receiver-active' : ''}`}
       
-      onContextMenu={(e) => e.preventDefault()}
+      onClick={clickAction}
+      onContextMenu={contextAction}
       onMouseDown={drawStartHook}
       onMouseUp={drawEndHook}
       onMouseLeave={drawEndHook}

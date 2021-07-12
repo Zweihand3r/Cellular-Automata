@@ -1,10 +1,11 @@
 import { createHelpers } from './helpers'
-import { setBounds, createGrid, reCreateGrid, createRandom } from './shapes'
+import { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom } from './shapes'
 import { setRule, checkSurvival, checkBirth } from './rules'
 import { monoShade, getShade, setShades, updateShades, resetAges, updateAge } from './shades'
 
 let gridW, gridH, size, brushSize
 let grid, neighbours
+let pCells, pOutOfBounds, pX, pY // pX, pY = Current preview cell coordinates
 
 
 /* --- Exports --- */
@@ -68,8 +69,44 @@ const drawShaded = (ctx) => {
   }
 }
 
+const drawShapes = (ctx) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  ctx.fillStyle = '#a2a2a2'
+  for (let yi = 0; yi < grid.length; yi++) {
+    for (let xi = 0; xi < grid[yi].length; xi++) {
+      if (grid[yi][xi]) {
+        ctx.fillRect(xi * size, yi * size, size, size)
+      }
+    }
+  }
+  ctx.fillStyle = pOutOfBounds ? '#ff3434' : '#ffffff'
+  for (let i = 0; i < pCells.length; i++) {
+    const [x, y] = pCells[i]
+    ctx.fillRect(x * size, y * size, size, size)
+  }
+}
+
 const drawOnGrid = (x, y) => applyBrush(x, y, 1)
 const eraseOnGrid = (x, y) => applyBrush(x, y, 0)
+
+const paint = () => {
+  if (!pOutOfBounds) {
+    for (let i = 0; i < pCells.length; i++) {
+      const [x, y] = pCells[i]
+      grid[y][x] = 1
+    }
+  }
+}
+
+const preview = (x, y) => { 
+  const cx = Math.min(Math.floor(x / size), gridW - 1)
+  const cy = Math.min(Math.floor(y / size), gridH - 1)
+  if (cx !== pX || cy !== pY) {
+    pX = cx; pY = cy
+    const { cells, outOfBounds } = getShape(cx, cy)
+    pCells = cells; pOutOfBounds = outOfBounds
+  }
+}
 
 const setBrushSize = bsz => brushSize = bsz
 
@@ -83,6 +120,12 @@ const setSize = (sz) => {
   }
 
   return { gridW, gridH }
+}
+
+const setupPreview = shape => {
+  setShape(shape)
+  pX = -1; pY = -1
+  pCells = []; pOutOfBounds = false
 }
 
 const setFill = (fill, args) => {
@@ -179,6 +222,6 @@ const checkBounds = (x, y) => x > -1 && y > -1 && x < gridW && y < gridH
 createHelpers([top, topRt, right, botRt, bottom, botLt, left, topLt])
 
 export { 
-  initGrid, updateGrid, drawGrid, drawShaded, drawOnGrid, eraseOnGrid,
-  setBrushSize, setSize, setFill, setRule, setShadeSeq
+  initGrid, updateGrid, drawGrid, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
+  setBrushSize, setSize, setupPreview, setFill, setRule, setShadeSeq
 }

@@ -1,5 +1,7 @@
 import { createContext, useState } from 'react'
 
+import shapes from './shapes.json'
+
 let gridW = Math.floor(window.innerWidth / 5)
 let gridH = Math.floor(window.innerHeight / 5)
 
@@ -31,8 +33,6 @@ const rules = [
   { name: 'Untitled',       b: '25',      s: '4' },
   { name: 'Walled Cities',  b: '45678',   s: '2345' }
 ]
-
-const shapes = []
 
 const constructFillers = () => {
   return [
