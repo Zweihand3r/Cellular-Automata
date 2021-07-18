@@ -1,7 +1,7 @@
 const presets = [
   {
-    rule: ['Assimilation', 'Cross'],
+    rules: ['Assimilation'],
     palette: '2-4-8-16-32 black<->black',
-    shape: 'Diagonal Stripes'
+    shapes: ['Diagonal Stripes', 'Cross']
   }
 ]
