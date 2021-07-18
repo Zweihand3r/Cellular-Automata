@@ -15,12 +15,13 @@ import './quick-access.css'
 
 /* 
 TODO: 
+0. OPTIMIZE CANVAS (Google how to)
 1. Fix palette first cell delete when second cell is step cell (*)
 2. Add border-radius to palette cells. (**) tried but not possible to add border radius to border image
 3. Implement textfields of palette cells (*)
 4. Add limits to palette cells
 5. Add Next as right click of Play/Pause
-6. Add wrap to grid
+6. Add wrap to grid (*)
 7. Add trailing palette (Start palette once cell dies to black)
 6. Divide grid into different rules
   a. Add different colors for different rules
@@ -36,21 +37,33 @@ let sliderValue = 0
 const QuickAccess = ({ 
   animId, qaHidden, qaExpanded, qaMinimised, qaSlider, isPlaying, isDrawing, 
   onQaHoverChanged, onQaExpanded, onQaMinimised, onQaSlider, onPlayClicked, onDrawClicked, onQaClose, onTempPause,
-  onShapeSelect, onFillSelect, onRuleSelect, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged, 
+  onShapeSelect, onFillSelect, onRuleSelect, onWrapChanged, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged, 
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
   const [slideId, setSlideId] = useState('na')
   const [tipIndex, setTipIndex] = useState(0)
   const [tipVis, setTipVis] = useState(false)
+  const [backVis, setBackVis] = useState(false)
+  const [exPindices, setExPindices] = useState([0, 0, 0, 0, 0, 0])
 
-  const qaExAction = (index) => {
-    if (qaExpanded && qaIndex === index) {
-      onQaExpanded(false)
-    } else {
+  const qaExAction = (index, pindex = 0) => {
+    if (!qaExpanded) {
       onQaExpanded(true)
+    } else {
+      if (qaIndex === index && exPindices[index] === pindex) {
+        onQaExpanded(false)
+        return
+      }
     }
 
+    setExPindices(exPindices.map((item, i) => i === index ? pindex : item))
+    if (backVis) setBackVis(false)
     setQaIndex(index)
+  }
+
+  const exChangePage = (index, pindex, enableBack = false) => {
+    setExPindices(exPindices.map((item, i) => i === index ? pindex : item))
+    setBackVis(enableBack)
   }
 
   const closeAction = () => {
@@ -113,8 +126,17 @@ const QuickAccess = ({
             onSliding={onTempPause} 
           />
 
-          <ExRules isCurrent={qaIndex === 3} onSelect={onRuleSelect} />
+          <ExRules 
+            isCurrent={qaIndex === 3} 
+            pindex={exPindices[3]}
+            onSelect={onRuleSelect} 
+            onWrapChanged={onWrapChanged}
+            onPindexChanged={pi => exChangePage(3, 1, true)}
+          />
+
           <ExPalette isCurrent={qaIndex === 4} onSelect={onShadesSelect} />
+
+          <Back vis={backVis} onClick={() => exChangePage(qaIndex, 0)} />
         </div>
 
         <div className='con'>
@@ -149,7 +171,7 @@ const QuickAccess = ({
 
           <Rules 
             unhide={unhide} animDelay={animdelays[3]} 
-            onClick={_ => qaExAction(3)} 
+            onClick={_ => qaExAction(3, 0)} onRightClick={_ => qaExAction(3, 1)} 
             onHoverChanged={h => hoverChangedAtIndex(h, 3)}
           />
 
@@ -176,6 +198,17 @@ const QuickAccess = ({
       </div>
 
       <QaTooltip vis={tipVis} index={tipIndex} />
+    </div>
+  )
+}
+
+const Back = ({ vis, onClick }) => {
+  return (
+    <div 
+      className={`ex-back ${vis ? 'ex-back-vis' : ''}`}
+      onClick={onClick}
+    >
+      <div className='ex-back-lbl'>{'<'}</div>
     </div>
   )
 }

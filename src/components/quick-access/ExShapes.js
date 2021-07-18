@@ -43,7 +43,7 @@ const Shapes = ({ shapes, onSelect }) => {
       {shapes.map(({ name, shapes }, icat) => (
         <div key={icat}>
           <div className='shape-item-pad' />
-          <ExSubTitle subtitle={name} width={120} isScrollable={true} />
+          <ExSubTitle subtitle={name} width={132 - name.length * 2} isScrollable={true} />
 
           {shapes.map(({ name, shape }, ishape) => (
             <div className='sc-con' key={ishape} onClick={() => onSelect(shape)} >{name}</div>

@@ -48,16 +48,19 @@ const ExIndicator = (props) => {
 }
 
 const ExSubTitle = ({ 
-  subtitle, width, 
-  isScrollable = false, 
+  children,
+  subtitle, fontSize = 10,
+  width, isScrollable = false, 
   left = 0, right = 0 
 }) => {
   const className = `ex-st-con ex-item-${isScrollable ? 'scrl' : 'con'}`
 
   return (
-    <div className={className}>
+    <div className={className} style={{height: fontSize + 3}}>
       <div className='ex-st-hr' style={{ width, left }} />
-      <div className='ex-st-lbl'>{subtitle.toUpperCase()}</div>
+      <div className='ex-st-lbl' style={{ fontSize }}>
+        {subtitle ? subtitle.toUpperCase() : children}
+      </div>
       <div className='ex-st-hr' style={{ width, right }} />
     </div>
   )

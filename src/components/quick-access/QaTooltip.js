@@ -24,7 +24,7 @@ const tips = {
   0: ['Play | Pause'],
   1: ['LMB: Toggle Brush | RMB: Brush Size'],
   2: ['LMB: Pattern List | RMB: Grid Cell Size'],
-  3: ['Sim Rule List'],
+  3: ['LMB: Configure Rules | RMB: Rule Presets'],
   4: ['Color Palette'],
   5: ['Sim Speed'],
   6: ['LMB: Close | RMB: Minimise']

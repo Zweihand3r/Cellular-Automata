@@ -10,7 +10,7 @@ let hideTimeoutIndex, mouseMoveIndex
 
 const Controls = ({ 
   onIsPlayingChanged, onBrushDownChanged, onDraw, onErase, onPaint, onPreview,
-  onPreviewStart, onPreviewEnd, onFillSelect, onRuleSelect, onShadesSelect,
+  onPreviewStart, onPreviewEnd, onFillSelect, onRuleSelect, onWrapChanged, onShadesSelect,
   onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
   const [qaState, setQaState] = useState({
@@ -168,6 +168,7 @@ const Controls = ({
         onShapeSelect={shapeSelected}
         onFillSelect={onFillSelect}
         onRuleSelect={onRuleSelect}
+        onWrapChanged={onWrapChanged}
         onShadesSelect={onShadesSelect}
         onBrushChanged={onBrushChanged}
         onSizeChanged={onSizeChanged}

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useContext } from 'react'
 import { 
   initGrid, updateGrid, drawGrid, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
-  setBrushSize, setSize, setupPreview, setFill, setRule, setShadeSeq
+  setBrushSize, setSize, setupPreview, setFill, setRule, setGridWrap, setShadeSeq
 } from './grid.js'
 
 import Controls from './controls/Controls'
@@ -86,6 +86,7 @@ const World = (props) => {
         onPreviewEnd={endPreview}
         onFillSelect={setFill}
         onRuleSelect={setRule}
+        onWrapChanged={setGridWrap}
         onShadesSelect={shadesSelected}
 
         onSizeChanged={sizeChanged}
