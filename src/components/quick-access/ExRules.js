@@ -196,7 +196,9 @@ const DiamondBtn = ({ text, x, y, checked, checkChanged }) => {
   return (
     <div className={btnClass} style={btnStyle} onClick={toggleCheck} >
       <div className={cbClass} />
-      <div className='dia-lbl'>{text}</div>
+      <div className='dia-lbl-con'>
+        <div className='dia-lbl center'>{text}</div>
+      </div>
     </div>
   )
 }

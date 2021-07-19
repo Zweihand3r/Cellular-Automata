@@ -1,3 +1,5 @@
+import { BsChevronLeft } from 'react-icons/bs'
+
 import { ExIndicator } from './ex-comps'
 import { useState } from 'react'
 import { 
@@ -208,7 +210,8 @@ const Back = ({ vis, onClick }) => {
       className={`ex-back ${vis ? 'ex-back-vis' : ''}`}
       onClick={onClick}
     >
-      <div className='ex-back-lbl'>{'<'}</div>
+      <BsChevronLeft className='ex-back-ico center' />
+      {/* <div className='ex-back-lbl center'>{'<'}</div> */}
     </div>
   )
 }

@@ -4,7 +4,9 @@ const ExCon = ({ title, isCurrent, children }) => {
   return (
     <div className={`ex-con ex-con-${isCurrent ? 'in' : 'out'}`}>
       <div className='ex-title'>
-        {title.split('').join(' ').toUpperCase()}
+        <div className='ex-title-lbl center'>
+          {title.split('').join(' ').toUpperCase()}
+        </div>
       </div>
       <div className='ex-cont'>
         {children}

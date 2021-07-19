@@ -46,7 +46,9 @@ const Shapes = ({ shapes, onSelect }) => {
           <ExSubTitle subtitle={name} width={132 - name.length * 2} isScrollable={true} />
 
           {shapes.map(({ name, shape }, ishape) => (
-            <div className='sc-con' key={ishape} onClick={() => onSelect(shape)} >{name}</div>
+            <div className='sc-con' key={ishape} onClick={() => onSelect(shape)} >
+              <div className='sc-lbl center'>{name}</div>
+            </div>
           ))}
         </div>
       ))}
@@ -102,7 +104,7 @@ const FillCell = ({ name, config, ex, onSelect, onSliding, onExpanded }) => {
 
   const select = () => onSelect(args.current)
   
-  const labelClass = `fc-lbl ${ex ? 'fc-lbl-ex' : ''}`
+  const labelClass = `fc-lbl-con ${ex ? 'fc-lbl-con-ex' : ''}`
   const iconClass = `fc-icon ${ex ? 'fc-icon-ex' : `${hovered ? '' : 'fc-icon-hid'}`}`
 
   return (
@@ -114,7 +116,9 @@ const FillCell = ({ name, config, ex, onSelect, onSliding, onExpanded }) => {
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
     >
-      <div className={labelClass} onClick={select}>{name}</div>
+      <div className={labelClass} onClick={select}>
+        <div className='fc-lbl center'>{name}</div>
+      </div>
       
       {ex ? 
       <IoChevronUp className={iconClass} onClick={configAction} /> :
