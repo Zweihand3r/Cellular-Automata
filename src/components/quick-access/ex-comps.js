@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { IoMdCheckboxOutline, IoMdSquareOutline } from 'react-icons/io'
 
 const ExCon = ({ title, isCurrent, children }) => {
   return (
@@ -68,4 +69,18 @@ const ExSubTitle = ({
   )
 }
 
-export { ExCon, ExIndicator, ExSubTitle }
+const ExCheckbox = ({ name, checked, style = {}, onChange }) => {
+  return (
+    <div 
+      className='ex-cb-con' style={style} 
+      onClick={() => onChange(!checked)}
+    >
+      {name}
+      {checked ? 
+      <IoMdCheckboxOutline className='ex-cb-ico' /> : 
+      <IoMdSquareOutline className='ex-cb-ico' />}
+    </div>
+  )
+}
+
+export { ExCon, ExIndicator, ExSubTitle, ExCheckbox }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { IoMdClose, IoMdCloseCircle } from 'react-icons/io'
+import { IoMdCloseCircle } from 'react-icons/io'
 
 let liveValue = 0
 const offsetX = window.innerWidth / 2 - 162

@@ -27,19 +27,25 @@ TODO:
 7. Add trailing palette (Start palette once cell dies to black)
 6. Divide grid into different rules
   a. Add different colors for different rules
-7. Add background image / gradient and alive cells are transparent / dead cells are black (better perormance)
-8. Option to 'Keep' earlier iterations in grid (Dont clear canvas)
-  a. Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;)
+7. Add background image / gradient and alive cells are transparent / dead cells are black (better perormance) (*)
+8. Option to 'Keep' earlier iterations in grid (Dont clear canvas) (*)
+  a. Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;) (*)
 9. Add X, Y offsets to all fillers (like Cross)
 10. Replace LMB and RMB with icons
+11. Improve cross browser compatibility with line-height: 1 (see md-con and children in palette.css)
 */
 
 let sliderValue = 0
 
 const QuickAccess = ({ 
-  animId, qaHidden, qaExpanded, qaMinimised, qaSlider, isPlaying, isDrawing, 
-  onQaHoverChanged, onQaExpanded, onQaMinimised, onQaSlider, onPlayClicked, onDrawClicked, onQaClose, onTempPause,
-  onShapeSelect, onFillSelect, onRuleSelect, onWrapChanged, onShadesSelect, onBrushChanged, onSizeChanged, onSpeedChanged, 
+  animId, qaHidden, qaExpanded, qaMinimised, 
+  qaSlider, isPlaying, isDrawing, 
+
+  onQaHoverChanged, onQaExpanded, onQaMinimised, onQaSlider, 
+  onPlayClicked, onDrawClicked, onQaClose, onTempPause,
+
+  onShapeSelect, onFillSelect, onClear, onRuleSelect, onWrapChanged, onBgSelect, onShadesSelect, 
+  onGradSelect, onImageSelect, onTrailsChanged, onBrushChanged, onSizeChanged, onSpeedChanged, 
 }) => {
   const [qaIndex, setQaIndex] = useState(0)
   const [slideId, setSlideId] = useState('na')
@@ -125,6 +131,7 @@ const QuickAccess = ({
             isCurrent={qaIndex === 2} 
             onShapeSelect={onShapeSelect} 
             onFillSelect={onFillSelect}
+            onClear={onClear}
             onSliding={onTempPause} 
           />
 
@@ -136,7 +143,16 @@ const QuickAccess = ({
             onPindexChanged={pi => exChangePage(3, 1, true)}
           />
 
-          <ExPalette isCurrent={qaIndex === 4} onSelect={onShadesSelect} />
+          <ExPalette 
+            isCurrent={qaIndex === 4} 
+            pindex={exPindices[4]}
+            onBgSelect={onBgSelect}
+            onSelect={onShadesSelect} 
+            onGradSelect={onGradSelect}
+            onImageSelect={onImageSelect}
+            onTrailsChanged={onTrailsChanged}
+            onPindexChanged={pi => exChangePage(4, 1, true)}
+          />
 
           <Back vis={backVis} onClick={() => exChangePage(qaIndex, 0)} />
         </div>
@@ -179,7 +195,7 @@ const QuickAccess = ({
 
           <Colors 
             unhide={unhide} animDelay={animdelays[4]} 
-            onClick={_ => qaExAction(4)} 
+            onClick={_ => qaExAction(4)} onRightClick={_ => qaExAction(4, 1)}
             onHoverChanged={h => hoverChangedAtIndex(h, 4)}
           />
 
@@ -233,7 +249,7 @@ const animdelaysJson = {
 
 const sdat = {
   na: { value: -1, range: [0, 1], icon: <div /> },
-  brush: { value: 1, range: [1, 50], icon: <BrushIcon /> },
+  brush: { value: 25, range: [1, 100], icon: <BrushIcon /> },
   grid: { value: 5, range: [1, 50], icon: <GridIcon /> },
   speed: { value: 97, range: [1, 100], icon: <SpeedIcon /> }
 }

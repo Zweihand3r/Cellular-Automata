@@ -25,7 +25,7 @@ const tips = {
   1: ['LMB: Toggle Brush | RMB: Brush Size'],
   2: ['LMB: Pattern List | RMB: Grid Cell Size'],
   3: ['LMB: Configure Rules | RMB: Rule Presets'],
-  4: ['Color Palette'],
+  4: ['LMB: Color Palette | RMB: Age Based Palette'],
   5: ['Sim Speed'],
   6: ['LMB: Close | RMB: Minimise']
 }

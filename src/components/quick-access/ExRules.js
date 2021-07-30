@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext } from 'react'
-import { IoMdCheckboxOutline, IoMdSquareOutline } from 'react-icons/io'
 import { FiChevronRight } from 'react-icons/fi'
 
 import { Context } from '../../context/Context'
-import { ExCon, ExSubTitle } from './ex-comps'
+import { ExCon, ExSubTitle, ExCheckbox } from './ex-comps'
 
 const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }) => {
   const { rules } = useContext(Context)
@@ -122,13 +121,12 @@ const WrapGrid = ({ onChanged }) => {
     onChanged(_checked)
   }
 
-  return (
-    <RuleOption title='Wrap Grid' onClick={updateChecked}>
-      {checked ?
-      <IoMdCheckboxOutline className='roc-ico roc-chk' /> :
-      <IoMdSquareOutline className='roc-ico roc-chk' />}
-    </RuleOption>
-  )
+  return <ExCheckbox 
+    name='Wrap Grid' 
+    checked={checked}
+    style={{marginTop: 10}}
+    onChange={updateChecked} 
+  />
 }
 
 const ActiveRule = ({ name, onClick }) => {

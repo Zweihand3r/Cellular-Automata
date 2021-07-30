@@ -1,7 +1,7 @@
 import { VscChevronLeft, VscChevronRight, VscTrash } from 'react-icons/vsc'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { useState, useRef, useEffect } from 'react'
-import { ExCon, ExSubTitle } from '../ex-comps'
+import { ExSubTitle } from '../ex-comps'
 
 let animActive = false, scrollListenerAttached = false
 let lastApplied = { isLoop: false, list: [{ isTint: true, value: '#ffffff', outId: '' }] }
@@ -67,6 +67,7 @@ const ExPalette = ({ isCurrent, onSelect }) => {
      * setList(lastApplied.list.slice()) -> Isnt this supposed to create a copy of lastApplied.list?
      * setList(lastApplied.list.map(item => item)) -> Again isnt this supposed to be a completely new array?
      * Seriously WTF is going on?
+     * - Could be cause Im not using useRef to store lastApplied. NEED TO TEST.
      * 
      * Only the line below seems to create a copy. I could really use some explaination on this.
      */
@@ -144,7 +145,7 @@ const ExPalette = ({ isCurrent, onSelect }) => {
   const isScrollable = list.length > 8
 
   return (
-    <div className='ap-con'>
+    <div className='ex-pg ex-pg2'>
       <div className='palette-list' ref={listRef}>
         {isLoop ? <LoopCell isStart={true} isScrollable={isScrollable} /> : <div />}
 
@@ -168,6 +169,11 @@ const ExPalette = ({ isCurrent, onSelect }) => {
         ))}
 
         {isLoop ? <LoopCell isStart={false} isScrollable={isScrollable} /> : <div />}
+
+        {list.length > 1 ? <div />:
+        <div className='palette-info'><i>Color mode will be converted to Mono on </i><b>Apply</b>.<br/>
+        <i>To use Age Based color mode add at least one </i><b>Color</b> <i>or</i> <b>Gradient</b> <i>from the</i> <b>Add</b> <i>menu</i></div>}
+
         <div style={{ height: isScrollable ? 65 : 0 }} />
       </div>
 
@@ -259,9 +265,10 @@ const TintCell = ({ color, isScrollable, outId, onChange, onDeleteQueue, onDelet
 
   const updateHex = e => {
     const text = e.target.value
-    if (text.length > hex.length && text.length < 8) {
-      const last = text.substring(text.length - 1, text.length)
-      if (/[0-9A-Fa-f]/.test(last)) setHex(text)
+    if (text.indexOf('#') < 0) {
+      setHex(`#${text}`)
+    } else if (text.length > hex.length && text.length < 8) {
+      if (/^[0-9A-Fa-f]+$/.test(text.substring(1))) setHex(text)
       if (text.length === 7) onChange(text)
     } else if (text.length < hex.length && text.length > 0) {
       setHex(text)

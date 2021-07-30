@@ -6,7 +6,7 @@ import { Context } from '../../context/Context'
 
 import { ExCon, ExSubTitle } from './ex-comps'
 
-const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
+const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onClear, onSliding }) => {
   const [isShapes, setIsShapes] = useState(true)
   const { shapes, fillers } = useContext(Context)
 
@@ -15,10 +15,10 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
   return (
     <ExCon title='Patterns' isCurrent={isCurrent}>
       <div className={className}>
-        <Shapes shapes={shapes} onSelect={onShapeSelect} />
+        <Fillers fillers={fillers} onSelect={onFillSelect} onSliding={onSliding} />
 
         <div className='shape-mid'>
-          <MidButton name='Clear'   x={1}   y={6} onClick={() => onFillSelect('clear')} />
+          <MidButton name='Clear'   x={1}   y={6} onClick={onClear} />
           <MidButton name='Invert'  x={159} y={6} onClick={() => onFillSelect('invert')} />
 
           <MidIndic y={4} visible={!isShapes} onClick={_ => setIsShapes(true)} paths={[
@@ -30,8 +30,7 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
           ]} />
         </div>
 
-        <ExSubTitle subtitle='DYNAMIC' width={120} />
-        <Fillers fillers={fillers} onSelect={onFillSelect} onSliding={onSliding} />
+        <Shapes shapes={shapes} onSelect={onShapeSelect} />
       </div>
     </ExCon>
   )
@@ -39,7 +38,11 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onSliding }) => {
 
 const Shapes = ({ shapes, onSelect }) => {
   return (
-    <div className='shape-l1 shape-scroll'>
+    <div className='shape-list'>
+      <div className='shape-info'>
+        The patterns listed below are meant to be used in<br/>
+        conjuction with <b>Conway's Life (B3-S23)</b> rule.
+      </div>
       {shapes.map(({ name, shapes }, icat) => (
         <div key={icat}>
           <div className='shape-item-pad' />
@@ -63,7 +66,9 @@ const Fillers = ({ fillers, onSelect, onSliding }) => {
   const exAction = (index) => setCurrentIndex(index === currentIndex ? -1 : index)
 
   return (
-    <div className='shape-l2 shape-scroll'>
+    <div className='shape-list'>
+      <div className='shape-item-pad' />
+
       {fillers.map(({ name, fill, config }, index) =>
         <FillCell 
           key={index}
@@ -74,8 +79,6 @@ const Fillers = ({ fillers, onSelect, onSliding }) => {
           onSliding={onSliding}
           onExpanded={() => exAction(index)}
         />)}
-
-      <div className='shape-item-pad' />
     </div>
   )
 }

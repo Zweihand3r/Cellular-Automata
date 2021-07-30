@@ -282,6 +282,7 @@
   position: fixed;
   text-align: center;
   border-radius: 50%;
+  pointer-events: none;
   background: #ffffff;
   box-sizing: border-box;
   box-shadow: 0 0 4px #000000;
@@ -464,6 +465,26 @@
   height: 24px;
 }
 
+.ex-cb-con {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 300;
+  color: #a2a2a2;
+  position: relative;
+  margin: 0 10px 0 10px;
+}
+
+.ex-cb-con:hover {
+  color: #ffffff;
+}
+
+.ex-cb-ico {
+  width: 21px;
+  height: 21px;
+  right: -3px; top: 0;
+  position: absolute;
+}
+
 @keyframes ex-in2ex-anim {
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -498,16 +519,12 @@
   transform: translateY(-316px);
 }
 
-.shape-l1 {
+.shape-list {
   width: 100%;
   height: 316px;
   overflow-y: scroll;
-}
-
-.shape-l2 {
-  width: 100%;
-  height: 296px;
-  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #a2a2a2 #00000000;
 }
 
 .shape-mid {
@@ -517,9 +534,11 @@
   margin: 0 10px 0 10px;
 }
 
-.shape-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #a2a2a2 #00000000;
+.shape-info {
+  font-size: 12px;
+  color: #a2a2a2;
+  text-align: center;
+  margin: 4px 10px 0 10px;
 }
 
 .mb-con {
@@ -595,7 +614,7 @@
   cursor: pointer;
   font-size: 19px;
   position: relative;
-  transition: font-size 120ms;
+  transition: font-size 120ms, background-color 120ms;
 }
 
 .fc-lbl {
@@ -861,19 +880,12 @@
   transition: transform 120ms;
 }
 
-.roc-ico {
-  width: 21px;
-  height: 21px;
-  position: absolute;
-}
-
-.roc-chk {
-  right: -3px;
-}
-
 .roc-chev {
   top: 1px;
   right: -8px;
+  width: 21px;
+  height: 21px;
+  position: absolute;
   transform: scale(0);
   transition: transform 120ms;
 }

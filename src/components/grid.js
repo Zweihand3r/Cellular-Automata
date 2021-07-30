@@ -6,21 +6,27 @@ import { monoShade, getShade, setShades, updateShades, resetAges, updateAge } fr
 let gridW, gridH, size, brushSize
 let grid, neighbours, wrapEnabled
 let pCells, pOutOfBounds, pX, pY // pX, pY = Current preview cell coordinates
+let inverseBg, alphaBg, background, drawBackground, isClearCanvas // background = inverseBg + alphaBg
 
 
 /* --- Exports --- */
 
 const initGrid = () => {
   size = 5
-  brushSize = 1
+  brushSize = 25
   calculateDimensions()
 
   wrapEnabled = false
 
   grid = createRandom({ grid })
+  generateNeighbours(gridW, gridH)
+
+  alphaBg = '00'
+  background = inverseBg + alphaBg // inverseBg initialised in World init
   setShades({ shadeSeq: ['#ffffff'], grid })
 
-  generateNeighbours(gridW, gridH)
+  isClearCanvas = true
+  updateDrawBackground()
 }
 
 const updateGrid = () => {
@@ -44,7 +50,7 @@ const updateGrid = () => {
 }
 
 const drawGrid = (ctx) => {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  drawBackground(ctx)
   ctx.fillStyle = monoShade
   for (let yi = 0; yi < grid.length; yi++) {
     for (let xi = 0; xi < grid[yi].length; xi++) {
@@ -55,8 +61,20 @@ const drawGrid = (ctx) => {
   }
 }
 
+const drawInverse = (ctx) => {
+  ctx.fillStyle = inverseBg
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  for (let yi = 0; yi < grid.length; yi++) {
+    for (let xi = 0; xi < grid[yi].length; xi++) {
+      if (grid[yi][xi]) {
+        ctx.clearRect(xi * size, yi * size, size, size)
+      }
+    }
+  }
+}
+
 const drawShaded = (ctx) => {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  drawBackground(ctx)
   for (let yi = 0; yi < grid.length; yi++) {
     for (let xi = 0; xi < grid[yi].length; xi++) {
       if (grid[yi][xi]) {
@@ -68,7 +86,8 @@ const drawShaded = (ctx) => {
 }
 
 const drawShapes = (ctx) => {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  ctx.fillStyle = '#000000'
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.fillStyle = '#a2a2a2'
   for (let yi = 0; yi < grid.length; yi++) {
     for (let xi = 0; xi < grid[yi].length; xi++) {
@@ -136,8 +155,30 @@ const setFill = (fill, args) => {
   resetAges()
 }
 
+const setInvserseBg = invbg => {
+  inverseBg = invbg
+  background = inverseBg + alphaBg
+}
+
 const setShadeSeq = ({ shades, isLoop }) => {
   setShades({ shadeSeq: shades, isLoop, grid })
+}
+
+const setTrails = i => {
+  i = 255 - i
+  alphaBg = `${i < 16 ? '0' : ''}${i.toString(16)}`
+  background = inverseBg + alphaBg
+
+  if (i < 255) {
+    if (isClearCanvas) {
+      isClearCanvas = false
+      updateDrawBackground()
+    }
+  } else {
+    /* Cause you can hit 255 only once */
+    isClearCanvas = true
+    updateDrawBackground()
+  }
 }
 
 /* --- End Exports --- */
@@ -156,6 +197,15 @@ const calculateDimensions = () => {
   )
 
   console.log(`Calculated gridW: ${gridW}, gridH: ${gridH}`)
+}
+
+const updateDrawBackground = () => {
+  drawBackground = isClearCanvas ? ctx => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  } : ctx => {
+    ctx.fillStyle = background
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  }
 }
 
 const applyBrush = (x, y, b) => {
@@ -263,6 +313,6 @@ const checkBounds = (x, y) => x > -1 && y > -1 && x < gridW && y < gridH
 // createHelpers([])
 
 export { 
-  initGrid, updateGrid, drawGrid, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
-  setBrushSize, setSize, setupPreview, setFill, setGridWrap, setRule, setShadeSeq
+  initGrid, updateGrid, drawGrid, drawInverse, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
+  setBrushSize, setSize, setupPreview, setFill, setGridWrap, setRule, setShadeSeq, setInvserseBg, setTrails
 }

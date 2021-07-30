@@ -1,19 +1,25 @@
 import { useRef, useState, useEffect, useContext } from 'react'
 import { 
-  initGrid, updateGrid, drawGrid, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
-  setBrushSize, setSize, setupPreview, setFill, setRule, setGridWrap, setShadeSeq
+  initGrid, updateGrid, drawGrid, drawInverse, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
+  setBrushSize, setSize, setupPreview, setFill, setRule, setGridWrap, setShadeSeq, setInvserseBg, setTrails
 } from './grid.js'
 
 import Controls from './controls/Controls'
 import { Context } from '../context/Context'
 
+let ctx
+let ctxbg, background
+
 let speed = 4, drawSpeed = speed
-let isBrushDown = false, isAgeShades = false, isShapeShades = false
+let isBrushDown = false, isInverseDraw = false, isAgeShades = false, isShapeShades = false
 
 const World = (props) => {
   const [fps, setFps] = useState(0)
   const [showFps, setShowFps] = useState(false)
+  const [bgImgSrc, setBgImgSrc] = useState('')
+
   const canvasRef = useRef(null)
+  const canvasbgRef = useRef(null)
   
   const { setDimensions } = useContext(Context)
 
@@ -22,9 +28,18 @@ const World = (props) => {
     setDimensions(gridW, gridH)
   }
 
+  const setBgImage = src => {
+    if (src) {
+      setBgImgSrc(src)
+      setupImageBackground()
+    }
+  }
+
   useEffect(() => {
     const canvas = canvasRef.current
+    const canvasBg = canvasbgRef.current
     const context = canvas.getContext('2d')
+    const contextBg = canvasBg.getContext('2d')
 
     const startTime = Date.now()
     let findex, animationFrameId, fLogIndex, fLogTime
@@ -36,6 +51,13 @@ const World = (props) => {
 
       canvas.setAttribute('width', window.innerWidth)
       canvas.setAttribute('height', window.innerHeight)
+
+      canvasBg.setAttribute('width', window.innerWidth)
+      canvasBg.setAttribute('height', window.innerHeight)
+
+      ctx = context
+      ctxbg = contextBg
+      setBackground('#000000')
     }
 
     const render = () => {
@@ -71,7 +93,11 @@ const World = (props) => {
 
   return (
     <div className='world'>
+      <img className='bg-img' src={bgImgSrc} />
+
+      <canvas ref={canvasbgRef} {...props} />
       <canvas ref={canvasRef} {...props} />
+
       {showFps ? <div className='fpsCounter'>{fps}</div> : <div />}
 
       <Controls
@@ -85,9 +111,14 @@ const World = (props) => {
         onPreviewStart={startPreview}
         onPreviewEnd={endPreview}
         onFillSelect={setFill}
+        onClear={clear}
         onRuleSelect={setRule}
         onWrapChanged={setGridWrap}
+        onBgSelect={setBackground}
         onShadesSelect={shadesSelected}
+        onGradSelect={setGradient}
+        onImageSelect={setBgImage}
+        onTrailsChanged={setTrails}
 
         onSizeChanged={sizeChanged}
         onSpeedChanged={speedChanged}
@@ -109,9 +140,15 @@ const brushDownChanged = (_isBrushDown) => {
 }
 
 const shadesSelected = ({ shades, isLoop }) => {
+  if (isInverseDraw) {
+    isInverseDraw = false
+    updateBackground()
+  }
+
   isAgeShades = shades.length > 1
   setShadeSeq({ shades, isLoop })
   reconfigureDraw()
+  triggerDraw()
 }
 
 const speedChanged = (spd) => {
@@ -135,12 +172,61 @@ const previewConfig = ({ isStart }) => {
   reconfigureDraw()
 }
 
+const clear = () => {
+  /* Will clear both canvas and grid */
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  setFill('clear')
+}
+
+/* --- BACKGROUND LAYER --- */
+
+const setBackground = bg => {
+  background = bg
+  setInvserseBg(bg)
+  
+  if (!isInverseDraw) {
+    updateBackground()
+  }
+}
+
+const setGradient = stops => {
+  initInverseDraw()
+
+  const grad = ctxbg.createLinearGradient(0, 0, ctxbg.canvas.width, 0)
+  grad.addColorStop(0, stops[0])
+  grad.addColorStop(1, stops[1])
+
+  ctxbg.fillStyle = grad
+  ctxbg.fillRect(0, 0, ctxbg.canvas.width, ctxbg.canvas.height)
+}
+
+const setupImageBackground = () => {
+  initInverseDraw()
+  ctxbg.clearRect(0, 0, ctxbg.canvas.width, ctxbg.canvas.height)
+}
+
+const updateBackground = () => {
+  ctxbg.fillStyle = background
+  ctxbg.fillRect(0, 0, ctxbg.canvas.width, ctxbg.canvas.height)
+}
+
+const initInverseDraw = () => {
+  if (!isInverseDraw) {
+    isInverseDraw = true
+    isAgeShades = false
+    reconfigureDraw()
+    triggerDraw()
+  }
+}
+
 
 /* --- EXT FUNCTIONS --- */
 
 const initExt = () => {
   initGrid()
 }
+
+const triggerDraw = () => draw(ctx, drawSpeed)
 
 /* - UPDATE - */
 
@@ -156,6 +242,7 @@ let update = _update
 
 const reconfigureDraw = () => {
   if (isShapeShades) _draw = drawShapes
+  else if (isInverseDraw) _draw = drawInverse
   else if (isAgeShades) _draw = drawShaded
   else _draw = drawGrid
 

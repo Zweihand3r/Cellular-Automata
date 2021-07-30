@@ -117,10 +117,11 @@ const Rules = ({ unhide, animDelay, onClick, onRightClick, onHoverChanged }) => 
   )
 }
 
-const Colors = ({ unhide, animDelay, onClick, onHoverChanged }) => {
+const Colors = ({ unhide, animDelay, onClick, onRightClick, onHoverChanged }) => {
   return (
     <QaButton 
       onClick={onClick} 
+      onRightClick={onRightClick}
       unhide={unhide} 
       animDelay={animDelay} 
       onHoverChanged={onHoverChanged}
