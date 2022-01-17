@@ -29,6 +29,15 @@ const initGrid = () => {
   updateDrawBackground()
 }
 
+const reInitGrid = () => {
+  calculateDimensions()
+  grid = reCreateGrid({ grid })
+  updateShades({ grid })
+  generateNeighbours(gridW, gridH)
+
+  return { gridW, gridH }
+}
+
 const updateGrid = () => {
   let isAlive
   const pop = []
@@ -130,10 +139,7 @@ const preview = (x, y) => {
 const setSize = (sz) => {
   if (sz !== size) {
     size = sz
-    calculateDimensions()
-    grid = reCreateGrid({ grid })
-    updateShades({ grid })
-    generateNeighbours(gridW, gridH)
+    reInitGrid()
   }
 
   return { gridW, gridH }
@@ -155,7 +161,7 @@ const setFill = (fill, args) => {
   resetAges()
 }
 
-const setInvserseBg = invbg => {
+const setInverseBg = invbg => {
   inverseBg = invbg
   background = inverseBg + alphaBg
 }
@@ -313,6 +319,6 @@ const checkBounds = (x, y) => x > -1 && y > -1 && x < gridW && y < gridH
 // createHelpers([])
 
 export { 
-  initGrid, updateGrid, drawGrid, drawInverse, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
-  setBrushSize, setSize, setupPreview, setFill, setGridWrap, setRule, setShadeSeq, setInvserseBg, setTrails
+  initGrid, reInitGrid, updateGrid, drawGrid, drawInverse, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
+  setBrushSize, setSize, setupPreview, setFill, setGridWrap, setRule, setShadeSeq, setInverseBg, setTrails
 }

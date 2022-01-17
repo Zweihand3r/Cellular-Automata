@@ -1,22 +1,24 @@
 import { useRef, useState, useEffect, useContext } from 'react'
 import { 
   initGrid, updateGrid, drawGrid, drawInverse, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,
-  setBrushSize, setSize, setupPreview, setFill, setRule, setGridWrap, setShadeSeq, setInvserseBg, setTrails
+  setBrushSize, setSize, setupPreview, setFill, setRule, setGridWrap, setShadeSeq, setInverseBg, setTrails, reInitGrid
 } from './grid.js'
 
 import Controls from './controls/Controls'
 import { Context } from '../context/Context'
+import Resizer from './resizer/Resizer.js'
 
 let ctx
-let ctxbg, background
+let ctxbg, background, gradientStops
 
 let speed = 4, drawSpeed = speed
-let isBrushDown = false, isInverseDraw = false, isAgeShades = false, isShapeShades = false
+let isBrushDown = false, isInverseDraw = false, isAgeShades = false, isInverseImage = false, isShapeShades = false
 
 const World = (props) => {
   const [fps, setFps] = useState(0)
   const [showFps, setShowFps] = useState(false)
   const [bgImgSrc, setBgImgSrc] = useState('')
+  const [isResizing, setIsResizing] = useState(false)
 
   const canvasRef = useRef(null)
   const canvasbgRef = useRef(null)
@@ -30,16 +32,42 @@ const World = (props) => {
 
   const setBgImage = src => {
     if (src) {
+      isInverseImage = true
       setBgImgSrc(src)
       setupImageBackground()
     }
   }
 
-  useEffect(() => {
+  const windowResized = (_isResizing) => {
+    if (_isResizing !== isResizing) {
+      setIsResizing(_isResizing)
+      isPlayingChanged(!_isResizing)
+
+      if (!_isResizing) {
+        /* Resizing finished */
+        
+        updateCanvasSize()
+        resizeBgRedraw()
+        
+        const { gridW, gridH } = reInitGrid()
+        setDimensions(gridW, gridH)
+      }
+    }
+  }
+
+  const updateCanvasSize = () => {
     const canvas = canvasRef.current
     const canvasBg = canvasbgRef.current
-    const context = canvas.getContext('2d')
-    const contextBg = canvasBg.getContext('2d')
+
+    canvas.setAttribute('width', window.innerWidth)
+    canvas.setAttribute('height', window.innerHeight)
+    canvasBg.setAttribute('width', window.innerWidth)
+    canvasBg.setAttribute('height', window.innerHeight)
+  }
+
+  useEffect(() => {
+    const context = canvasRef.current.getContext('2d')
+    const contextBg = canvasbgRef.current.getContext('2d')
 
     const startTime = Date.now()
     let findex, animationFrameId, fLogIndex, fLogTime
@@ -49,14 +77,10 @@ const World = (props) => {
       fLogIndex = 0
       fLogTime = startTime
 
-      canvas.setAttribute('width', window.innerWidth)
-      canvas.setAttribute('height', window.innerHeight)
-
-      canvasBg.setAttribute('width', window.innerWidth)
-      canvasBg.setAttribute('height', window.innerHeight)
-
       ctx = context
       ctxbg = contextBg
+
+      updateCanvasSize()
       setBackground('#000000')
     }
 
@@ -124,6 +148,8 @@ const World = (props) => {
         onSpeedChanged={speedChanged}
         onBrushChanged={setBrushSize}
       />
+
+      <Resizer isResizing={isResizing} onResizing={windowResized} />
     </div>
   )
 }
@@ -182,7 +208,7 @@ const clear = () => {
 
 const setBackground = bg => {
   background = bg
-  setInvserseBg(bg)
+  setInverseBg(bg)
   
   if (!isInverseDraw) {
     updateBackground()
@@ -190,14 +216,10 @@ const setBackground = bg => {
 }
 
 const setGradient = stops => {
+  isInverseImage = false
+  gradientStops = stops
   initInverseDraw()
-
-  const grad = ctxbg.createLinearGradient(0, 0, ctxbg.canvas.width, 0)
-  grad.addColorStop(0, stops[0])
-  grad.addColorStop(1, stops[1])
-
-  ctxbg.fillStyle = grad
-  ctxbg.fillRect(0, 0, ctxbg.canvas.width, ctxbg.canvas.height)
+  applyGradient()
 }
 
 const setupImageBackground = () => {
@@ -210,12 +232,31 @@ const updateBackground = () => {
   ctxbg.fillRect(0, 0, ctxbg.canvas.width, ctxbg.canvas.height)
 }
 
+const applyGradient = () => {
+  const grad = ctxbg.createLinearGradient(0, 0, ctxbg.canvas.width, 0)
+  grad.addColorStop(0, gradientStops[0])
+  grad.addColorStop(1, gradientStops[1])
+
+  ctxbg.fillStyle = grad
+  ctxbg.fillRect(0, 0, ctxbg.canvas.width, ctxbg.canvas.height)
+}
+
 const initInverseDraw = () => {
   if (!isInverseDraw) {
     isInverseDraw = true
     isAgeShades = false
     reconfigureDraw()
     triggerDraw()
+  }
+}
+
+const resizeBgRedraw = () => {
+  if (isInverseDraw) {
+    if (isInverseImage) {
+      setupImageBackground()
+    } else applyGradient()
+  } else {
+    updateBackground()
   }
 }
 

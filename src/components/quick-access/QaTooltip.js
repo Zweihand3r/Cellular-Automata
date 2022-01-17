@@ -1,6 +1,5 @@
-const startX = (window.innerWidth - 324) / 2
-
 const QaTooltip = ({ vis, index }) => {
+  const startX = (window.innerWidth - 324) / 2
   const midX = startX + 8 + (44 * index) + 22
   const path = `M ${midX - 12} 8 L ${midX} 0 L ${midX + 12} 8`
   const msgConStyle = { left: midX }
