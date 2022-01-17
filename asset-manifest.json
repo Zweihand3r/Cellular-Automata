@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/Cellular-Automata/static/css/main.dd32cd26.chunk.css",
-    "main.js": "/Cellular-Automata/static/js/main.4b26cef1.chunk.js",
-    "main.js.map": "/Cellular-Automata/static/js/main.4b26cef1.chunk.js.map",
-    "runtime-main.js": "/Cellular-Automata/static/js/runtime-main.9837b0a1.js",
-    "runtime-main.js.map": "/Cellular-Automata/static/js/runtime-main.9837b0a1.js.map",
-    "static/js/2.a26e134d.chunk.js": "/Cellular-Automata/static/js/2.a26e134d.chunk.js",
-    "static/js/2.a26e134d.chunk.js.map": "/Cellular-Automata/static/js/2.a26e134d.chunk.js.map",
-    "static/js/3.050ba4d1.chunk.js": "/Cellular-Automata/static/js/3.050ba4d1.chunk.js",
-    "static/js/3.050ba4d1.chunk.js.map": "/Cellular-Automata/static/js/3.050ba4d1.chunk.js.map",
+    "main.css": "/Cellular-Automata/static/css/main.3bca5e90.chunk.css",
+    "main.js": "/Cellular-Automata/static/js/main.494013a9.chunk.js",
+    "main.js.map": "/Cellular-Automata/static/js/main.494013a9.chunk.js.map",
+    "runtime-main.js": "/Cellular-Automata/static/js/runtime-main.0fbed81a.js",
+    "runtime-main.js.map": "/Cellular-Automata/static/js/runtime-main.0fbed81a.js.map",
+    "static/js/2.4ea2efaf.chunk.js": "/Cellular-Automata/static/js/2.4ea2efaf.chunk.js",
+    "static/js/2.4ea2efaf.chunk.js.map": "/Cellular-Automata/static/js/2.4ea2efaf.chunk.js.map",
+    "static/js/3.37eba071.chunk.js": "/Cellular-Automata/static/js/3.37eba071.chunk.js",
+    "static/js/3.37eba071.chunk.js.map": "/Cellular-Automata/static/js/3.37eba071.chunk.js.map",
     "index.html": "/Cellular-Automata/index.html",
-    "static/css/main.dd32cd26.chunk.css.map": "/Cellular-Automata/static/css/main.dd32cd26.chunk.css.map",
-    "static/js/2.a26e134d.chunk.js.LICENSE.txt": "/Cellular-Automata/static/js/2.a26e134d.chunk.js.LICENSE.txt"
+    "static/css/main.3bca5e90.chunk.css.map": "/Cellular-Automata/static/css/main.3bca5e90.chunk.css.map",
+    "static/js/2.4ea2efaf.chunk.js.LICENSE.txt": "/Cellular-Automata/static/js/2.4ea2efaf.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.9837b0a1.js",
-    "static/js/2.a26e134d.chunk.js",
-    "static/css/main.dd32cd26.chunk.css",
-    "static/js/main.4b26cef1.chunk.js"
+    "static/js/runtime-main.0fbed81a.js",
+    "static/js/2.4ea2efaf.chunk.js",
+    "static/css/main.3bca5e90.chunk.css",
+    "static/js/main.494013a9.chunk.js"
   ]
 }
