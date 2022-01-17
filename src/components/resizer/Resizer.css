@@ -3,3 +3,15 @@
   color: #fff;
   background-color: #000;
 }
+
+.resizer-icon {
+  width: 44px;
+  height: 44px;
+  animation: blink 720ms linear 0ms infinite normal forwards;
+}
+
+@keyframes blink {
+  0% { opacity: 0.25; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.25); }
+  100% { opacity: 0.25; transform: scale(1); }
+}

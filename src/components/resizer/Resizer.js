@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { GiResize } from "react-icons/gi"
 import './Resizer.css'
 
-const COUNTDOWN_MAX = 3
+const COUNTDOWN_MAX = 1
 let timer
 
 const Resizer = ({ isResizing, onResizing }) => {
@@ -36,7 +37,7 @@ const Resizer = ({ isResizing, onResizing }) => {
   if (isResizing) {
     return (
       <div className='resizer-base fill'>
-        Resizing window. Recreating grid in {countdown} seconds
+        <GiResize className='resizer-icon center' />
       </div>
     )
   } else {
