@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { IoMdCloseCircle } from 'react-icons/io'
 
 let liveValue = 0
-const offsetX = window.innerWidth / 2 - 162
 
 const QaSlider = ({ unhide, icon, value, range, onChange, onDismiss }) => {
+  const offsetX = window.innerWidth / 2 - 162
+  
   const [trackX, setTrackX] = useState(150)
   const [isPressed, setIsPressed] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
