@@ -167,14 +167,20 @@ const cross = (args = [0, 0, bX, bY]) => {
   const grid = create2dArray(() => 0)
   for (let xi = 0; xi < bX; xi++) {
     for (let hi = 0; hi < h; hi++) {
-      grid[ystart + hi][xi] = 1
+      if (ystart + hi < bY) {
+        grid[ystart + hi][xi] = 1
+      }
     }
   }
   for (let yi = 0; yi < bY; yi++) {
     for (let wi = 0; wi < w; wi++) {
-      grid[yi][xstart + wi] = 1
+      if (xstart + wi < bX) {
+        grid[yi][xstart + wi] = 1
+      }
     }
   }
+  const width = grid[0].length
+  const height = grid.length
   return grid
 }
 

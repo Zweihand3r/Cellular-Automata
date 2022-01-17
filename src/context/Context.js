@@ -64,8 +64,8 @@ const constructFillers = () => {
       { name: 'Height', init: 4, range: [1, Math.floor(gridH / 2)] }
     ]},
     { name: 'Cross', fill: 'cross', config: [
-      { name: 'X Offset', init: 0, range: [-gridW / 2, gridW / 2] }, 
-      { name: 'Y Offset', init: 0, range: [-gridH / 2, gridH / 2] }, 
+      { name: 'X Offset', init: 0, range: [-gridW / 2, gridW / 2 - (1 - gridW % 2)] }, // -1 if gridW is even
+      { name: 'Y Offset', init: 0, range: [-gridH / 2, gridH / 2 - (1 - gridH % 2)] }, 
       { name: 'Width', init: 1, range: [1, gridW / 2] }, 
       { name: 'Height', init: 1, range: [1, gridW / 2] }, 
     ]},
