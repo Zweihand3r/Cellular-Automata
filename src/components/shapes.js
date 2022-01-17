@@ -179,8 +179,6 @@ const cross = (args = [0, 0, bX, bY]) => {
       }
     }
   }
-  const width = grid[0].length
-  const height = grid.length
   return grid
 }
 
