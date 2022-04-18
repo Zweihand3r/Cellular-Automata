@@ -117,7 +117,7 @@ const World = (props) => {
 
   return (
     <div className='world'>
-      <img className='bg-img' src={bgImgSrc} />
+      <img className='bg-img' src={bgImgSrc} alt="Background" />
 
       <canvas ref={canvasbgRef} {...props} />
       <canvas ref={canvasRef} {...props} />
