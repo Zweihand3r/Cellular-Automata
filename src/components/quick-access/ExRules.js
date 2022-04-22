@@ -1,8 +1,10 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useCallback } from 'react'
 import { FiChevronRight } from 'react-icons/fi'
 
 import { Context } from '../../context/Context'
 import { ExCon, ExSubTitle, ExCheckbox } from './ex-comps'
+
+let isKeyModeSurvival = false
 
 const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }) => {
   const { rules } = useContext(Context)
@@ -14,7 +16,7 @@ const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }
     transform: `translateX(${pindex * -324}px)`
   }
 
-  const updateActiveRule = ({ b, s, ari }) => {
+  const updateActiveRule = useCallback(({ b, s, ari }) => {
     let selectedRule = {...activeRule}
     if (ari > -1) {
       if (ari !== arIndex) {
@@ -40,7 +42,65 @@ const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }
     }
     setActiveRule(selectedRule)
     onSelect(selectedRule)
-  }
+  }, [activeRule, arIndex, onSelect, rules])
+
+  useEffect(() => {
+    const keyListener = e => {
+      switch (e.key) {
+        case "b": isKeyModeSurvival = 0; break
+        case "s": isKeyModeSurvival = 1; break
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8": 
+          const { b, s } = activeRule
+          if (isKeyModeSurvival) {
+            const sarr = s.split("")
+            const si = sarr.indexOf(e.key)
+            if (si > -1) {
+              sarr.splice(si, 1)
+            } else {
+              sarr.push(e.key)
+            }
+            const _s = sarr.sort().join("")
+            updateActiveRule({ b, s: _s, ari: -1 })
+          } else {
+            const barr = b.split("")
+            const bi = barr.indexOf(e.key)
+            if (bi > -1) {
+              barr.splice(bi, 1)
+            } else {
+              barr.push(e.key)
+            }
+            const _b = barr.sort().join("")
+            updateActiveRule({ b: _b, s, ari: -1 })
+          }
+          break
+        default:
+          if (e.keyCode === 38) {
+            if (arIndex > 0) {
+              updateActiveRule({ ari: arIndex - 1 })
+            }
+          } else if (e.keyCode === 40) {
+            if (arIndex < rules.length - 1) {
+              updateActiveRule({ ari: arIndex + 1 })
+            }
+          }
+          break
+      }
+    }
+
+    document.body.addEventListener("keydown", keyListener)
+
+    return () => {
+      document.body.removeEventListener("keydown", keyListener)
+    }
+  }, [updateActiveRule])
 
   return (
     <ExCon title='Rules' isCurrent={isCurrent}>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 import QuickAccess from '../quick-access/QuickAccess'
 import MouseReceiver from '../receivers/MouseReceiver'
@@ -53,27 +53,40 @@ const Controls = ({
     }
   }
 
-  const updateQaMinimised = (qaMinimised) => {
+  const updateQaMinimised = useCallback((qaMinimised) => {
     if (qaMinimised) {
       const inState = qaState.exp ? 'ex' : 'in'
       setQaState({ ...qaState, prev: inState, next: 'min', min: true, exp: false })
     } else {
-      setQaState({ ...qaState, prev: 'min', next: 'in', min: false })
-      endPreviewIfIsPainting()
+      const outState = isPainting ? 'ex' : 'in'
+      setQaState({ ...qaState, prev: 'min', next: outState, min: false, exp: isPainting })
+      
+      // End preview if Painting
+      if (isPainting) {
+        setIsPainting(false)
+        onPreviewEnd()
+      }
     }
-  }
+  }, [isPainting, onPreviewEnd, qaState])
 
   const updateToggleState = (value, setter, event) => {
     setter(value)
     event(value)
   }
 
-  const updateIsPlaying = () => updateToggleState(!isPlaying, setIsPlaying, onIsPlayingChanged)
+  const updateIsPlaying = useCallback(
+    () => updateToggleState(!isPlaying, setIsPlaying, onIsPlayingChanged), 
+    [isPlaying, onIsPlayingChanged]
+  )
+
   const updateIsDrawing = () => updateToggleState(!isDrawing, setIsDrawing, () => {})
 
   const mouseMove = () => {
-    /* Maybe do it a different way. This just seems like cheating */
-    if (!(qaState.exp || qaState.slide)) {
+    /* 
+     * Maybe do it a different way. This just seems like cheating 
+     * qaState.min is always true when isPainting is true so no need to add it as a condition
+     */
+    if (!(qaState.exp || qaState.slide || isPainting)) {
       if (qaState.hide) {
         if (qaEnabled) {
           updateQaHidden(false)
@@ -91,7 +104,7 @@ const Controls = ({
 
   const qaHoverChanged = (hovered) => {
     if (hovered) clearTimeout(hideTimeoutIndex)
-    else if (!(qaState.exp || qaState.slide)) {
+    else if (!(qaState.exp || qaState.slide || isPainting)) {
       if (qaEnabled) {
         hideTimeoutIndex = setTimeout(() => updateQaHidden(true), 5000)
       }
@@ -125,18 +138,32 @@ const Controls = ({
     onPreviewStart(shape)
   }
 
-  const endPreviewIfIsPainting = () => {
-    if (isPainting) {
-      setIsPainting(false)
-      onPreviewEnd()
-    }
-  }
-
   useEffect(() => {
     mouseMoveIndex = 0
-  }, [])
 
-  const { prev, next, hide, exp, slide, min } = qaState
+    const escPressed = () => {
+      if (qaState.min) {
+        updateQaMinimised()
+      } 
+    }
+
+    const keyListener = e => {
+      console.log(e.keyCode)
+      switch (e.keyCode) {
+        case 27: escPressed(); break
+        case 32: updateIsPlaying(); break
+        case 67: onClear(); break
+        case 70: document.body.requestFullscreen(); break
+        default: break
+      }
+    }
+
+    document.body.addEventListener("keydown", keyListener)
+
+    return () => {
+      document.body.removeEventListener("keydown", keyListener)
+    }
+  }, [onClear, qaState.min, updateIsPlaying, updateQaMinimised])
 
   return (
     <div className='controls-base'>
@@ -153,11 +180,11 @@ const Controls = ({
       />
 
       <QuickAccess
-        animId={`${prev}2${next}`}
-        qaHidden={hide}
-        qaExpanded={exp}
-        qaMinimised={min}
-        qaSlider={slide}
+        animId={`${qaState.prev}2${qaState.next}`}
+        qaHidden={qaState.hide}
+        qaExpanded={qaState.exp}
+        qaMinimised={qaState.min}
+        qaSlider={qaState.slide}
         isPlaying={isPlaying}
         isDrawing={isDrawing}
         onQaHoverChanged={qaHoverChanged}

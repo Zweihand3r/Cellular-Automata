@@ -65,6 +65,10 @@
   animation: ex2min-anim 480ms ease-in 0ms 1 normal forwards
 }
 
+.base-min2ex {
+  animation: min2ex-anim 480ms ease-out 0ms 1 normal forwards
+}
+
 .con {
   width: 324px;
   height: 44px;
@@ -129,6 +133,16 @@
     width: 44px; height: 44px; border-radius: 50%; 
     transform: scale(.35); border-width: 4px; box-sizing: border-box; 
   }
+}
+
+@keyframes min2ex-anim {
+  0% { 
+    width: 44px; height: 44px; border-radius: 50%; 
+    transform: scale(.35); border-width: 4px; box-sizing: border-box; 
+  }
+  50% { width: 44px; height: 44px; transform: scale(1) }
+  /* 75% { width: 324px; height: 324px } */
+  100% { width: 324px; height: 444px; }
 }
 
 /* --- qa-buttons --- */
@@ -350,6 +364,10 @@
 
 .ex-base-ex2min {
   animation: ex-ex2in-anim 120ms ease-in 0ms 1 normal forwards;
+}
+
+.ex-base-min2ex {
+  animation: ex-in2ex-anim 240ms ease-in 300ms 1 normal forwards;
 }
 
 .ex-indic {

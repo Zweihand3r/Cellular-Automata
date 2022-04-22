@@ -1,7 +1,7 @@
 import { BsChevronLeft } from 'react-icons/bs'
 
 import { ExIndicator } from './ex-comps'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Play, Draw, Speed, Shapes, Rules, Colors, Close,
   BrushIcon, GridIcon, SpeedIcon 
@@ -18,21 +18,24 @@ import './quick-access.css'
 /* 
 TODO: 
 0. OPTIMIZE CANVAS (Google how to)
-1. Fix palette first cell delete when second cell is step cell (*)
-2. Add border-radius to palette cells. (**) tried but not possible to add border radius to border image
-3. Implement textfields of palette cells (*)
+1. * Fix palette first cell delete when second cell is step cell 
+2. ** Add border-radius to palette cells. (* tried but not possible to add border radius to border image *)
+3. * Implement textfields of palette cells 
 4. Add limits to palette cells
 5. Add Next as right click of Play/Pause
-6. Add wrap to grid (*)
+6. * Add wrap to grid 
 7. Add trailing palette (Start palette once cell dies to black)
 6. Divide grid into different rules
   a. Add different colors for different rules
-7. Add background image / gradient and alive cells are transparent / dead cells are black (better perormance) (*)
-8. Option to 'Keep' earlier iterations in grid (Dont clear canvas) (*)
-  a. Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;) (*)
+7. * Add background image / gradient and alive cells are transparent / dead cells are black (better perormance) 
+8. * Option to 'Keep' earlier iterations in grid (Dont clear canvas) 
+  a. * Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;) 
 9. Add X, Y offsets to all fillers (like Cross)
 10. Replace LMB and RMB with icons
 11. Improve cross browser compatibility with line-height: 1 (see md-con and children in palette.css)
+12. Add rotate on right mouse click to placable patterns
+13. ** Add fullscreen (* Done only on keypress *)
+14. Add notifications on key pressess
 */
 
 let sliderValue = 0
@@ -53,6 +56,7 @@ const QuickAccess = ({
   const [tipVis, setTipVis] = useState(false)
   const [backVis, setBackVis] = useState(false)
   const [exPindices, setExPindices] = useState([0, 0, 0, 0, 0, 0])
+  const [, setPhantomUpdateIndex] = useState(0)
 
   const qaExAction = (index, pindex = 0) => {
     if (!qaExpanded) {
@@ -104,6 +108,7 @@ const QuickAccess = ({
     switch (slideId) {
       case 'speed': onSpeedChanged(value); break
       case 'brush': onBrushChanged(value); break
+      default: break
     }
   }
 
@@ -111,6 +116,34 @@ const QuickAccess = ({
     setTipVis(hovered)
     if (hovered) setTipIndex(index)
   }
+
+  const phantomUpdate = _ => {
+    setPhantomUpdateIndex(ps => ps + 1)
+  }
+
+  useEffect(() => {
+    const keyListener = e => {
+      let speed = sdat['speed'].value
+      const [speedLower, speedUpper] = sdat['speed'].range
+      if (e.keyCode === 37 && speed > speedLower) {
+        speed -= 1
+      } else if (e.keyCode === 39 && speed < speedUpper) {
+        speed += 1
+      }
+      sdat['speed'].value = speed
+      onSpeedChanged(speed)
+
+      if (slideId === "speed") {
+        phantomUpdate()
+      }
+    }
+
+    document.body.addEventListener("keydown", keyListener)
+
+    return () => {
+      document.body.removeEventListener("keydown", keyListener) 
+    }
+  }, [onSpeedChanged, slideId])
 
   const animdelays = animdelaysJson[animId]
   const unhide = !qaHidden && !qaSlider && !qaMinimised
@@ -243,6 +276,7 @@ const animdelaysJson = {
   'ex2in': [0, 0, 0, 0, 0, 0, 0],
   'ex2sl': [0, 0, 0, 0, 0, 0, 0],
   'ex2min': [0, 0, 0, 0, 0, 0, 0],
+  'min2ex': [280, 320, 360, 400, 440, 480, 520],
   'sl2in': [240, 200, 160, 120, 80, 40, 240],
   'in2sl': [0, 0, 0, 0, 0, 0, 0]
 }
