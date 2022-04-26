@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useContext } from 'react'
 
+import { NotificationContext } from '../../context/NotificationContext'
 import QuickAccess from '../quick-access/QuickAccess'
 import MouseReceiver from '../receivers/MouseReceiver'
 
@@ -16,6 +17,8 @@ const Controls = ({
 
   onBrushChanged, onSizeChanged, onSpeedChanged
 }) => {
+  const { showNotification } = useContext(NotificationContext)
+
   const [qaState, setQaState] = useState({
     prev: 'out', next: 'in', hide: false, exp: false, slide: false, min: false
   })
@@ -136,24 +139,35 @@ const Controls = ({
     setIsPainting(true)
     updateQaMinimised(true)
     onPreviewStart(shape)
+    showNotification(
+      (<span>
+        Left click to place pattern on grid. For best results clear the grid (shortcut: C)<br/>
+        Click on the small circle at the bottom or press Esc to go back to pattern list
+      </span>), 10
+    )
   }
 
   useEffect(() => {
     mouseMoveIndex = 0
 
-    const escPressed = () => {
-      if (qaState.min) {
-        updateQaMinimised()
-      } 
-    }
-
     const keyListener = e => {
-      console.log(e.keyCode)
+      console.log(`keydown with code ${e.keyCode}`)
       switch (e.keyCode) {
-        case 27: escPressed(); break
+        case 27: 
+          if (qaState.min) {
+            updateQaMinimised()
+          } 
+          break
         case 32: updateIsPlaying(); break
-        case 67: onClear(); break
+        case 67: 
+          onClear()
+          showNotification('Grid cleared')
+          break
         case 70: document.body.requestFullscreen(); break
+        case 73:
+          onFillSelect('invert')
+          showNotification('Grid inverted')
+          break
         default: break
       }
     }

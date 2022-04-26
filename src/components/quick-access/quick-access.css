@@ -141,7 +141,6 @@
     transform: scale(.35); border-width: 4px; box-sizing: border-box; 
   }
   50% { width: 44px; height: 44px; transform: scale(1) }
-  /* 75% { width: 324px; height: 324px } */
   100% { width: 324px; height: 444px; }
 }
 

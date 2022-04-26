@@ -5,7 +5,7 @@ import {
 } from './grid.js'
 
 import Controls from './controls/Controls'
-import { Context } from '../context/Context'
+import { DataContext } from '../context/DataContext'
 import Resizer from './resizer/Resizer.js'
 
 let ctx
@@ -23,7 +23,7 @@ const World = (props) => {
   const canvasRef = useRef(null)
   const canvasbgRef = useRef(null)
   
-  const { setDimensions } = useContext(Context)
+  const { setDimensions } = useContext(DataContext)
 
   const sizeChanged = size => {
     const { gridW, gridH } = setSize(size)

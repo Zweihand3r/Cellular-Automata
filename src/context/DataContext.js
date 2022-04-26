@@ -81,9 +81,9 @@ const constructFillers = () => {
 const fillers = constructFillers()
 
 const contextState = { gridW, gridH, rules, shapes, fillers }
-const Context = createContext(contextState)
+const DataContext = createContext(contextState)
 
-const Provider = ({ children }) => {
+const DataProvider = ({ children }) => {
   const [state, setState] = useState(contextState)
 
   const setDimensions = (_gridW, _gridH) => {
@@ -92,10 +92,10 @@ const Provider = ({ children }) => {
   }
 
   return (
-    <Context.Provider value={{ ...state, setDimensions }}>
+    <DataContext.Provider value={{ ...state, setDimensions }}>
       {children}
-    </Context.Provider>
+    </DataContext.Provider>
   )
 }
 
-export { Context, Provider }
+export { DataContext, DataProvider }

@@ -1,6 +1,9 @@
 import { useRef, useEffect } from 'react'
 import { IoMdCheckboxOutline, IoMdSquareOutline } from 'react-icons/io'
 
+/* Need to adjust width if any changes to qa */
+const width = 324 * 2
+
 const ExCon = ({ title, isCurrent, children }) => {
   return (
     <div className={`ex-con ex-con-${isCurrent ? 'in' : 'out'}`}>
@@ -19,9 +22,6 @@ const ExCon = ({ title, isCurrent, children }) => {
 const ExIndicator = (props) => {
   const { selectedIndex } = props
   const canvasRef = useRef(null)
-
-  /* Need to adjust width if any changes to qa */
-  const width = 324 * 2
 
   const style = {
     width, left: (8 - width / 2 + 22) + (44 * selectedIndex)
@@ -43,10 +43,10 @@ const ExIndicator = (props) => {
     points.forEach(([x, y]) => ctx.lineTo(x, y))
     ctx.stroke()
 
-  }, [null])
+  }, [])
 
   return (
-    <canvas className='ex-indic' ref={canvasRef} style={style} className='ex-indic' />
+    <canvas className='ex-indic' ref={canvasRef} style={style} />
   )
 }
 

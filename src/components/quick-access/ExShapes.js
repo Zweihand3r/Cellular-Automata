@@ -2,13 +2,13 @@ import { HiOutlineAdjustments } from 'react-icons/hi'
 import { IoChevronUp } from 'react-icons/io5'
 
 import { useState, useEffect, useRef, useContext } from 'react'
-import { Context } from '../../context/Context'
+import { DataContext } from '../../context/DataContext'
 
 import { ExCon, ExSubTitle } from './ex-comps'
 
 const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onClear, onSliding }) => {
   const [isShapes, setIsShapes] = useState(true)
-  const { shapes, fillers } = useContext(Context)
+  const { shapes, fillers } = useContext(DataContext)
 
   const className = `shape-con ${isShapes ? '' : 'shape-up'}`
 

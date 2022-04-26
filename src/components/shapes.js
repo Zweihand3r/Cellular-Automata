@@ -60,6 +60,7 @@ const constructGrid = (fill, grid, args) => {
     case 'cross': return cross(args)
     case 'mesh': return mesh(args)
     case 'wraplines': return wraplines(args)
+    default: break
   }
 }
 

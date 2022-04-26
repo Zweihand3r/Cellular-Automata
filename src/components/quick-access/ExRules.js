@@ -1,13 +1,16 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
 import { FiChevronRight } from 'react-icons/fi'
 
-import { Context } from '../../context/Context'
+import { DataContext } from '../../context/DataContext'
+import { NotificationContext } from '../../context/NotificationContext'
+import { RuleNotification } from '../notifications/Notifications'
 import { ExCon, ExSubTitle, ExCheckbox } from './ex-comps'
 
 let isKeyModeSurvival = false
 
 const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }) => {
-  const { rules } = useContext(Context)
+  const { rules } = useContext(DataContext)
+  const { showNotification } = useContext(NotificationContext)
 
   const [arIndex, setArIndex] = useState(0)
   const [activeRule, setActiveRule] = useState(rules[arIndex]) // Conway's Life
@@ -46,9 +49,16 @@ const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }
 
   useEffect(() => {
     const keyListener = e => {
+      const { b, s } = activeRule
       switch (e.key) {
-        case "b": isKeyModeSurvival = 0; break
-        case "s": isKeyModeSurvival = 1; break
+        case "b": 
+          isKeyModeSurvival = 0
+          showNotification(<RuleNotification b={b} s={s} highlightS={false} />)
+          break
+        case "s":
+          isKeyModeSurvival = 1
+          showNotification(<RuleNotification b={b} s={s} highlightS={true} />)
+          break
         case "0":
         case "1":
         case "2":
@@ -58,7 +68,6 @@ const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }
         case "6":
         case "7":
         case "8": 
-          const { b, s } = activeRule
           if (isKeyModeSurvival) {
             const sarr = s.split("")
             const si = sarr.indexOf(e.key)
@@ -69,6 +78,7 @@ const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }
             }
             const _s = sarr.sort().join("")
             updateActiveRule({ b, s: _s, ari: -1 })
+            showNotification(<RuleNotification b={b} s={_s} highlightS={true} />)
           } else {
             const barr = b.split("")
             const bi = barr.indexOf(e.key)
@@ -79,16 +89,19 @@ const ExRules = ({ isCurrent, pindex, onSelect, onWrapChanged, onPindexChanged }
             }
             const _b = barr.sort().join("")
             updateActiveRule({ b: _b, s, ari: -1 })
+            showNotification(<RuleNotification b={_b} s={s} highlightS={false} />)
           }
           break
         default:
           if (e.keyCode === 38) {
             if (arIndex > 0) {
               updateActiveRule({ ari: arIndex - 1 })
+              showNotification(rules[arIndex - 1].name)
             }
           } else if (e.keyCode === 40) {
             if (arIndex < rules.length - 1) {
               updateActiveRule({ ari: arIndex + 1 })
+              showNotification(rules[arIndex + 1].name)
             }
           }
           break
