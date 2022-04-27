@@ -128,14 +128,6 @@ const QuickAccess = ({
     }
   }, [onSpeedChanged, slideId])
 
-  useEffect(() => {
-    if (isDrawing) {
-      showNotification(<span>Brush Enabled<br/>Press left mouse button to draw and right mouse button to erase on the grid.</span>)
-    } else {
-      showNotification("Brush Disabled")
-    }
-  }, [isDrawing])
-
   const animdelays = animdelaysJson[animId]
   const unhide = !qaHidden && !qaSlider && !qaMinimised
   const closeAnimDuration = animId === 'sl2in' || animId === 'in2sl' || animId === 'ex2sl' ? 0 : 240

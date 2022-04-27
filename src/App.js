@@ -7,6 +7,7 @@ import World from './components/World'
 /**
  * TODO:
  * [ ] OPTIMIZE CANVAS (Google how to)
+ * [ ] Add Cellular Automata as starting shape
  * [✓] Fix palette first cell delete when second cell is step cell 
  * [x] Add border-radius to palette cells 
  *     * Not possible to add border radius to border image

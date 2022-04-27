@@ -11,8 +11,6 @@ const Notifications = ({ message, timeout, messageIndex }) => {
   const [show, setShow] = useState(false)
   const [outPhase, setOutPhase] = useState(false)
 
-  console.log(message)
-
   const animEnded = e => {
     if (e.animationName === "fade-out-anim") {
       setShow(false)

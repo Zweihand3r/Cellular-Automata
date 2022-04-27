@@ -72,17 +72,22 @@ const Controls = ({
     }
   }, [isPainting, onPreviewEnd, qaState])
 
-  const updateToggleState = (value, setter, event) => {
-    setter(value)
-    event(value)
+  const toggleIsPlaying = useCallback(() => {
+    const _isPlaying = !isPlaying
+    setIsPlaying(_isPlaying)
+    onIsPlayingChanged(_isPlaying)
+  }, [isPlaying, onIsPlayingChanged]);
+
+  const toggleIsDrawing = () => {
+    const _isDrawing = !isDrawing
+    if (_isDrawing) {
+      showNotification(<span>Brush Enabled<br/>Press left mouse button to draw and right mouse button to erase on the grid.</span>)
+    } else {
+      showNotification("Brush Disabled")
+    }
+    setIsDrawing(_isDrawing)
+    console.log(_isDrawing, isDrawing)
   }
-
-  const updateIsPlaying = useCallback(
-    () => updateToggleState(!isPlaying, setIsPlaying, onIsPlayingChanged), 
-    [isPlaying, onIsPlayingChanged]
-  )
-
-  const updateIsDrawing = () => updateToggleState(!isDrawing, setIsDrawing, () => {})
 
   const mouseMove = () => {
     /* 
@@ -123,12 +128,12 @@ const Controls = ({
   /* Hooking brushDownChanged to trigger draw-on-every-update when sliding filler modifiers */
   const tempPause = (pause) => {
     if (isPlaying) {
-      updateIsPlaying()
+      toggleIsPlaying()
       onBrushDownChanged(true)
       isTempPause = true 
     } else {
       if (isTempPause) {
-        updateIsPlaying()
+        toggleIsPlaying()
         onBrushDownChanged(false)
         isTempPause = false
       }
@@ -158,7 +163,7 @@ const Controls = ({
             updateQaMinimised()
           } 
           break
-        case 32: updateIsPlaying(); break
+        case 32: toggleIsPlaying(); break
         case 67: 
           onClear()
           showNotification('Grid cleared')
@@ -168,6 +173,7 @@ const Controls = ({
           onFillSelect('invert')
           showNotification('Grid inverted')
           break
+        case 80: toggleIsDrawing(); break
         default: break
       }
     }
@@ -177,7 +183,7 @@ const Controls = ({
     return () => {
       document.body.removeEventListener("keydown", keyListener)
     }
-  }, [onClear, qaState.min, updateIsPlaying, updateQaMinimised])
+  }, [onClear, qaState.min, toggleIsPlaying, toggleIsDrawing, updateQaMinimised])
 
   return (
     <div className='controls-base'>
@@ -205,8 +211,8 @@ const Controls = ({
         onQaExpanded={updateQaExpanded}
         onQaMinimised={updateQaMinimised}
         onQaSlider={updateQaSlider}
-        onPlayClicked={updateIsPlaying} 
-        onDrawClicked={updateIsDrawing}
+        onPlayClicked={toggleIsPlaying} 
+        onDrawClicked={toggleIsDrawing}
         onQaClose={hideQa}
         onTempPause={tempPause}
         onShapeSelect={shapeSelected}
