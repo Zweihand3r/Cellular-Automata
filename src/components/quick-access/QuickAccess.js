@@ -162,6 +162,7 @@ const QuickAccess = ({
           <ExPalette 
             isCurrent={qaIndex === 4} 
             pindex={exPindices[4]}
+            qaExpanded={qaExpanded}
             onBgSelect={onBgSelect}
             onSelect={onShadesSelect} 
             onGradSelect={onGradSelect}

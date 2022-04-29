@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { IoMdCheckboxOutline, IoMdSquareOutline } from 'react-icons/io'
 
 /* Need to adjust width if any changes to qa */
@@ -83,4 +83,37 @@ const ExCheckbox = ({ name, checked, style = {}, onChange }) => {
   )
 }
 
-export { ExCon, ExIndicator, ExSubTitle, ExCheckbox }
+const ExHexButton = ({ name, x, y, onClick }) => {
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
+
+  const mouseLeave = _ => {
+    setHovered(false)
+    setPressed(false)
+  }
+
+  const fill = pressed ? '#fff' : '#00000000'
+  const stroke = hovered ? '#fff' : '#a2a2a2'
+  const textStyle = { color: pressed ? '#000' : stroke }
+
+  return (
+    <div
+      className='ex-hb-con'
+      style={{left: x, top: y}}
+      onMouseEnter={_ => setHovered(true)}
+      onMouseLeave={mouseLeave}
+      onMouseDown={_ => setPressed(true)}
+      onMouseUp={_ => setPressed(false)}
+      onClick={onClick}
+    >
+      <svg className='ex-hb-svg'>
+        <path d='M 0 13 L 10 0 L 134 0 L 144 13 L 134 26 L 10 26 Z' fill={fill} />
+        <path d='M 1 13 L 10 0 M 133 0 L 142 13 L 133 26 M 10 26 L 0 13' strokeWidth={1.5} stroke={stroke} fill='#00000000' />
+        <path d='M 10 0 L 134 0 M 133 26 L 10 26' strokeWidth={2.5} stroke={stroke} />
+      </svg>
+      <div className='ex-hb-lbl center' style={textStyle}>{name}</div>
+    </div>
+  )
+}
+
+export { ExCon, ExIndicator, ExSubTitle, ExCheckbox, ExHexButton }

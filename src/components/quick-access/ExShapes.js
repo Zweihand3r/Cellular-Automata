@@ -4,7 +4,7 @@ import { IoChevronUp } from 'react-icons/io5'
 import { useState, useEffect, useRef, useContext } from 'react'
 import { DataContext } from '../../context/DataContext'
 
-import { ExCon, ExSubTitle } from './ex-comps'
+import { ExCon, ExHexButton, ExSubTitle } from './ex-comps'
 
 const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onClear, onSliding }) => {
   const [isShapes, setIsShapes] = useState(true)
@@ -18,8 +18,8 @@ const ExShapes = ({ isCurrent, onShapeSelect, onFillSelect, onClear, onSliding }
         <Fillers fillers={fillers} onSelect={onFillSelect} onSliding={onSliding} />
 
         <div className='shape-mid'>
-          <MidButton name='Clear'   x={1}   y={6} onClick={onClear} />
-          <MidButton name='Invert'  x={159} y={6} onClick={() => onFillSelect('invert')} />
+          <ExHexButton name='Clear'   x={1}   y={6} onClick={onClear} />
+          <ExHexButton name='Invert'  x={159} y={6} onClick={() => onFillSelect('invert')} />
 
           <MidIndic y={4} visible={!isShapes} onClick={_ => setIsShapes(true)} paths={[
             'M 1 1 L 10 12 L 19 1', 'M 0 0 L 20 0'
@@ -172,39 +172,6 @@ const FSlide = ({ name, init, range, onChange, onDown, onUp }) => {
         onChange={slideAction}
       ></input>
       {/* <div className='fslide-val'>{value}</div> */}
-    </div>
-  )
-}
-
-const MidButton = ({ name, x, y, onClick }) => {
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
-
-  const mouseLeave = _ => {
-    setHovered(false)
-    setPressed(false)
-  }
-
-  const fill = pressed ? '#fff' : '#00000000'
-  const stroke = hovered ? '#fff' : '#a2a2a2'
-  const textStyle = { color: pressed ? '#000' : stroke }
-
-  return (
-    <div
-      className='mb-con'
-      style={{left: x, top: y}}
-      onMouseEnter={_ => setHovered(true)}
-      onMouseLeave={mouseLeave}
-      onMouseDown={_ => setPressed(true)}
-      onMouseUp={_ => setPressed(false)}
-      onClick={onClick}
-    >
-      <svg className='mb-svg'>
-        <path d='M 0 13 L 10 0 L 134 0 L 144 13 L 134 26 L 10 26 Z' fill={fill} />
-        <path d='M 1 13 L 10 0 M 133 0 L 142 13 L 133 26 M 10 26 L 0 13' strokeWidth={1.5} stroke={stroke} fill='#00000000' />
-        <path d='M 10 0 L 134 0 M 133 26 L 10 26' strokeWidth={2.5} stroke={stroke} />
-      </svg>
-      <div className='fb-lbl center' style={textStyle}>{name}</div>
     </div>
   )
 }

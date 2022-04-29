@@ -7,7 +7,7 @@ const offsetX = window.innerWidth / 2 - 152
 
 const PrefsPalette = ({ 
   shades, onBackgroundSelect, onMonoSelect, onGradientSelect, 
-  onImageSelect, onAgeConfigure, onTrailsChanged,
+  onImageSelect, onAgeConfigure, onTrailsChanged, selectColor
 }) => {
   /* trails state in Modes */
   const [modeEx, setModeEx] = useState(false)
@@ -56,7 +56,7 @@ const PrefsPalette = ({
   return (
     <div className='ex-pg'>
       <ExSubTitle fontSize={13} width={78} subtitle='BACKGROUND COLOR' />
-      <ColorSelection color='#000000' onChange={onBackgroundSelect} />
+      <ColorSelection color='#000000' selectColor={selectColor} onChange={onBackgroundSelect} />
 
       <div style={{height: 12}} />
 
@@ -70,6 +70,7 @@ const PrefsPalette = ({
         vis={!modeEx} 
         currentIndex={modeIndex} 
         states={modeStates}
+        selectColor={selectColor}
         onMonoChanged={monoSelect}
         onGradientChanged={gradientSelect}
         onImageSelect={imageSelect}
@@ -81,129 +82,125 @@ const PrefsPalette = ({
 } 
 
 const Modes = ({ 
-  vis, currentIndex, states, 
+  vis, currentIndex, states, selectColor,
   onMonoChanged, onGradientChanged, onImageSelect, onAgeConfigure, onTrailsChanged
 }) => {
+  const [mono, gradient, src, shades] = states
+
   const [trails, setTrails] = useState(0)
+  const uploadRef = useRef(null)
+  const canvasRef = useRef(null)
+
   const modesClass = `mds-con ${vis ? '' : 'mds-inv'}`
+
+  const updateGradientStops = (v, index) => {
+    onGradientChanged(gradient.map((s, i) => i === index ? v : s))
+  }
 
   const trailsChanged = trails => {
     setTrails(trails)
     onTrailsChanged(trails)
   }
 
-  const render = () => {
+  const uploadImage = () => uploadRef.current.click()
+
+  const onSrcChange = e => {
+    if (e.target.files && e.target.files[0]) {
+      onImageSelect(URL.createObjectURL(e.target.files[0]))
+    }
+  }
+
+  const renderContent = () => {
     switch (currentIndex) {
-      case 0: return <Mono color={states[0]} trails={trails} onChange={onMonoChanged} onTrailsChanged={trailsChanged} />
-      case 1: return <Gradient gradient={states[1]} onChange={onGradientChanged} />
-      case 2: return <Image src={states[2]} uploaded={onImageSelect} />
-      case 3: return <AgeBased shades={states[3]} trails={trails} onClick={onAgeConfigure} onTrailsChanged={trailsChanged} />
+      // Mono
+      case 0: return (
+        <div>
+          <ExSubTitle fontSize={13} width={102} subtitle='MONO COLOR' />
+          <ColorSelection color={mono} selectColor={selectColor} onChange={onMonoChanged} />
+          <Trails value={trails} onChange={trailsChanged} />
+        </div>
+      )
+
+      // Gradient
+      case 1: return (
+        <div>
+          <ExSubTitle fontSize={13} width={91} subtitle='GRADIENT STOPS' />
+          <ColorSelection color={gradient[0]} selectColor={selectColor} onChange={v => updateGradientStops(v, 0)} />
+          <div style={{ height: 4 }} />
+          <ColorSelection color={gradient[1]} selectColor={selectColor} onChange={v => updateGradientStops(v, 1)} />
+        </div>
+      )
+
+      // Image
+      case 2: return (
+        <div>
+          {src ? <img className='upl-preview' src={src} alt="" /> : <div />}
+          <div className='pp-con ppb-con' onClick={uploadImage}>
+            <div className='ppb-lbl'>Upload Image</div>
+            <div className='ppb-ri-con' style={{right: 4}}>
+              <BsCloudUpload className='ppb-ri center' />
+            </div>
+            <input type='file' ref={uploadRef} onChange={onSrcChange} />
+          </div>
+        </div>
+      )
+
+      // AgeBased
+      case 3: return (
+        <div>
+          <ExSubTitle fontSize={11} width={22}>Cells change color from left to right as they age</ExSubTitle>
+          <div className='pp-con'>
+            <canvas className='age-preview' ref={canvasRef} />
+          </div>
+          <div style={{ height: 12 }} />
+          <div className='pp-con ppb-con' onClick={onAgeConfigure}>
+            <div className='ppb-lbl'>Configure Age Based</div>
+            <div className='ppb-ri-con'>
+              <BsChevronRight className='ppb-ri center' />
+            </div>
+          </div>
+          <Trails value={trails} onChange={trailsChanged} />
+        </div>
+      )
+
       default: return <div />
     }
   }
 
+  useEffect(() => {
+    if (currentIndex === 3) {
+      const canvas = canvasRef.current
+      canvas.setAttribute('width', 304)
+      canvas.setAttribute('height', 26)
+
+      const ctx = canvas.getContext('2d')
+      const width = 304 / shades.shades.length
+
+      ctx.clearRect(0, 0, 304, 26)
+      for (let i = 0; i < shades.shades.length; i++) {
+        ctx.fillStyle = shades.shades[i]
+        ctx.fillRect(i * width, 0, width, 26)
+      }
+    }
+  }, [currentIndex, shades])
+
   return (
     <div className={modesClass}>
       <div style={{ height: 12 }} />
-      {render()}
+      {renderContent()}
     </div>
   )
 }
 
-const Mono = ({ color, trails, onChange, onTrailsChanged }) => {
-  return (
-    <div>
-      <ExSubTitle fontSize={13} width={102} subtitle='MONO COLOR' />
-      <ColorSelection color={color} onChange={onChange} />
-      <Trails value={trails} onChange={onTrailsChanged} />
-    </div>
-  )
-}
-
-const Gradient = ({ gradient, onChange }) => {
-  const updateStops = (v, index) => {
-    onChange(gradient.map((s, i) => i === index ? v : s))
-  }
-
-  return (
-    <div>
-      <ExSubTitle fontSize={13} width={91} subtitle='GRADIENT STOPS' />
-      <ColorSelection color={gradient[0]} onChange={v => updateStops(v, 0)} />
-      <div style={{ height: 4 }} />
-      <ColorSelection color={gradient[1]} onChange={v => updateStops(v, 1)} />
-    </div>
-  )
-}
-
-const Image = ({ src, uploaded }) => {
-  const uploadRef = useRef(null)
-
-  const upload = () => uploadRef.current.click()
-
-  const onChange = e => {
-    if (e.target.files && e.target.files[0]) {
-      uploaded(URL.createObjectURL(e.target.files[0]))
-    }
-  }
-
-  return (
-    <div>
-      {src ? <img className='upl-preview' src={src} /> : <div />}
-      <div className='pp-con ppb-con' onClick={upload}>
-        <div className='ppb-lbl'>Upload Image</div>
-        <div className='ppb-ri-con' style={{right: 4}}>
-          <BsCloudUpload className='ppb-ri center' />
-        </div>
-        <input type='file' ref={uploadRef} onChange={onChange} />
-      </div>
-    </div>
-  )
-}
-
-const AgeBased = ({ shades, trails, onClick, onTrailsChanged }) => {
-  const canvasRef = useRef(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    canvas.setAttribute('width', 304)
-    canvas.setAttribute('height', 26)
-
-    const ctx = canvas.getContext('2d')
-    const width = 304 / shades.shades.length
-
-    ctx.clearRect(0, 0, 304, 26)
-    for (let i = 0; i < shades.shades.length; i++) {
-      ctx.fillStyle = shades.shades[i]
-      ctx.fillRect(i * width, 0, width, 26)
-    }
-  }, [shades])
-
-  return (
-    <div>
-      <ExSubTitle fontSize={11} width={22}>Cells change color from left to right as they age</ExSubTitle>
-      <div className='pp-con'>
-        <canvas className='age-preview' ref={canvasRef} />
-      </div>
-      <div style={{ height: 12 }} />
-      <div className='pp-con ppb-con' onClick={onClick}>
-        <div className='ppb-lbl'>Configure Age Based</div>
-        <div className='ppb-ri-con'>
-          <BsChevronRight className='ppb-ri center' />
-        </div>
-      </div>
-      <Trails value={trails} onChange={onTrailsChanged} />
-    </div>
-  )
-}
-
-const ColorSelection = ({ color, onChange }) => {
+const ColorSelection = ({ color, selectColor, onChange }) => {
   const [hex, setHex] = useState('#000000')
   const [hasFocus, setHasFocus] = useState(false)
 
-  const inputSelection = e => {
-    const hex = e.target.value
-    setHex(hex)
-    onChange(hex)
+  const showColorGrid = () => {
+    selectColor(_hex => {
+      setHex(_hex)
+      onChange(_hex)
+    }, hex)
   }
 
   const updateHex = e => {
@@ -233,9 +230,7 @@ const ColorSelection = ({ color, onChange }) => {
 
   return (
     <div className='pp-con' style={{borderColor: hasFocus ? '#ffffff' : '#a2a2a2'}}>
-      <div className='cs-cp' style={{backgroundColor: hex}}>
-        <input type='color' className='tint-input' onChange={inputSelection} />
-      </div>
+      <div className='cs-cp' style={{backgroundColor: hex}} onClick={showColorGrid} />
       <input 
         type='text' className='cs-tf tint-tf' value={hex.toUpperCase()} 
         onChange={updateHex} onFocus={() => setHasFocus(true)} onBlur={editingComplete}

@@ -6,7 +6,7 @@ import { ExSubTitle } from '../ex-comps'
 let animActive = false, scrollListenerAttached = false
 let lastApplied = { isLoop: false, list: [{ isTint: true, value: '#ffffff', outId: '' }] }
 
-const ExPalette = ({ isCurrent, onSelect }) => {
+const ExPalette = ({ isCurrent, selectColor, onSelect }) => {
   const [list, setList] = useState([
     { isTint: true, value: '#ffffff', outId: '' }
   ])
@@ -155,6 +155,7 @@ const ExPalette = ({ isCurrent, onSelect }) => {
             key={index}
             color={value} outId={outId}
             isScrollable={isScrollable}
+            selectColor={selectColor}
             onChange={v => updateTint({ index, value: v })} 
             onDeleteQueue={_ => deleteQueuedAtIndex(index)}
             onDeleteFinish={_ => deleteAtIndex(index)}
@@ -199,12 +200,12 @@ const Footer = ({
 
   return (
     <div className={className}>
-      <FooterButton name='+ Add' isControl={true} isIn={!isAdd} x={100} onClick={_ => setIsAdd(true)} />
+      <FooterButton name={isAdd ? '< Back' : '+ Add'} isControl={true} isIn={true} x={100} onClick={_ => setIsAdd(!isAdd)} />
       <FooterButton name='Clear' isControl={true} isIn={!isAdd} x={1} y={22} onClick={onClear} />
       <FooterButton name='Reset' isControl={true} isIn={!isAdd} x={199} y={21} onClick={onReset} />
       <FooterButton name='Apply' isControl={true} isIn={!isAdd} x={100} y={37} onClick={onApply} />
 
-      <FooterButton name='< Controls' isControl={false} isIn={isAdd} x={100} onClick={_ => setIsAdd(false)} />
+      {/* <FooterButton name='< Controls' isControl={false} isIn={isAdd} x={100} onClick={_ => setIsAdd(false)} /> */}
       <FooterButton name='+ Color'    isControl={false} isIn={isAdd} x={1} y={22} onClick={onAddTint} />
       <FooterButton name='+ Gradient' isControl={false} isIn={isAdd} x={199} y={21} onClick={onAddGradient} />
       <FooterButton name={loopName}   isControl={false} isIn={isAdd} x={100} y={37} onClick={onAddLoop} />
@@ -248,7 +249,7 @@ const FooterButton = ({ name, isControl, isIn, x, y, onClick }) => {
   )
 }
 
-const TintCell = ({ color, isScrollable, outId, onChange, onDeleteQueue, onDeleteFinish }) => {
+const TintCell = ({ color, isScrollable, outId, selectColor, onChange, onDeleteQueue, onDeleteFinish }) => {
   const [hex, setHex] = useState('#FFFFFF')
 
   const getAccent = () => {
@@ -258,7 +259,7 @@ const TintCell = ({ color, isScrollable, outId, onChange, onDeleteQueue, onDelet
   }
 
   const animEnded = event => {
-    if (event.animationName == 'pc-out-anim') {
+    if (event.animationName === 'pc-out-anim') {
       onDeleteFinish()
     }
   }
@@ -285,6 +286,12 @@ const TintCell = ({ color, isScrollable, outId, onChange, onDeleteQueue, onDelet
     onChange(_hex)
   }
 
+  const showColorGrid = () => {
+    selectColor(_hex => {
+      onChange(_hex)
+    }, hex)
+  }
+
   useEffect(() => setHex(color), [color])
 
   const style = { backgroundColor: color }
@@ -294,8 +301,7 @@ const TintCell = ({ color, isScrollable, outId, onChange, onDeleteQueue, onDelet
   return (
     <div className={className} style={style} onAnimationEnd={animEnded}>
       <div className='tint-icon-con'>
-        <IoColorPaletteOutline className='tint-icon center' style={contentStyle} />
-        <input className='tint-input' type='color' value={color} onChange={e => onChange(e.target.value)} />
+        <IoColorPaletteOutline className='tint-icon center' style={contentStyle} onClick={showColorGrid} />
       </div>
       <div className='tint-icon-con tint-trash-con' onClick={onDeleteQueue}>
         <VscTrash className='tint-icon center' style={contentStyle} />
@@ -317,12 +323,17 @@ const StepCell = ({ steps, isScrollable, outId, gradient, onChange }) => {
     onChange(`${steps + diff}`)
   }
 
+  const rightClick = (e, diff) => {
+    stepper(diff)
+    e.preventDefault()
+  }
+
   const className = `step-con pc-${isScrollable ? 'scrl' : 'con'} ${outId}`
 
   return (
     <div className={className}>
-      <VscChevronLeft className='step-arrow' onClick={_ => stepper(-1)} />
-      <VscChevronRight className='step-arrow step-right' onClick={_ => stepper(1)} />
+      <VscChevronLeft className='step-arrow' onClick={_ => stepper(-1)} onContextMenu={e => rightClick(e, -10)} />
+      <VscChevronRight className='step-arrow step-right' onClick={_ => stepper(1)} onContextMenu={e => rightClick(e, 10)} />
 
       <input 
         className='palette-tf step-tf' type='input' 
