@@ -7,6 +7,9 @@ import {
 import Controls from './controls/Controls'
 import { DataContext } from '../context/DataContext'
 import Resizer from './resizer/Resizer.js'
+import TouchControls from './controls/TouchControls.js'
+
+const IS_MOBILE = window.innerWidth <= 768
 
 let ctx
 let ctxbg, background, gradientStops
@@ -124,30 +127,36 @@ const World = (props) => {
 
       {showFps ? <div className='fpsCounter'>{fps}</div> : <div />}
 
-      <Controls
-        onIsPlayingChanged={isPlayingChanged} 
-        onBrushDownChanged={brushDownChanged}
-        onDraw={drawOnGrid}
-        onErase={eraseOnGrid}
-        onPaint={paint}
-        onPreview={preview}
+      {IS_MOBILE ? (
+        <TouchControls 
+          onRuleSelect={setRule}
+        />
+      ) : (
+        <Controls
+          onIsPlayingChanged={isPlayingChanged} 
+          onBrushDownChanged={brushDownChanged}
+          onDraw={drawOnGrid}
+          onErase={eraseOnGrid}
+          onPaint={paint}
+          onPreview={preview}
 
-        onPreviewStart={startPreview}
-        onPreviewEnd={endPreview}
-        onFillSelect={setFill}
-        onClear={clear}
-        onRuleSelect={setRule}
-        onWrapChanged={setGridWrap}
-        onBgSelect={setBackground}
-        onShadesSelect={shadesSelected}
-        onGradSelect={setGradient}
-        onImageSelect={setBgImage}
-        onTrailsChanged={setTrails}
+          onPreviewStart={startPreview}
+          onPreviewEnd={endPreview}
+          onFillSelect={setFill}
+          onClear={clear}
+          onRuleSelect={setRule}
+          onWrapChanged={setGridWrap}
+          onBgSelect={setBackground}
+          onShadesSelect={shadesSelected}
+          onGradSelect={setGradient}
+          onImageSelect={setBgImage}
+          onTrailsChanged={setTrails}
 
-        onSizeChanged={sizeChanged}
-        onSpeedChanged={speedChanged}
-        onBrushChanged={setBrushSize}
-      />
+          onSizeChanged={sizeChanged}
+          onSpeedChanged={speedChanged}
+          onBrushChanged={setBrushSize}
+        />
+      )}
 
       <Resizer isResizing={isResizing} onResizing={windowResized} />
     </div>

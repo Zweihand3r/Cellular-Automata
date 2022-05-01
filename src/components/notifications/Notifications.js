@@ -65,8 +65,8 @@ const Notifications = ({ message, timeout, messageIndex }) => {
 
 export const RuleNotification = ({ b, s, highlightS }) => (
   <div>
-    <span className={highlightS && "text-dim"}>B{b}</span>{" "}
-    <span className={!highlightS && "text-dim"}>S{s}</span>
+    <span className={highlightS ? "text-dim" : ""}>B{b}</span>{" "}
+    <span className={!highlightS ? "text-dim" : ""}>S{s}</span>
   </div>
 )
 
