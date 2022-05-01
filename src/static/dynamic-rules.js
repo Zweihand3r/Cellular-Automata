@@ -1,6 +1,4 @@
-let bi = 3, si = 38
-
-const dynRules = [
+export const dynamicRules = [
   '0',
   '1',
   '2',
@@ -87,44 +85,3 @@ const dynRules = [
   '80123',
   ''
 ]
-
-const currBRl = () => dynRules[bi]
-const currSRl = () => dynRules[si]
-
-const nextBRl = () => {
-  if (bi < dynRules.length - 1) {
-    bi += 1
-  } else {
-    bi = 0
-  }
-  return dynRules[bi]
-}
-
-const prevBRl = () => {
-  if (bi > 0) {
-    bi -= 1
-  } else {
-    bi = dynRules.length - 1
-  }
-  return dynRules[bi]
-}
-
-const nextSRl = () => {
-  if (si < dynRules.length - 1) {
-    si += 1
-  } else {
-    si = 0
-  }
-  return dynRules[si]
-}
-
-const prevSRl = () => {
-  if (si > 0) {
-    si -= 1
-  } else {
-    si = dynRules.length - 1
-  }
-  return dynRules[si]
-}
-
-export { currBRl, currSRl, nextBRl, prevBRl, nextSRl, prevSRl }

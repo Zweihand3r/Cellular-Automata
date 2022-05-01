@@ -1,43 +1,10 @@
-import React, { useContext } from 'react'
-import { NotificationContext } from '../../context/NotificationContext'
-import { currBRl, currSRl, nextBRl, nextSRl, prevBRl, prevSRl } from '../../utils/dynamic-rules'
-import { RuleNotification } from '../notifications/Notifications'
+import React from 'react'
 
 const TRIGGER_OFFSET = 5
 
 let sx = 0, sy = 0, xi = 0, yi = 0
 
-const TouchReceiver = ({ onDynamicRule }) => {
-  const { showNotification } = useContext(NotificationContext)
-
-  const upTrigger = dy => {
-    const b = prevBRl()
-    const s = currSRl()
-    onDynamicRule({ b, s })
-    showNotification(<RuleNotification b={b} s={s} highlightS={false} />)
-  }
-
-  const rightTrigger = dx => {
-    const b = currBRl()
-    const s = nextSRl()
-    onDynamicRule({ b, s })
-    showNotification(<RuleNotification b={b} s={s} highlightS={true} />)
-  }
-
-  const downTrigger = dy => {
-    const b = nextBRl()
-    const s = currSRl()
-    onDynamicRule({ b, s })
-    showNotification(<RuleNotification b={b} s={s} highlightS={false} />)
-  }
-
-  const leftTrigger = dx => {
-    const b = currBRl()
-    const s = prevSRl()
-    onDynamicRule({ b, s })
-    showNotification(<RuleNotification b={b} s={s} highlightS={true} />)
-  }
-
+const TouchReceiver = ({ onTap, onUpTrigger, onRightTrigger, onDownTrigger, onLeftTrigger }) => {
   const touchStart = e => {
     sx = e.touches[0].clientX
     sy = e.touches[0].clientY
@@ -64,17 +31,17 @@ const TouchReceiver = ({ onDynamicRule }) => {
     }
     if (xi > TRIGGER_OFFSET) {
       if (dx > 0) {
-        rightTrigger(dx)
+        onRightTrigger(dx)
       } else {
-        leftTrigger(dx)
+        onLeftTrigger(dx)
       }
       xi = 0
     }
     if (yi > TRIGGER_OFFSET) {
       if (dy > 0) {
-        downTrigger(dy)
+        onDownTrigger(dy)
       } else {
-        upTrigger(dy)
+        onUpTrigger(dy)
       }
       yi = 0
     }
@@ -92,6 +59,8 @@ const TouchReceiver = ({ onDynamicRule }) => {
       onTouchMove={touchMove}
       onTouchEnd={touchEnd}
       onTouchCancel={touchEnd}
+      onClick={onTap}
+      onContextMenu={e => e.preventDefault()}
     />
   )
 }

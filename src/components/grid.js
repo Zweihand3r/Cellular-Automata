@@ -1,4 +1,4 @@
-import { createHelpers } from './helpers'
+import { createHelpers } from '../utils/helpers'
 import { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom } from './shapes'
 import { setRule, checkSurvival, checkBirth } from './rules'
 import { monoShade, getShade, setShades, updateShades, resetAges, updateAge } from './shades'
