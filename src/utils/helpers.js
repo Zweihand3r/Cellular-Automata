@@ -1,12 +1,11 @@
-const helperNames = []
-window.helperNames = helperNames
+window.helperNames = []
 
 const createHelpers = (helpers) => {
   helpers.forEach(helper => {
     let name = helper.name
     if (window[name]) name = `f${name.charAt(0).toUpperCase()}${name.substring(1)}`
     window[name] = helper
-    helperNames.push(name)
+    window.helperNames.push(name)
   })
 }
 

@@ -1,13 +1,26 @@
 import React from 'react'
 
 const TRIGGER_OFFSET = 5
+const TAP_AND_HOLD_INTERVAL = 480
 
-let sx = 0, sy = 0, xi = 0, yi = 0
+let sx = 0, sy = 0, xi = 0, yi = 0, longPressTimeout = null
 
-const TouchReceiver = ({ onTap, onUpTrigger, onRightTrigger, onDownTrigger, onLeftTrigger }) => {
+const TouchReceiver = ({ 
+  onTap, onTapAndHold, 
+  onUpTrigger, onRightTrigger, onDownTrigger, onLeftTrigger 
+}) => {
   const touchStart = e => {
     sx = e.touches[0].clientX
     sy = e.touches[0].clientY
+    longPressTimeout = setTimeout(() => {
+      if (
+        Math.abs(e.touches[0].clientX - sx) < 5 &&
+        Math.abs(e.touches[0].clientY - sy) < 5
+      ) {
+        onTapAndHold()
+        longPressTimeout = null
+      }
+    }, TAP_AND_HOLD_INTERVAL)
   }
 
   const touchMove = e => {
@@ -50,6 +63,14 @@ const TouchReceiver = ({ onTap, onUpTrigger, onRightTrigger, onDownTrigger, onLe
   const touchEnd = e => {
     xi = 0
     yi = 0
+    clearLongPressTimeout()
+  }
+
+  const clearLongPressTimeout = () => {
+    if (longPressTimeout) {
+      clearInterval(longPressTimeout)
+      longPressTimeout = null
+    }
   }
 
   return (

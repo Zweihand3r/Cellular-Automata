@@ -2,6 +2,7 @@ import { VscChevronLeft, VscChevronRight, VscTrash } from 'react-icons/vsc'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { useState, useRef, useEffect } from 'react'
 import { ExSubTitle } from '../ex-comps'
+import { generateShadesFromList, hex2rgb } from '../../../utils/color-utils'
 
 let animActive = false, scrollListenerAttached = false
 let lastApplied = { isLoop: false, list: [{ isTint: true, value: '#ffffff', outId: '' }] }
@@ -122,7 +123,7 @@ const ExPalette = ({ isCurrent, selectColor, onSelect }) => {
 
   const apply = () => {
     lastApplied = { isLoop, list }
-    onSelect({ isLoop, shades: generateShades(list)})
+    onSelect({ isLoop, shades: generateShadesFromList(list)})
   }
 
   useEffect(() => {
@@ -135,7 +136,7 @@ const ExPalette = ({ isCurrent, selectColor, onSelect }) => {
       }
     }
     return () => {
-      if (scrollListenerAttached) {
+      if (scrollListenerAttached && listRef.current) {
         listRef.current.removeEventListener('scroll', scrollListener)
         scrollListenerAttached = false
       }
@@ -348,49 +349,5 @@ const LoopCell = ({ isStart, isScrollable }) => <ExSubTitle
   subtitle={`LOOP ${isStart ? 'START' : 'END'}`} 
   width={isStart ? 118 : 122} isScrollable={isScrollable}
 />
-
-const generateShades = (list) => {
-  const shades = []
-
-  let index = 0
-  while (index < list.length) {
-    const { isTint, value } = list[index]
-
-    if (isTint) {
-      shades.push(value)
-      index += 1
-    } else {
-      const prev = hex2rgb(list[index - 1].value)
-      const next = hex2rgb(list[index + 1].value)
-      const steps = value + 1
-
-      const dr = (next.r - prev.r) / steps
-      const dg = (next.g - prev.g) / steps
-      const db = (next.b - prev.b) / steps
-
-      for (let i = 1; i < steps; i++) {
-        shades.push(rgb2hex({ r: prev.r + dr * i, g: prev.g + dg * i, b: prev.b + db * i }))
-      }
-
-      shades.push(rgb2hex({ r: next.r, g: next.g, b: next.b }))
-      index += 2
-    }
-  }
-
-  return shades
-}
-
-const hex2rgb = (hex) => {
-  const bigint = parseInt(hex.substring(1), 16)
-  return {
-    r: (bigint >> 16) & 255,
-    g: (bigint >> 8) & 255,
-    b: bigint & 255
-  }
-}
-
-const rgb2hex = ({ r, g, b }) => {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1, 7)
-}
 
 export default ExPalette

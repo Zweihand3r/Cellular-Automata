@@ -130,6 +130,7 @@ const World = (props) => {
       {IS_MOBILE ? (
         <TouchControls 
           onRuleSelect={setRule}
+          onShadesSelect={shadesSelected}
         />
       ) : (
         <Controls

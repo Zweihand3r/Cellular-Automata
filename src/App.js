@@ -20,6 +20,12 @@ import World from './components/World'
  * [ ] Add rotate on right mouse click to placable patterns
  * [ ] Add change shapes on mouse wheel
  * [ ] Age Based loop from a different index (currently from 0)
+ * [ ] Add dynamic rules on brush off
+ * [ ] Add recents to palette
+ * [ ] Save age based shades (not sure where to fit this)
+ * [ ] Add shadows to each generation of mono color on trails aplha = 0
+ * [-] Add fullscreen
+ *     * Done only on key press
  * [✓] Fix palette first cell delete when second cell is step cell 
  * [✓] Implement textfields of palette cells
  * [✓] Add wrap to grid 
@@ -27,8 +33,6 @@ import World from './components/World'
  * [✓] Option to 'Keep' earlier iterations in grid (Dont clear canvas)
  *     [✓] Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;)
  * [✓] Add notifications on key pressess
- * [-] Add fullscreen
- *     * Done only on key press
  * [x] Add border-radius to palette cells 
  *     * Not possible to add border radius to border image
  */

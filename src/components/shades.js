@@ -1,25 +1,36 @@
-let monoShade, shades, isLooped, ages, ageMax, updateAge, selectedShadesSeq
+let monoShade, shades, isLooped, ages, ageMax, updateAge, selectedShadesSeq, preserveAges
 
 const getShade = (x, y) => shades[ages[y][x]]
 
+const initShades = (grid) => {
+  selectedShadesSeq = ["#ffffff"]
+  isLooped = false
+  resetAges(grid)
+  constructShades(selectedShadesSeq)
+}
+
 const setShades = ({ shadeSeq, isLoop, grid }) => {
+  preserveAges = isLoop && isLooped && selectedShadesSeq.length === shadeSeq
   selectedShadesSeq = shadeSeq
   isLooped = isLoop
   constructShades(shadeSeq, grid)
 }
 
 const updateShades = ({ grid }) => {
-  constructShades(selectedShadesSeq, grid)
+  resetAges(grid)
+  constructShades(selectedShadesSeq)
 }
 
-const resetAges = () => ages = ages ? ages.map(row => row.map(_ => 0)) : []
+const resetAges = (grid) => ages = grid.map(row => row.map(_ => 0))
 
-const constructShades = (shadeSeq, grid) => {
+const constructShades = (shadeSeq) => {
   if (shadeSeq.length > 1) {
     shades = ['age starts from index 1', ...shadeSeq]
     ageMax = shades.length - 1
-    ages = grid.map(row => row.map(i => 0))
-    updateAge = isLooped ? _updateLoopedAge : _updateAge
+    if (!preserveAges) { // if this true than _updateLoopedAge is already selected
+      ages = ages.map(row => row.map(age => Math.min(age, ageMax)))
+      updateAge = isLooped ? _updateLoopedAge : _updateAge
+    }
   } else {
     monoShade = shadeSeq[0]
     updateAge = () => {}
@@ -56,4 +67,4 @@ const _updateLoopedAge = (isAlive, x, y) => {
   else _resetAge(x, y)
 }
 
-export { monoShade, getShade, setShades, updateShades, resetAges, updateAge }
+export { monoShade, getShade, initShades, setShades, updateShades, resetAges, updateAge }

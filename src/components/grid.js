@@ -1,7 +1,7 @@
 import { createHelpers } from '../utils/helpers'
 import { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom } from './shapes'
 import { setRule, checkSurvival, checkBirth } from './rules'
-import { monoShade, getShade, setShades, updateShades, resetAges, updateAge } from './shades'
+import { monoShade, getShade, initShades, setShades, updateShades, resetAges, updateAge } from './shades'
 
 let gridW, gridH, size, brushSize
 let grid, neighbours, wrapEnabled
@@ -23,7 +23,7 @@ const initGrid = () => {
 
   alphaBg = '00'
   background = inverseBg + alphaBg // inverseBg initialised in World init
-  setShades({ shadeSeq: ['#ffffff'], grid })
+  initShades(grid)
 
   isClearCanvas = true
   updateDrawBackground()
@@ -158,7 +158,7 @@ const setGridWrap = wrap => {
 
 const setFill = (fill, args) => {
   grid = createGrid({ fill, grid, args })
-  resetAges()
+  resetAges(grid)
 }
 
 const setInverseBg = invbg => {
