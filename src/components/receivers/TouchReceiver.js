@@ -1,12 +1,12 @@
 import React from 'react'
 
-const TRIGGER_OFFSET = 5
 const TAP_AND_HOLD_INTERVAL = 480
 
 let sx = 0, sy = 0, xi = 0, yi = 0, longPressTimeout = null
 
 const TouchReceiver = ({ 
-  onTap, onTapAndHold, 
+  triggerOffset,
+  onTap, onTapAndHold, onRelease,
   onUpTrigger, onRightTrigger, onDownTrigger, onLeftTrigger 
 }) => {
   const touchStart = e => {
@@ -42,7 +42,7 @@ const TouchReceiver = ({
         xi = 0
       }
     }
-    if (xi > TRIGGER_OFFSET) {
+    if (xi > triggerOffset) {
       if (dx > 0) {
         onRightTrigger(dx)
       } else {
@@ -50,7 +50,7 @@ const TouchReceiver = ({
       }
       xi = 0
     }
-    if (yi > TRIGGER_OFFSET) {
+    if (yi > triggerOffset) {
       if (dy > 0) {
         onDownTrigger(dy)
       } else {
@@ -64,6 +64,7 @@ const TouchReceiver = ({
     xi = 0
     yi = 0
     clearLongPressTimeout()
+    onRelease()
   }
 
   const clearLongPressTimeout = () => {

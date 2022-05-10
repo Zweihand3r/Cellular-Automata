@@ -1,0 +1,93 @@
+.tqa-root {
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  margin-top: 40px;
+  position: relative;
+}
+
+.tqa-bg {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.86);
+  animation: scale-in-anim 120ms linear 0ms 1 normal forwards;
+}
+
+.tqa-item-con {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  transform: scale(0);
+  animation: scale-in-anim 120ms linear 0ms 1 normal forwards
+}
+
+.tqa-item {
+  color: #a2a2a2;
+  transition: color 120ms;
+}
+
+.tqa-draw { width: 30px; height: 30px; }
+.tqa-shapes { width: 26px; height: 26px; }
+.tqa-rules { width: 30px; height: 30px; }
+.tqa-colors { width: 30px; height: 30px; }
+
+.item-up { left: 50px; top: 0; animation-delay: 120ms; }
+.item-right { left: 100px; top: 50px; animation-delay: 140ms; }
+.item-down { left: 50px; top: 100px; animation-delay: 160ms; }
+.item-left { left: 0; top: 47px; animation-delay: 180ms; }
+
+.item-up .highlight { color: #ffffff; }
+.item-right .highlight { color: #ffffff; }
+.item-down .highlight { color: #ffffff; }
+.item-left .highlight { color: #ffffff; }
+
+.arrows-holder {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  animation: scale-in-anim 120ms linear 0ms 1 normal forwards
+}
+
+.tqa-arrow-con {
+  width: 25px;
+  height: 25px;
+  color: #a2a2a2;
+  position: absolute;
+}
+
+.tqa-arrow {
+  width: 25px;
+  height: 25px;
+  transition: transform 120ms, color 120ms;
+}
+
+.arrow-up { left: 62.5px; top: 50px; }
+.arrow-right { left: 75px; top: 62.5px; }
+.arrow-down { left: 62.5px; top: 75px; }
+.arrow-left { left: 50px; top: 62.5px; }
+
+.arrow-up .collapsed { color: #ff6767; transform: translateY(18px); }
+.arrow-right .collapsed { color: #ff6767; transform: translateX(-18px); }
+.arrow-down .collapsed { color: #ff6767; transform: translateY(-18px); }
+.arrow-left .collapsed { color: #ff6767; transform: translateX(18px); }
+
+.arrow-up .highlight { color: #ffffff; transform: translateY(-9px); }
+.arrow-right .highlight { color: #ffffff; transform: translateX(9px); }
+.arrow-down .highlight { color: #ffffff; transform: translateY(9px); }
+.arrow-left .highlight { color: #ffffff; transform: translateX(-9px); }
+
+.scale-out {
+  animation: scale-out-anim 120ms linear 0ms 1 normal forwards
+}
+
+@keyframes scale-in-anim {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+@keyframes scale-out-anim {
+  0% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
