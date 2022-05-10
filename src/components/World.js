@@ -129,6 +129,8 @@ const World = (props) => {
 
       {IS_MOBILE ? (
         <TouchControls 
+          onDraw={drawOnGrid}
+          onErase={eraseOnGrid}
           onRuleSelect={setRule}
           onShadesSelect={shadesSelected}
         />

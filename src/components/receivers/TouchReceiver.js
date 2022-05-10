@@ -5,8 +5,8 @@ const TAP_AND_HOLD_INTERVAL = 480
 let sx = 0, sy = 0, xi = 0, yi = 0, longPressTimeout = null
 
 const TouchReceiver = ({ 
-  triggerOffset,
-  onTap, onTapAndHold, onRelease,
+  triggerOffset, isTouchOverride,
+  onTap, onTapAndHold, onRelease, onTouchChange,
   onUpTrigger, onRightTrigger, onDownTrigger, onLeftTrigger 
 }) => {
   const touchStart = e => {
@@ -21,9 +21,21 @@ const TouchReceiver = ({
         longPressTimeout = null
       }
     }, TAP_AND_HOLD_INTERVAL)
+
+    if (isTouchOverride) {
+      onTouchChange(sx, sy)
+    }
   }
 
   const touchMove = e => {
+    if (isTouchOverride) {
+      sx = e.touches[0].clientX
+      sy = e.touches[0].clientY
+      
+      onTouchChange(e.touches[0].clientX, e.touches[0].clientY)
+      return
+    }
+
     const dx = e.touches[0].clientX - sx
     const dy = e.touches[0].clientY - sy
     const adx = Math.abs(dx)

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useContext } from 'react'
 
 import { NotificationContext } from '../../context/NotificationContext'
+import { NotificationWithBody } from '../notifications/notification-templates'
 import QuickAccess from '../quick-access/QuickAccess'
 import MouseReceiver from '../receivers/MouseReceiver'
 
@@ -9,10 +10,10 @@ import './controls.css'
 let qaEnabled = true, isTempPause = false
 let hideTimeoutIndex, mouseMoveIndex
 
-const Controls = ({ 
+const Controls = ({
   onIsPlayingChanged, onBrushDownChanged, onDraw, onErase, onPaint, onPreview,
 
-  onPreviewStart, onPreviewEnd, onFillSelect, onClear, onRuleSelect, onWrapChanged, 
+  onPreviewStart, onPreviewEnd, onFillSelect, onClear, onRuleSelect, onWrapChanged,
   onBgSelect, onShadesSelect, onGradSelect, onImageSelect, onTrailsChanged,
 
   onBrushChanged, onSizeChanged, onSpeedChanged
@@ -63,7 +64,7 @@ const Controls = ({
     } else {
       const outState = isPainting ? 'ex' : 'in'
       setQaState({ ...qaState, prev: 'min', next: outState, min: false, exp: isPainting })
-      
+
       // End preview if Painting
       if (isPainting) {
         setIsPainting(false)
@@ -81,12 +82,16 @@ const Controls = ({
   const toggleIsDrawing = () => {
     const _isDrawing = !isDrawing
     if (_isDrawing) {
-      showNotification(<span>Brush Enabled<br/>Press left mouse button to draw and right mouse button to erase on the grid.</span>)
+      showNotification(
+        <NotificationWithBody
+          title='Brush Enabled'
+          body='Press left mouse button to draw and right mouse button to erase on the grid.'
+        />
+      )
     } else {
       showNotification("Brush Disabled")
     }
     setIsDrawing(_isDrawing)
-    console.log(_isDrawing, isDrawing)
   }
 
   const mouseMove = () => {
@@ -130,7 +135,7 @@ const Controls = ({
     if (isPlaying) {
       toggleIsPlaying()
       onBrushDownChanged(true)
-      isTempPause = true 
+      isTempPause = true
     } else {
       if (isTempPause) {
         toggleIsPlaying()
@@ -158,13 +163,13 @@ const Controls = ({
     const keyListener = e => {
       console.log(`keydown with code ${e.keyCode}`)
       switch (e.keyCode) {
-        case 27: 
+        case 27:
           if (qaState.min) {
             updateQaMinimised()
-          } 
+          }
           break
         case 32: toggleIsPlaying(); break
-        case 67: 
+        case 67:
           onClear()
           showNotification('Grid cleared')
           break
@@ -183,12 +188,12 @@ const Controls = ({
     return () => {
       document.body.removeEventListener("keydown", keyListener)
     }
-  }, [onClear, qaState.min, toggleIsPlaying, toggleIsDrawing, updateQaMinimised])
+  }, [onClear, qaState.min, showNotification, toggleIsPlaying, toggleIsDrawing, updateQaMinimised])
 
   return (
     <div className='controls-base'>
-      <MouseReceiver 
-        isDrawing={isDrawing} 
+      <MouseReceiver
+        isDrawing={isDrawing}
         isPainting={isPainting}
         onBrushDown={() => onBrushDownChanged(true)}
         onBrushUp={() => onBrushDownChanged(false)}
@@ -211,7 +216,7 @@ const Controls = ({
         onQaExpanded={updateQaExpanded}
         onQaMinimised={updateQaMinimised}
         onQaSlider={updateQaSlider}
-        onPlayClicked={toggleIsPlaying} 
+        onPlayClicked={toggleIsPlaying}
         onDrawClicked={toggleIsDrawing}
         onQaClose={hideQa}
         onTempPause={tempPause}

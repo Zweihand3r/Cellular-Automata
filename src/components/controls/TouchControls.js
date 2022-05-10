@@ -6,6 +6,7 @@ import { currBRl, currSRl, nextBRl, nextSRl, prevBRl, prevSRl } from '../../touc
 import { extendSeq, shortenSeq, nextSeq, prevSeq } from '../../touch-controllers/shades-tc'
 
 import './controls.css'
+import { NotificationWithBody } from '../notifications/notification-templates'
 
 /**
  * Hold and Drag (upper 80% of screen) => QUICK OPTIONS 
@@ -31,13 +32,22 @@ const MODES = [
   { notification: 'Switched to Color Mode', triggerOffset: 5 },
   { notification: 'Switched to Rule Mode', triggerOffset: 5 },
   { notification: 'Switched to Fill Mode', triggerOffset: 5 },
-  { notification: 'Switched to Brush Mode', triggerOffset: -1 },
+  {
+    notification: (
+      <NotificationWithBody
+        title='Switched to Brush Mode'
+        body='Swipe up menu disabled. Please select another mode to re-enable swipe up menu.'
+      />
+    ),
+    triggerOffset: -1
+  },
 ]
 
-const TouchControls = ({ onRuleSelect, onShadesSelect }) => {
+const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
   const { showNotification } = useContext(NotificationContext)
 
   const [isMenu, setIsMenu] = useState(false)
+  const [isEraser, setIsEraser] = useState(false)
   const [modeIndex, setModeIndex] = useState(0)
   const [menuDirIndex, setMenuDirIndex] = useState(-2)
   const [triggerOffset, setTriggerOffset] = useState(5)
@@ -52,22 +62,43 @@ const TouchControls = ({ onRuleSelect, onShadesSelect }) => {
     if (!isMenu) {
       setIsMenu(true)
       setTriggerOffset(25)
-    } 
+    }
   }
 
   const release = () => {
     if (isMenu) {
-      if (menuDirIndex > -1) {
+      if (menuDirIndex > -1 && menuDirIndex !== modeIndex) {
         const { notification, triggerOffset } = MODES[menuDirIndex]
+        if (menuDirIndex === 3 && isEraser) {
+          setIsEraser(false)
+        }
+
         setModeIndex(menuDirIndex)
         setTriggerOffset(triggerOffset)
-        showNotification(notification)
+        if (modeIndex === 3) {
+          showNotification(
+            <NotificationWithBody
+              title={notification}
+              body='Swipe up menu re-enabled'
+            />
+          )
+        } else {
+          showNotification(notification)
+        }
       } else {
         setTriggerOffset(MODES[modeIndex].triggerOffset)
       }
-  
+
       setIsMenu(false)
       setMenuDirIndex(-2)
+    }
+  }
+
+  const touchChange = (x, y) => {
+    if (isEraser) {
+      onErase(x, y)
+    } else {
+      onDraw(x, y)
     }
   }
 
@@ -78,15 +109,20 @@ const TouchControls = ({ onRuleSelect, onShadesSelect }) => {
       setMenuDirIndex(di)
     }
   }
-  
+
   const applyDynamicRule = (b, s) => {
     onRuleSelect({ b, s })
     showNotification(`B${b} S${s}`)
   }
 
-  const applyDynamicShades = ({ name, step, shades}) => {
+  const applyDynamicShades = ({ name, step, shades }) => {
     onShadesSelect({ shades, isLoop: true })
     showNotification(`${name} ${step}`)
+  }
+
+  const toggleEraser = () => {
+    setIsEraser(!isEraser)
+    showNotification(`Switched to ${isEraser ? 'Brush' : 'Eraser'}`) // bc isEraser still prev value at this point
   }
 
   if (isMenu) {
@@ -112,20 +148,24 @@ const TouchControls = ({ onRuleSelect, onShadesSelect }) => {
       leftTrigger = () => {}
     }
   }
-  
+
 
   return (
     <div className='controls-base'>
-      <TouchQuickAccess 
+      <TouchQuickAccess
         isMenu={isMenu}
+        isEraser={isEraser}
         modeIndex={modeIndex}
         dirIndex={menuDirIndex}
+        onEraserToggle={toggleEraser}
       />
 
-      <TouchReceiver 
+      <TouchReceiver
         triggerOffset={triggerOffset}
+        isTouchOverride={modeIndex === 3 && !isMenu}
         onTap={tap}
         onTapAndHold={tapAndHold}
+        onTouchChange={touchChange}
         onUpTrigger={upTrigger}
         onRightTrigger={rightTrigger}
         onDownTrigger={downTrigger}
