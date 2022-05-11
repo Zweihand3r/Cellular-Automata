@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import BrushToggle from './BrushToggle'
 import RadialMenu from './RadialMenu'
 
 import './touch-quick-access.css'
 
-const TouchQuickAccess = ({ isMenu, isEraser, modeIndex, dirIndex, onEraserToggle }) => {
+const TouchQuickAccess = ({ 
+  isMenu, isEraser, modeIndex, dirIndex, 
+  onEraserToggle, onClear 
+}) => {
   return (
     <div className='tqa-root'>
       <RadialMenu 
@@ -17,6 +20,7 @@ const TouchQuickAccess = ({ isMenu, isEraser, modeIndex, dirIndex, onEraserToggl
         <BrushToggle 
           isEraser={isEraser}
           onToggle={onEraserToggle}
+          onClear={onClear}
         />
       )}
     </div>

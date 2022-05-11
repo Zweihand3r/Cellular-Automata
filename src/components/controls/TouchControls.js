@@ -43,7 +43,7 @@ const MODES = [
   },
 ]
 
-const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
+const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSelect, onShadesSelect }) => {
   const { showNotification } = useContext(NotificationContext)
 
   const [isMenu, setIsMenu] = useState(false)
@@ -62,7 +62,24 @@ const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
     if (!isMenu) {
       setIsMenu(true)
       setTriggerOffset(25)
+
+      // if menu opened onBrushDownChange(false) does not trigger
+      if (modeIndex === 3) {
+        onBrushDownChange(false)
+      }
     }
+  }
+
+  const touch = (x, y) => {
+    if (modeIndex === 3) {
+      applyBrush(x, y)
+      onBrushDownChange(true)
+    }
+  }
+
+  const touchPointChange = (x, y) => {
+    // only called on modeIndex === 3 atm
+    applyBrush(x, y)
   }
 
   const release = () => {
@@ -91,14 +108,10 @@ const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
 
       setIsMenu(false)
       setMenuDirIndex(-2)
-    }
-  }
-
-  const touchChange = (x, y) => {
-    if (isEraser) {
-      onErase(x, y)
     } else {
-      onDraw(x, y)
+      if (modeIndex === 3) {
+        onBrushDownChange(false)
+      }
     }
   }
 
@@ -120,9 +133,22 @@ const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
     showNotification(`${name} ${step}`)
   }
 
+  const applyBrush = (x, y) => {
+    if (isEraser) {
+      onErase(x, y)
+    } else {
+      onDraw(x, y)
+    }
+  }
+
   const toggleEraser = () => {
     setIsEraser(!isEraser)
     showNotification(`Switched to ${isEraser ? 'Brush' : 'Eraser'}`) // bc isEraser still prev value at this point
+  }
+
+  const clear = () => {
+    showNotification('Grid cleared')
+    onClear()
   }
 
   if (isMenu) {
@@ -158,6 +184,7 @@ const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
         modeIndex={modeIndex}
         dirIndex={menuDirIndex}
         onEraserToggle={toggleEraser}
+        onClear={clear}
       />
 
       <TouchReceiver
@@ -165,12 +192,13 @@ const TouchControls = ({ onDraw, onErase, onRuleSelect, onShadesSelect }) => {
         isTouchOverride={modeIndex === 3 && !isMenu}
         onTap={tap}
         onTapAndHold={tapAndHold}
-        onTouchChange={touchChange}
+        onTouch={touch}
+        onTouchPointChange={touchPointChange}
+        onRelease={release}
         onUpTrigger={upTrigger}
         onRightTrigger={rightTrigger}
         onDownTrigger={downTrigger}
         onLeftTrigger={leftTrigger}
-        onRelease={release}
       />
     </div>
   )

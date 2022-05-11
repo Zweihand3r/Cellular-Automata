@@ -6,7 +6,7 @@ let sx = 0, sy = 0, xi = 0, yi = 0, longPressTimeout = null
 
 const TouchReceiver = ({ 
   triggerOffset, isTouchOverride,
-  onTap, onTapAndHold, onRelease, onTouchChange,
+  onTap, onTapAndHold, onTouch, onTouchPointChange, onRelease,
   onUpTrigger, onRightTrigger, onDownTrigger, onLeftTrigger 
 }) => {
   const touchStart = e => {
@@ -21,10 +21,8 @@ const TouchReceiver = ({
         longPressTimeout = null
       }
     }, TAP_AND_HOLD_INTERVAL)
-
-    if (isTouchOverride) {
-      onTouchChange(sx, sy)
-    }
+    
+    onTouch(sx, sy)
   }
 
   const touchMove = e => {
@@ -32,7 +30,7 @@ const TouchReceiver = ({
       sx = e.touches[0].clientX
       sy = e.touches[0].clientY
       
-      onTouchChange(e.touches[0].clientX, e.touches[0].clientY)
+      onTouchPointChange(e.touches[0].clientX, e.touches[0].clientY)
       return
     }
 

@@ -131,6 +131,8 @@ const World = (props) => {
         <TouchControls 
           onDraw={drawOnGrid}
           onErase={eraseOnGrid}
+          onClear={clear}
+          onBrushDownChange={brushDownChanged}
           onRuleSelect={setRule}
           onShadesSelect={shadesSelected}
         />
