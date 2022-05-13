@@ -105,12 +105,11 @@ const hstripes = (args = [1, 1]) => {
 }
 
 const dstripes = (args = [1, 1]) => {
-  /* Lazy code. Need to find better alternative */
   const [s, w] = args
-  const snapshot = []
-  let wi = 0, si = 0, di = 0, a = 0
-  return create2dArray(({ y }) => {
-    if (y === 0) snapshot.push({ wi, si, a })
+  let snapshot = {}
+  let wi = 0, si = 0, a = 0
+  return create2dArray(({ x }) => {
+    if (x === 1) snapshot = { wi, si, a }
     if (a) {
       if (wi < w) { wi += 1; a = 1 } 
       else { si = 1; a = 0 }
@@ -121,9 +120,7 @@ const dstripes = (args = [1, 1]) => {
     return a
   }, ({ y }) => {
     if (y > 0) {
-      wi = snapshot[y].wi
-      si = snapshot[y].si
-      a = snapshot[y].a
+      ({ wi, si, a } = snapshot)
     }
   })
 }

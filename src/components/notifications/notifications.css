@@ -26,6 +26,10 @@
   animation: fade-out-anim 1200ms ease-out 0ms 1 normal forwards;
 }
 
+.bubble-out-quick {
+  animation: fade-out-anim 240ms ease-out 0ms 1 normal forwards;
+}
+
 @keyframes fade-in-anim {
   0% { opacity: 0; }
   100% { opacity: 1; }

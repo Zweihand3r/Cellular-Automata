@@ -10,11 +10,13 @@ let tid
 const Notifications = ({ message, timeout, messageIndex }) => {
   const [show, setShow] = useState(false)
   const [outPhase, setOutPhase] = useState(false)
+  const [outQuick, setOutQuick] = useState(false)
 
   const animEnded = e => {
     if (e.animationName === "fade-out-anim") {
       setShow(false)
       setOutPhase(false)
+      setOutQuick(false)
     }
   }
 
@@ -26,6 +28,10 @@ const Notifications = ({ message, timeout, messageIndex }) => {
 
       if (outPhase) {
         setOutPhase(false)
+      }
+
+      if (outQuick) {
+        setOutQuick(false)
       }
       
       if (tid) {
@@ -44,15 +50,25 @@ const Notifications = ({ message, timeout, messageIndex }) => {
     } else {
       setShow(false)
       setOutPhase(false)
+      setOutQuick(false)
     }
   }, [message, messageIndex])
+
+  useEffect(() => {
+    if (timeout === -1) {
+      setOutQuick(true)
+      if (tid) {
+        clearTimeout(tid)
+      }
+    }
+  }, [timeout])
 
   return (
     <div>
       {show && (
         <div className='notification-container'>
           <div 
-            className={`notification-bubble ${outPhase && 'bubble-out'}`}
+            className={`notification-bubble ${outPhase && 'bubble-out'} ${outQuick && 'bubble-out-quick'}`}
             onAnimationEnd={animEnded}
           >
             {message}

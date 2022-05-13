@@ -135,3 +135,135 @@
   50% { opacity: 1; transform: scale(5); }
   100% { opacity: 1; transform: scale(1); }
 }
+
+/* ShapeMenu */
+
+.sm-root {
+  width: fit-content;
+  margin: auto;
+  color: #fff;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  position: absolute;
+  top: 8px; left: 0; right: 0;
+}
+
+.sm-label-con {
+  width: fit-content;
+  opacity: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.86);
+  transition: opacity 1200ms ease-in;
+}
+
+.sm-lc-show {
+  opacity: 1;
+  transition: opacity 120ms;
+}
+
+.sm-lc-ex {
+  border-radius: 4px 4px 0 0;
+}
+
+.sm-label {
+  padding: 3px;
+}
+
+.sm-arrow {
+  width: 16px;
+  height: 16px;
+  padding: 4px 4px 4px 0;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 120ms, transform 120ms;
+}
+
+.sm-arrow-vis {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sm-sliders-con {
+  height: fit-content;
+  position: relative;
+}
+
+.sm-ss-bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.86);
+  animation: fade-in-anim 120ms linear 0ms 1 normal forwards;
+}
+
+.sm-sliders {
+  width: 100%;
+  height: fit-content;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.sm-slider-con {
+  display: flex;
+  justify-content: space-between;
+  color: #a2a2a2;
+  padding: 4px 8px 0 8px;
+  transition: color 120ms;
+  opacity: 0;
+  animation-name: slide-in-anim;
+  animation-duration: 120ms;
+  animation-fill-mode: forwards;
+}
+
+.sm-sc-highlight {
+  color: #fff;
+}
+
+.sm-slider {
+  width: 150px;
+  height: 10px;
+  border-radius: 5px;
+  margin: 3px 0 0 8px;
+  box-sizing: border-box;
+  border: 2px solid #a2a2a2;
+  transition: border-color 120ms;
+}
+
+.sm-s-track {
+  width: 50%;
+  height: 100%;
+  background-color: #a2a2a2;
+  transition: background-color 120ms;
+}
+
+.sm-sc-highlight .sm-slider {
+  border-color: #fff;
+}
+
+.sm-sc-highlight .sm-s-track {
+  background-color: #fff;
+}
+
+.fade-out {
+  animation: fade-out-anim 120ms linear 0ms 1 normal forwards;
+}
+
+@keyframes slide-in-anim {
+  0% { opacity: 0; transform: translateX(100px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-in-anim {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fade-out-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}

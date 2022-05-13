@@ -14,8 +14,19 @@ const NotificationProvider = ({ children }) => {
     setMessageIndex(pv => pv + 1)
   }
 
+  const hideNotification = () => {
+    if (timeout > -1) {
+      setTimeout(-1)
+    }
+  }
+
   return (
-    <NotificationContext.Provider value={{ showNotification }}>
+    <NotificationContext.Provider 
+      value={{ 
+        showNotification,
+        hideNotification 
+      }}
+    >
       {children}
       <Notifications 
         message={message} 

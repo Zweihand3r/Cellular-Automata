@@ -1,12 +1,13 @@
 import React from 'react'
 import BrushToggle from './BrushToggle'
 import RadialMenu from './RadialMenu'
+import ShapeMenu from './ShapeMenu'
 
 import './touch-quick-access.css'
 
 const TouchQuickAccess = ({ 
-  isMenu, isEraser, modeIndex, dirIndex, 
-  onEraserToggle, onClear 
+  isMenu, isEraser, modeIndex, dirIndex, touchTrigger,
+  onEraserToggle, onClear, onFillSelect 
 }) => {
   return (
     <div className='tqa-root'>
@@ -23,6 +24,13 @@ const TouchQuickAccess = ({
           onClear={onClear}
         />
       )}
+
+      <ShapeMenu 
+        modeIndex={modeIndex}
+        dir={touchTrigger.dir}
+        trig={touchTrigger.trig}
+        onFillSelect={onFillSelect}
+      />
     </div>
   )
 }

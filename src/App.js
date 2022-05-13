@@ -6,6 +6,7 @@ import World from './components/World'
 
 /**
  * TODO:
+ * [ ] FIX FLICKERING ON LOOPED PALETTE
  * [ ] OPTIMIZE CANVAS (Google how to)
  * [ ] Disable key controls on input focus
  * [ ] Add Cellular Automata as starting shape

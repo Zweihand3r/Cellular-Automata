@@ -9,7 +9,7 @@ import { DataContext } from '../context/DataContext'
 import Resizer from './resizer/Resizer.js'
 import TouchControls from './controls/TouchControls.js'
 
-const IS_MOBILE = window.innerWidth <= 768
+const IS_MOBILE = document.body.clientWidth <= 768
 
 let ctx
 let ctxbg, background, gradientStops
@@ -135,6 +135,7 @@ const World = (props) => {
           onBrushDownChange={brushDownChanged}
           onRuleSelect={setRule}
           onShadesSelect={shadesSelected}
+          onFillSelect={setFill}
         />
       ) : (
         <Controls

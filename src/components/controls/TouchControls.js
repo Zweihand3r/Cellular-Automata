@@ -43,7 +43,10 @@ const MODES = [
   },
 ]
 
-const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSelect, onShadesSelect }) => {
+const TouchControls = ({ 
+  onDraw, onErase, onClear, onBrushDownChange, 
+  onRuleSelect, onShadesSelect, onFillSelect
+ }) => {
   const { showNotification } = useContext(NotificationContext)
 
   const [isMenu, setIsMenu] = useState(false)
@@ -51,11 +54,14 @@ const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSele
   const [modeIndex, setModeIndex] = useState(0)
   const [menuDirIndex, setMenuDirIndex] = useState(-2)
   const [triggerOffset, setTriggerOffset] = useState(5)
+  const [touchTrigger, setTouchTrigger] = useState({ dir: -1, trig: 0 }) // dir same as menuDirIndex + 4 as tap & 5 as release
 
   let upTrigger, rightTrigger, downTrigger, leftTrigger
 
   const tap = () => {
-    
+    if (modeIndex === 2) {
+      triggerTouch(4)
+    }
   }
 
   const tapAndHold = () => {
@@ -109,10 +115,16 @@ const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSele
       setIsMenu(false)
       setMenuDirIndex(-2)
     } else {
-      if (modeIndex === 3) {
+      if (modeIndex === 2) {
+        triggerTouch(5)
+      } else if (modeIndex === 3) {
         onBrushDownChange(false)
       }
     }
+  }
+
+  const triggerTouch = (dir) => {
+    setTouchTrigger({ dir, trig: 1 - touchTrigger.trig })
   }
 
   const applyMenuDirection = (di, odi) => {
@@ -167,6 +179,11 @@ const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSele
       rightTrigger = () => applyDynamicRule(currBRl(), nextSRl())
       downTrigger = () => applyDynamicRule(nextBRl(), currSRl())
       leftTrigger = () => applyDynamicRule(currBRl(), prevSRl())
+    } else if (modeIndex === 2) {
+      upTrigger = () => triggerTouch(0)
+      rightTrigger = () => triggerTouch(1)
+      downTrigger = () => triggerTouch(2)
+      leftTrigger = () => triggerTouch(3)
     } else {
       upTrigger = () => {}
       rightTrigger = () => {}
@@ -175,7 +192,6 @@ const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSele
     }
   }
 
-
   return (
     <div className='controls-base'>
       <TouchQuickAccess
@@ -183,8 +199,10 @@ const TouchControls = ({ onDraw, onErase, onClear, onBrushDownChange, onRuleSele
         isEraser={isEraser}
         modeIndex={modeIndex}
         dirIndex={menuDirIndex}
+        touchTrigger={touchTrigger}
         onEraserToggle={toggleEraser}
         onClear={clear}
+        onFillSelect={onFillSelect}
       />
 
       <TouchReceiver
