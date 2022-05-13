@@ -44,6 +44,7 @@ const MODES = [
 ]
 
 const TouchControls = ({ 
+  onIsPlayingChanged,
   onDraw, onErase, onClear, onBrushDownChange, 
   onRuleSelect, onShadesSelect, onFillSelect
  }) => {
@@ -163,6 +164,10 @@ const TouchControls = ({
     onClear()
   }
 
+  const tempPause = (pause) => {
+    onIsPlayingChanged(!pause)
+  }
+
   if (isMenu) {
     upTrigger = () => applyMenuDirection(0, 2)
     rightTrigger = () => applyMenuDirection(1, 3)
@@ -203,6 +208,7 @@ const TouchControls = ({
         onEraserToggle={toggleEraser}
         onClear={clear}
         onFillSelect={onFillSelect}
+        onTempPause={tempPause}
       />
 
       <TouchReceiver

@@ -130,16 +130,13 @@ const Controls = ({
     setTimeout(() => qaEnabled = true, 1000)
   }
 
-  /* Hooking brushDownChanged to trigger draw-on-every-update when sliding filler modifiers */
   const tempPause = (pause) => {
     if (isPlaying) {
       toggleIsPlaying()
-      onBrushDownChanged(true)
       isTempPause = true
     } else {
       if (isTempPause) {
         toggleIsPlaying()
-        onBrushDownChanged(false)
         isTempPause = false
       }
     }

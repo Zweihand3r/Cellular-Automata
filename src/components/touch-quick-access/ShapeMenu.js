@@ -4,9 +4,9 @@ import { TiChevronRight } from 'react-icons/ti'
 import { DataContext } from '../../context/DataContext'
 import { NotificationContext } from '../../context/NotificationContext'
 
-let fi = 0, allArgValues = []
+let fi = 0, allArgValues = [], isSliding
 
-const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect }) => {
+const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect, onSliding }) => {
   const { fillers } = useContext(DataContext)
   const { hideNotification } = useContext(NotificationContext)
 
@@ -28,7 +28,7 @@ const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect }) => {
     setArgValues(allArgValues[fi])
   }
 
-  const updateArg = (byVal) => {
+  const slideArg = (byVal) => {
     const val = argValues[argIndex]
     const newVal = Math.clamp(
       val + byVal,
@@ -37,6 +37,13 @@ const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect }) => {
     )
     if (newVal !== val) {
       setArgValues(argValues.map((v, i) => i === argIndex ? newVal : v))
+      allArgValues[fi][argIndex] = newVal
+      onFillSelect(fill.fill, allArgValues[fi])
+    }
+
+    if (!isSliding) {
+      isSliding = true
+      onSliding(true)
     }
   }
 
@@ -76,7 +83,7 @@ const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect }) => {
         }
         hideNotification()
       } else if (stateIndex === 2) {
-        updateArg(1)
+        slideArg(1)
       }
     }
 
@@ -104,7 +111,7 @@ const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect }) => {
       if (stateIndex === 1) {
         setStateIndex(0)
       } else if (stateIndex === 2) {
-        updateArg(-1)
+        slideArg(-1)
       }
     }
 
@@ -126,6 +133,11 @@ const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect }) => {
       } else if (stateIndex === 1) {
         setStateIndex(2)
         setShowSliders(true)
+      } else {
+        if (isSliding) {
+          isSliding = false
+          onSliding(false)
+        }
       }
     }
 

@@ -7,7 +7,7 @@ import './touch-quick-access.css'
 
 const TouchQuickAccess = ({ 
   isMenu, isEraser, modeIndex, dirIndex, touchTrigger,
-  onEraserToggle, onClear, onFillSelect 
+  onEraserToggle, onClear, onFillSelect, onTempPause 
 }) => {
   return (
     <div className='tqa-root'>
@@ -30,6 +30,7 @@ const TouchQuickAccess = ({
         dir={touchTrigger.dir}
         trig={touchTrigger.trig}
         onFillSelect={onFillSelect}
+        onSliding={onTempPause}
       />
     </div>
   )

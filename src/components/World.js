@@ -129,6 +129,7 @@ const World = (props) => {
 
       {IS_MOBILE ? (
         <TouchControls 
+          onIsPlayingChanged={isPlayingChanged}
           onDraw={drawOnGrid}
           onErase={eraseOnGrid}
           onClear={clear}
