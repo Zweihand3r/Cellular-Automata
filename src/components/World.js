@@ -13,6 +13,7 @@ const IS_MOBILE = document.body.clientWidth <= 768
 
 let ctx
 let ctxbg, background, gradientStops
+let animationFrameId, findex, initialised = false
 
 let speed = 4, drawSpeed = speed
 let isBrushDown = false, isInverseDraw = false, isAgeShades = false, isInverseImage = false, isShapeShades = false
@@ -68,23 +69,35 @@ const World = (props) => {
     canvasBg.setAttribute('height', window.innerHeight)
   }
 
+  const toggleFps = v => {
+    setShowFps(v)
+    if (!v) {
+      setFps(0)
+    }
+  }
+
   useEffect(() => {
     const context = canvasRef.current.getContext('2d')
     const contextBg = canvasbgRef.current.getContext('2d')
 
     const startTime = Date.now()
-    let findex, animationFrameId, fLogIndex, fLogTime
+    let fLogIndex, fLogTime
 
     const init = () => {
       findex = 0
-      fLogIndex = 0
-      fLogTime = startTime
 
       ctx = context
       ctxbg = contextBg
 
       updateCanvasSize()
       setBackground('#000000')
+
+      initialised = true
+    }
+    
+    const initFps = () => {
+      fLogIndex = 0
+      fLogTime = startTime
     }
 
     const render = () => {
@@ -110,13 +123,19 @@ const World = (props) => {
       }
     }
 
-    init()
+    if (!initialised) {
+      init()
+    }
+    if (showFps) {
+      initFps()
+    }
+
     render()
 
     return () => {
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [showFps])
 
   return (
     <div className='world'>
@@ -125,7 +144,11 @@ const World = (props) => {
       <canvas ref={canvasbgRef} {...props} />
       <canvas ref={canvasRef} {...props} />
 
-      {showFps ? <div className='fpsCounter'>{fps}</div> : <div />}
+      {showFps && (
+        <div className='fpsCounter'>
+          {fps ? fps : 'Calculating...'}
+        </div>
+      )}
 
       {IS_MOBILE ? (
         <TouchControls 
@@ -137,6 +160,9 @@ const World = (props) => {
           onRuleSelect={setRule}
           onShadesSelect={shadesSelected}
           onFillSelect={setFill}
+
+          onShowFpsChange={toggleFps}
+          onWrapChange={setGridWrap}
         />
       ) : (
         <Controls

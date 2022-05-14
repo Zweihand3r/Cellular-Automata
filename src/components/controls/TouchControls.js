@@ -7,6 +7,7 @@ import { extendSeq, shortenSeq, nextSeq, prevSeq } from '../../touch-controllers
 
 import './controls.css'
 import { NotificationWithBody } from '../notifications/notification-templates'
+import TouchOptions from '../touch-options/TouchOptions'
 
 /**
  * Hold and Drag (upper 80% of screen) => QUICK OPTIONS 
@@ -46,11 +47,13 @@ const MODES = [
 const TouchControls = ({ 
   onIsPlayingChanged,
   onDraw, onErase, onClear, onBrushDownChange, 
-  onRuleSelect, onShadesSelect, onFillSelect
+  onRuleSelect, onShadesSelect, onFillSelect,
+  onShowFpsChange, onWrapChange
  }) => {
   const { showNotification } = useContext(NotificationContext)
 
   const [isMenu, setIsMenu] = useState(false)
+  const [isOptions, setIsOptions] = useState(false)
   const [isEraser, setIsEraser] = useState(false)
   const [modeIndex, setModeIndex] = useState(0)
   const [menuDirIndex, setMenuDirIndex] = useState(-2)
@@ -128,6 +131,10 @@ const TouchControls = ({
     setTouchTrigger({ dir, trig: 1 - touchTrigger.trig })
   }
 
+  const swipeUp = () => {
+    setIsOptions(true)
+  }
+
   const applyMenuDirection = (di, odi) => {
     if (menuDirIndex === odi) {
       setMenuDirIndex(-1)
@@ -166,6 +173,10 @@ const TouchControls = ({
 
   const tempPause = (pause) => {
     onIsPlayingChanged(!pause)
+  }
+
+  const closeOptions = () => {
+    setIsOptions(false)
   }
 
   if (isMenu) {
@@ -223,6 +234,14 @@ const TouchControls = ({
         onRightTrigger={rightTrigger}
         onDownTrigger={downTrigger}
         onLeftTrigger={leftTrigger}
+        onSwipeUp={swipeUp}
+      />
+
+      <TouchOptions 
+        isOptions={isOptions}
+        onShowFpsChange={onShowFpsChange}
+        onWrapChange={onWrapChange}
+        onClose={closeOptions}
       />
     </div>
   )
