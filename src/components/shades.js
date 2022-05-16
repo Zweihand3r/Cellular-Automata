@@ -47,7 +47,7 @@ const _incrementLoopedAge = (x, y) => {
   if (ages[y][x] < ageMax) {
     ages[y][x] += 1
   } else {
-    ages[y][x] = 0
+    ages[y][x] = 1
   }
 }
 

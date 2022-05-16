@@ -6,7 +6,6 @@ import World from './components/World'
 
 /**
  * TODO:
- * [ ] FIX FLICKERING ON LOOPED PALETTE
  * [ ] OPTIMIZE CANVAS (Google how to)
  * [ ] Disable key controls on input focus
  * [ ] Add Cellular Automata as starting shape
@@ -27,6 +26,7 @@ import World from './components/World'
  * [ ] Add shadows to each generation of mono color on trails aplha = 0
  * [-] Add fullscreen
  *     * Done only on key press
+ * [✓] FIX FLICKERING ON LOOPED PALETTE
  * [✓] Fix palette first cell delete when second cell is step cell 
  * [✓] Implement textfields of palette cells
  * [✓] Add wrap to grid 
