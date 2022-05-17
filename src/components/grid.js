@@ -10,14 +10,14 @@ let inverseBg, alphaBg, background, drawBackground, isClearCanvas // background 
 
 /* --- Exports --- */
 
-const initGrid = () => {
+const initGrid = (isMobile) => {
   size = 5
   brushSize = 25
   calculateDimensions()
 
   wrapEnabled = false
 
-  grid = initTitle()
+  grid = initTitle(isMobile)
   generateNeighbours(gridW, gridH)
 
   alphaBg = '00'

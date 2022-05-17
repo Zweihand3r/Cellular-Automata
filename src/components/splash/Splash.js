@@ -48,13 +48,7 @@ const MobileSplash = ({ onDismiss }) => {
       onClick={() => setOutPhase(true)}
       onAnimationEnd={animEnded}
     >
-      <div className='sm-item sm-start'>
-        Tap to Start
-      </div>
-      <div className='sm-instruc-con'>
-        <div className='sm-item'>
-          Once Started,
-        </div> 
+      <div className='sm-con'>
         <div className='sm-item sm-touch'>
           <div className='sm-t-con'>
             <div className='sm-t-outer sm-hold-outer' />
@@ -69,7 +63,10 @@ const MobileSplash = ({ onDismiss }) => {
             <div className='sm-t-inner sm-swipe-inner' />
           </div>
 
-          Swipe up from the bottom to bring up Options Menu
+          Swipe up from the bottom of the screen to bring up Options Menu
+        </div>
+        <div className='sm-item sm-start'>
+          Tap to Start
         </div>
       </div>
     </div>

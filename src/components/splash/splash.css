@@ -58,14 +58,22 @@
 }
 
 
+.sm-con {
+  width: 100%;
+  position: absolute;
+  color: #a2a2a2;
+  text-align: center;
+  bottom: 0;
+}
+
 .sm-item {
   width: fit-content;
   margin: auto;
-  /* background-color: red; */
+  padding: 0 20px;
 }
 
 .sm-start {
-  margin-top: 184px;
+  margin-bottom: 44px;
   font-size: 21px;
   font-weight: 300;
   animation: start-anim 2400ms ease-in 0ms infinite normal forwards
@@ -78,16 +86,8 @@
   100% { opacity: .6; }
 }
 
-.sm-instruc-con {
-  width: 100%;
-  position: absolute;
-  color: #a2a2a2;
-  text-align: center;
-  bottom: 0;
-}
-
 .sm-touch {
-  margin-top: 44px;
+  margin-bottom: 96px;
 }
 
 .sm-t-con {
@@ -140,8 +140,7 @@
 }
 
 .sm-swipe {
-  margin-top: 96px;
-  margin-bottom: 16px;
+  margin-bottom: 96px;
 }
 
 .sm-swipe-con {

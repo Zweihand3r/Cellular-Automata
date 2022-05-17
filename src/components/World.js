@@ -322,7 +322,7 @@ const resizeBgRedraw = () => {
 /* --- EXT FUNCTIONS --- */
 
 const initExt = () => {
-  initGrid()
+  initGrid(IS_MOBILE)
 }
 
 const triggerDraw = () => draw(ctx, drawSpeed)

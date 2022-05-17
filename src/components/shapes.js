@@ -34,24 +34,19 @@ const getShape = (gX, gY) => {
   return { cells, outOfBounds }
 }
 
-const initTitle = () => {
-  let ti = 0, maxW = 0, maxH = 0
-  titles.forEach(({ width, height }, i) => {
-    if (width < bX && height < bY) {
-      if (maxW < width && maxH < height) {
-        ti = i
-        maxW = width
-        maxH = height
-      }
-    }
-  })
-  const { width, shape } = titles[ti]
-  const sx = Math.floor((bX / 2) - (width / 2))
-  const sy = 10
+const initTitle = (isMobile) => {
+  const ti = isMobile ? 0 : 1
+  const finalShape = []
+  for (let i = 0; i < 2; i++) {
+    const { width, height, shape } = titles[ti][i]
+    const sx = Math.floor((bX / 2) - (width / 2))
+    const sy = 10 + (i * (height + Math.floor(height / 3)))
+    shape.forEach(([x, y]) => {
+      finalShape.push([x + sx, y + sy])
+    })
+  }
   const grid = create2dArray(() => 0)
-  shape.forEach(([x, y]) => {
-    grid[y + sy][x + sx] = 1
-  })
+  finalShape.forEach(([x, y]) => grid[y][x] = 1)
   return grid
 }
 
