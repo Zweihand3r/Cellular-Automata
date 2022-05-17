@@ -8,6 +8,7 @@ import Controls from './controls/Controls'
 import { DataContext } from '../context/DataContext'
 import Resizer from './resizer/Resizer.js'
 import TouchControls from './controls/TouchControls.js'
+import Splash from './splash/Splash.js'
 
 const IS_MOBILE = document.body.clientWidth <= 768
 
@@ -23,6 +24,7 @@ const World = (props) => {
   const [showFps, setShowFps] = useState(false)
   const [bgImgSrc, setBgImgSrc] = useState('')
   const [isResizing, setIsResizing] = useState(false)
+  const [isSplash, setIsSplash] = useState(true)
 
   const canvasRef = useRef(null)
   const canvasbgRef = useRef(null)
@@ -45,7 +47,9 @@ const World = (props) => {
   const windowResized = (_isResizing) => {
     if (_isResizing !== isResizing) {
       setIsResizing(_isResizing)
-      isPlayingChanged(!_isResizing)
+      if (!isSplash) {
+        isPlayingChanged(!_isResizing)
+      }
 
       if (!_isResizing) {
         /* Resizing finished */
@@ -74,6 +78,11 @@ const World = (props) => {
     if (!v) {
       setFps(0)
     }
+  }
+
+  const removeSplash = () => {
+    setIsSplash(false)
+    isPlayingChanged(true)
   }
 
   useEffect(() => {
@@ -150,45 +159,52 @@ const World = (props) => {
         </div>
       )}
 
-      {IS_MOBILE ? (
-        <TouchControls 
-          onIsPlayingChanged={isPlayingChanged}
-          onDraw={drawOnGrid}
-          onErase={eraseOnGrid}
-          onClear={clear}
-          onBrushDownChange={brushDownChanged}
-          onRuleSelect={setRule}
-          onShadesSelect={shadesSelected}
-          onFillSelect={setFill}
-
-          onShowFpsChange={toggleFps}
-          onWrapChange={setGridWrap}
+      {isSplash ? (
+        <Splash 
+          isMobile={IS_MOBILE}
+          onDismiss={removeSplash}
         />
       ) : (
-        <Controls
-          onIsPlayingChanged={isPlayingChanged} 
-          onBrushDownChanged={brushDownChanged}
-          onDraw={drawOnGrid}
-          onErase={eraseOnGrid}
-          onPaint={paint}
-          onPreview={preview}
-
-          onPreviewStart={startPreview}
-          onPreviewEnd={endPreview}
-          onFillSelect={setFill}
-          onClear={clear}
-          onRuleSelect={setRule}
-          onWrapChanged={setGridWrap}
-          onBgSelect={setBackground}
-          onShadesSelect={shadesSelected}
-          onGradSelect={setGradient}
-          onImageSelect={setBgImage}
-          onTrailsChanged={setTrails}
-
-          onSizeChanged={sizeChanged}
-          onSpeedChanged={speedChanged}
-          onBrushChanged={setBrushSize}
-        />
+        IS_MOBILE ? (
+          <TouchControls 
+            onIsPlayingChanged={isPlayingChanged}
+            onDraw={drawOnGrid}
+            onErase={eraseOnGrid}
+            onClear={clear}
+            onBrushDownChange={brushDownChanged}
+            onRuleSelect={setRule}
+            onShadesSelect={shadesSelected}
+            onFillSelect={setFill}
+  
+            onShowFpsChange={toggleFps}
+            onWrapChange={setGridWrap}
+          />
+        ) : (
+          <Controls
+            onIsPlayingChanged={isPlayingChanged} 
+            onBrushDownChanged={brushDownChanged}
+            onDraw={drawOnGrid}
+            onErase={eraseOnGrid}
+            onPaint={paint}
+            onPreview={preview}
+  
+            onPreviewStart={startPreview}
+            onPreviewEnd={endPreview}
+            onFillSelect={setFill}
+            onClear={clear}
+            onRuleSelect={setRule}
+            onWrapChanged={setGridWrap}
+            onBgSelect={setBackground}
+            onShadesSelect={shadesSelected}
+            onGradSelect={setGradient}
+            onImageSelect={setBgImage}
+            onTrailsChanged={setTrails}
+  
+            onSizeChanged={sizeChanged}
+            onSpeedChanged={speedChanged}
+            onBrushChanged={setBrushSize}
+          />
+        )
       )}
 
       <Resizer isResizing={isResizing} onResizing={windowResized} />
@@ -313,6 +329,8 @@ const triggerDraw = () => draw(ctx, drawSpeed)
 
 /* - UPDATE - */
 
+let update = () => {}
+
 const _update = (findex) => {
   if (findex % speed === 0) {
     /* All updates go here */
@@ -321,7 +339,7 @@ const _update = (findex) => {
   }
 }
 
-let update = _update
+/* - DRAW - */
 
 const reconfigureDraw = () => {
   if (isShapeShades) _draw = drawShapes
@@ -332,7 +350,6 @@ const reconfigureDraw = () => {
   draw = isBrushDown || drawSpeed === 1 ? _draw : _fdraw
 }
 
-/* - DRAW - */
 /*
  * Changed draw implemention to only use draw-on-each-render (not fast) for:
  * 1. When in brush mode and mouse is held down

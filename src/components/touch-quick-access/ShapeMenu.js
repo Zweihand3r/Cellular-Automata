@@ -131,6 +131,7 @@ const ShapeMenu = ({ modeIndex, dir, trig, onFillSelect, onSliding }) => {
           setShowLabel(false)
         }
       } else if (stateIndex === 1) {
+        setArgIndex(0)
         setStateIndex(2)
         setShowSliders(true)
       } else {

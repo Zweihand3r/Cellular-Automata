@@ -1,7 +1,9 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import './utils/helpers'
 import { DataProvider } from './context/DataContext'
 import { NotificationProvider } from './context/NotificationContext';
-
-// import Prototype from './prototypes/Prototype'
+import Prototype from './prototypes/Prototype'
 import World from './components/World'
 
 /**
@@ -40,13 +42,21 @@ import World from './components/World'
 
 function App() {
   return (
-    // <Prototype />
-    <DataProvider>
-      <NotificationProvider>
-        <World />
-      </NotificationProvider>
-    </DataProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path='/Prototype' element={<Prototype />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+const Main = () => (
+  <DataProvider>
+    <NotificationProvider>
+      <World />
+    </NotificationProvider>
+  </DataProvider>
+)
 
 export default App;

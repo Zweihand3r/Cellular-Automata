@@ -1,6 +1,5 @@
 import { dynamicShades } from "../static/dynamic-shades"
 import { generateGradient, hex2rgb, rgb2hex } from "../utils/color-utils"
-import { createHelpers } from "../utils/helpers"
 
 let step = 10
 let dsi = 0 // dynamic shade index
@@ -80,4 +79,4 @@ const converti = (inpStr) => {
   return 0
 }
 
-createHelpers([converti])
+window.createHelpers([converti])

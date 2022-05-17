@@ -1,6 +1,6 @@
 window.helperNames = []
 
-const createHelpers = (helpers) => {
+window.createHelpers = (helpers) => {
   helpers.forEach(helper => {
     let name = helper.name
     if (window[name]) name = `f${name.charAt(0).toUpperCase()}${name.substring(1)}`
@@ -23,5 +23,3 @@ window.print2dArray = (arr2d) => {
 Math.clamp = (x, a, b) => Math.min(Math.max(x, a), b)
 Math.lerp = (a, b, x) => a + (b - a) * Math.clamp(x, 0, 1)
 Math.inverseLerp = (a, b, x) => Math.clamp((x - a) / (b - a), 0, 1)
-
-export { createHelpers }

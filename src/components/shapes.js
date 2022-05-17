@@ -1,4 +1,6 @@
-let bX, bY, selectedShape, selectedFill
+import titles from '../static/titles.json'
+
+let bX, bY, selectedShape
 
 const randomInit = [
   'random', 'vstripes', 'hstripes', 'dstripes', 
@@ -32,8 +34,28 @@ const getShape = (gX, gY) => {
   return { cells, outOfBounds }
 }
 
+const initTitle = () => {
+  let ti = 0, maxW = 0, maxH = 0
+  titles.forEach(({ width, height }, i) => {
+    if (width < bX && height < bY) {
+      if (maxW < width && maxH < height) {
+        ti = i
+        maxW = width
+        maxH = height
+      }
+    }
+  })
+  const { width, shape } = titles[ti]
+  const sx = Math.floor((bX / 2) - (width / 2))
+  const sy = 10
+  const grid = create2dArray(() => 0)
+  shape.forEach(([x, y]) => {
+    grid[y + sy][x + sx] = 1
+  })
+  return grid
+}
+
 const createGrid = ({ fill, grid, args }) => {
-  selectedFill = fill
   return constructGrid(fill, grid, args)
 }
 
@@ -44,7 +66,9 @@ const createRandom = ({ grid }) => {
 }
 
 const reCreateGrid = ({ grid }) => {
-  return constructGrid(selectedFill, grid)
+  return create2dArray(({ x, y }) => (
+    (grid[y] && grid[y][x]) || 0
+  ))
 }
 
 const constructGrid = (fill, grid, args) => {
@@ -237,4 +261,4 @@ const create2dArray = (func, yiter = () => {}) => {
 /* Yes this is a duplicate of grid.js checkBounds */
 const checkBounds = (x, y) => x > -1 && y > -1 && x < bX && y < bY
 
-export { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom }
+export { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom, initTitle }

@@ -1,5 +1,4 @@
-import { createHelpers } from '../utils/helpers'
-import { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom } from './shapes'
+import { setBounds, setShape, getShape, createGrid, reCreateGrid, createRandom, initTitle } from './shapes'
 import { setRule, checkSurvival, checkBirth } from './rules'
 import { monoShade, getShade, initShades, setShades, updateShades, resetAges, updateAge } from './shades'
 
@@ -18,7 +17,7 @@ const initGrid = () => {
 
   wrapEnabled = false
 
-  grid = createRandom({ grid })
+  grid = initTitle()
   generateNeighbours(gridW, gridH)
 
   alphaBg = '00'
@@ -316,7 +315,24 @@ const n_topLtW = (x, y) => topW(x, y) + topRtW(x, y) + right(x, y) + botRt(x, y)
 
 const checkBounds = (x, y) => x > -1 && y > -1 && x < gridW && y < gridH
 
-// createHelpers([])
+const createShapeFromGrid = () => {
+  let shape = [], minX = gridW - 1, minY = gridH - 1, maxX = 0, maxY = 0
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length; x++) {
+      if (grid[y][x]) {
+        shape.push([x, y])
+        if (x < minX) minX = x
+        if (y < minY) minY = y
+        if (x > maxX) maxX = x
+        if (y > maxY) maxY = y
+      }
+    }
+  }
+  shape = shape.map(([x, y]) => [x - minX, y - minY])
+  return { width: maxX - minX + 1, height: maxY - minY + 1, shape }
+}
+
+window.createHelpers([createShapeFromGrid])
 
 export { 
   initGrid, reInitGrid, updateGrid, drawGrid, drawInverse, drawShaded, drawShapes, drawOnGrid, eraseOnGrid, paint, preview,

@@ -4,8 +4,10 @@ import './prototypes.css'
 
 let playActive = true
 
-let tw = 144 * 2
-let th = 73 * 2
+let size = 5
+
+let tw = Math.floor(window.innerWidth / 5)
+let th = Math.floor(window.innerHeight / size)
 
 let gw = tw
 let gh = th
@@ -13,7 +15,6 @@ let gh = th
 let cw = gw - 1
 let ch = gh - 1
 
-let size = 5
 let speed = 4
 
 let grid = []
@@ -356,9 +357,13 @@ const Controls = () => {
     <div className='life-controls'>
       <Text fontSize={30} fontWeight={900} padVert={8}>CONTROLS</Text>
 
-      <Button width={148} marginBot={8} text={isPlaying ? 'Pause' : 'Play'} onClick={toggleIsPlaying} />
+      <Button width={148} text={isPlaying ? 'Pause' : 'Play'} onClick={toggleIsPlaying} />
 
-      <Text >Initial Condition:</Text>
+      <div />
+
+      <Button width={148} marginBot={8} text='Reset' onClick={reset} />
+
+      <Text >Initial Condition: *</Text>
       <select onChange={updateIcIndex}>
         <option>Random</option>
         <option>Hori Stripe</option>
@@ -371,14 +376,12 @@ const Controls = () => {
         <option>Glider Gun</option>
       </select>
 
-      <Button text='Reset' onClick={reset} />
-
-      <Text>Rules:</Text>
+      <Text padTop={8}>Rules:</Text>
       <select onChange={updateConditions}>
         {conditionPresets.map(({name}) => <option key={name}>{name}</option>)}
       </select>
       
-      <Text padTop={4}>Width: *</Text>
+      <Text padTop={8}>Width: *</Text>
       <input defaultValue={gw} onChange={updateTw}></input>
 
       <Text padTop={8}>Height: *</Text>
