@@ -10,16 +10,15 @@ import { NotificationWithBody } from '../notifications/notification-templates'
 import TouchOptions from '../touch-options/TouchOptions'
 
 /**
- * Hold and Drag (upper 80% of screen) => QUICK OPTIONS 
- * 1. Customisable up right down left options activate on release
- * 2. Dynamic Rules, Brush, Fills, Dynamic colors
- * 3. On tap bring thier respective menus => Custom Rules, Brush/Eraser, Customise fill, Age Based Palette
- * 
- * Swipe up from bottom 20% of screen (other than brush mode)
- * MENU OPTIONS => grid size, wrap grid, full screen
- * 
- * Tap on lower 20% of screen - Play/Pause
- * Swipe left/right on lower 20% of screen for sim speed
+ * [ ] Add dx, dy to trigger index in TouchReceiver not 1
+ * [ ] Color mode implement interval (pulse -> step size at loop end) apart from steps
+ *     [ ] Add similar menu for color mode as shape mode to cycle between the sub-modes
+ * [ ] Rule mode down / right cycle between zero rules and up / left cycle non-zero rules
+ * [ ] ON TAP OF MODES
+ *     [ ] Multihandle slider for color mode
+ *     [ ] Custom rules panel
+ *     [ ] Menu access by up chevron for further customisation. Maybe put all this to the right for more space
+ * [ ] Some explaination regarding modes instead of notification (Can be toggles wiht tutorial or something independant of notifications)
  */
 
 /* 

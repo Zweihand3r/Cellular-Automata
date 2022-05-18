@@ -10,7 +10,6 @@ import World from './components/World'
  * TODO:
  * [ ] OPTIMIZE CANVAS (Google how to)
  * [ ] Disable key controls on input focus
- * [ ] Add Cellular Automata as starting shape
  * [ ] Add limits to palette cells
  * [ ] Add Next as right click of Play/Pause
  * [ ] Add trailing palette (Start palette once cell dies to black)
@@ -36,6 +35,7 @@ import World from './components/World'
  * [✓] Option to 'Keep' earlier iterations in grid (Dont clear canvas)
  *     [✓] Maybe "clear" the rect with rgba(0, 0, 0, .1) each draw cycle? (or some smaller a;)
  * [✓] Add notifications on key pressess
+ * [✓] Add Cellular Automata as starting shape
  * [x] Add border-radius to palette cells 
  *     * Not possible to add border radius to border image
  */
