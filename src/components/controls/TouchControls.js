@@ -3,7 +3,7 @@ import TouchReceiver from '../receivers/TouchReceiver'
 import TouchQuickAccess from '../touch-quick-access/TouchQuickAccess'
 import { NotificationContext } from '../../context/NotificationContext'
 import { currBRl, currSRl, nextBRl, nextSRl, prevBRl, prevSRl } from '../../touch-controllers/rules-tc'
-import { extendSeq, shortenSeq, nextSeq, prevSeq } from '../../touch-controllers/shades-tc'
+import { extendColorMod, shortenColorMod, nextSeq, prevSeq, switchColorSubMod } from '../../touch-controllers/shades-tc'
 
 import './controls.css'
 import { NotificationWithBody } from '../notifications/notification-templates'
@@ -62,7 +62,10 @@ const TouchControls = ({
   let upTrigger, rightTrigger, downTrigger, leftTrigger
 
   const tap = () => {
-    if (modeIndex === 2) {
+    if (modeIndex === 0) {
+      const { notification } = switchColorSubMod()
+      showNotification(notification)
+    } else if (modeIndex === 2) {
       triggerTouch(4)
     }
   }
@@ -147,9 +150,9 @@ const TouchControls = ({
     showNotification(`B${b} S${s}`)
   }
 
-  const applyDynamicShades = ({ name, step, shades }) => {
+  const applyDynamicShades = ({ shades, notification }) => {
     onShadesSelect({ shades, isLoop: true })
-    showNotification(`${name} ${step}`)
+    showNotification(notification)
   }
 
   const applyBrush = (x, y) => {
@@ -185,9 +188,9 @@ const TouchControls = ({
     leftTrigger = () => applyMenuDirection(3, 1)
   } else {
     if (modeIndex === 0) {
-      upTrigger = () => applyDynamicShades(extendSeq())
+      upTrigger = () => applyDynamicShades(extendColorMod())
       rightTrigger = () => applyDynamicShades(nextSeq())
-      downTrigger = () => applyDynamicShades(shortenSeq())
+      downTrigger = () => applyDynamicShades(shortenColorMod())
       leftTrigger = () => applyDynamicShades(prevSeq())
     } else if (modeIndex === 1) {
       upTrigger = () => applyDynamicRule(prevBRl(), currSRl())

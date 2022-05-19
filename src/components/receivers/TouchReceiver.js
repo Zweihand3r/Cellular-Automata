@@ -47,12 +47,12 @@ const TouchReceiver = ({
     ly = e.touches[0].clientY
 
     if (adx > ady) {
-      xi += adx * .5
+      xi += adx * ady
       if (yi && xi > triggerOffset / 2) {
         yi = 0
       }
     } else {
-      yi += ady * .5
+      yi += ady * ady
       if (xi && yi > triggerOffset / 2) {
         xi = 0
       }
