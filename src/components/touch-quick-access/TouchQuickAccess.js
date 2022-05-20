@@ -2,12 +2,13 @@ import React from 'react'
 import BrushToggle from './BrushToggle'
 import RadialMenu from './RadialMenu'
 import ShapeMenu from './ShapeMenu'
+import TqaRules from './TqaRules'
 
 import './touch-quick-access.css'
 
 const TouchQuickAccess = ({ 
-  isMenu, isEraser, modeIndex, dirIndex, touchTrigger,
-  onEraserToggle, onClear, onFillSelect, onTempPause 
+  isMenu, isEraser, isCustomRules, modeIndex, dirIndex, touchTrigger, activeRule,
+  onEraserToggle, onClear, onFillSelect, onRuleSelect, onTempPause 
 }) => {
   return (
     <div className='tqa-root'>
@@ -24,6 +25,12 @@ const TouchQuickAccess = ({
           onClear={onClear}
         />
       )}
+
+      <TqaRules
+        isCustomRules={isCustomRules}
+        activeRule={activeRule}
+        onSelect={onRuleSelect}
+      />
 
       <ShapeMenu 
         modeIndex={modeIndex}

@@ -11,14 +11,14 @@ import TouchOptions from '../touch-options/TouchOptions'
 
 /**
  * [ ] Add dx, dy to trigger index in TouchReceiver not 1
- * [ ] Color mode implement interval (pulse -> step size at loop end) apart from steps
- *     [ ] Add similar menu for color mode as shape mode to cycle between the sub-modes
  * [ ] Rule mode down / right cycle between zero rules and up / left cycle non-zero rules
  * [ ] ON TAP OF MODES
  *     [ ] Multihandle slider for color mode
  *     [ ] Custom rules panel
  *     [ ] Menu access by up chevron for further customisation. Maybe put all this to the right for more space
  * [ ] Some explaination regarding modes instead of notification (Can be toggles wiht tutorial or something independant of notifications)
+ * [-] Color mode implement interval (pulse -> step size at loop end) apart from steps
+ *     [x] Add similar menu for color mode as shape mode to cycle between the sub-modes
  */
 
 /* 
@@ -43,6 +43,8 @@ const MODES = [
   },
 ]
 
+let arB = '3', arS = '23'
+
 const TouchControls = ({ 
   onIsPlayingChanged,
   onDraw, onErase, onClear, onBrushDownChange, 
@@ -54,17 +56,31 @@ const TouchControls = ({
   const [isMenu, setIsMenu] = useState(false)
   const [isOptions, setIsOptions] = useState(false)
   const [isEraser, setIsEraser] = useState(false)
+  const [isCustomRules, setIsCustomRules] = useState(false)
   const [modeIndex, setModeIndex] = useState(1)
   const [menuDirIndex, setMenuDirIndex] = useState(-2)
   const [triggerOffset, setTriggerOffset] = useState(5)
   const [touchTrigger, setTouchTrigger] = useState({ dir: -1, trig: 0 }) // dir same as menuDirIndex + 4 as tap & 5 as release
+  const [activeRule, setActiveRule] = useState({ b: '3', s: '23' })
 
   let upTrigger, rightTrigger, downTrigger, leftTrigger
+
+  const updateIsCustomRules = v => {
+    if (v) {
+      setActiveRule({ b: arB, s: arS })
+    } else {
+      arB = activeRule.b
+      arS = activeRule.s
+    }
+    setIsCustomRules(v)
+  }
 
   const tap = () => {
     if (modeIndex === 0) {
       const { notification } = switchColorSubMod()
       showNotification(notification)
+    } else if (modeIndex === 1) {
+      updateIsCustomRules(!isCustomRules)
     } else if (modeIndex === 2) {
       triggerTouch(4)
     }
@@ -104,6 +120,9 @@ const TouchControls = ({
 
         setModeIndex(menuDirIndex)
         setTriggerOffset(triggerOffset)
+        if (isCustomRules && menuDirIndex !== 1) {
+          updateIsCustomRules(false)
+        }
         if (modeIndex === 3) {
           showNotification(
             <NotificationWithBody
@@ -147,7 +166,13 @@ const TouchControls = ({
 
   const applyDynamicRule = (b, s) => {
     onRuleSelect({ b, s })
-    showNotification(`B${b} S${s}`)
+    if (isCustomRules) {
+      setActiveRule({ b, s })
+    } else {
+      arB = b
+      arS = s
+      showNotification(`B${b} S${s}`, 2)
+    }
   }
 
   const applyDynamicShades = ({ shades, notification }) => {
@@ -215,12 +240,15 @@ const TouchControls = ({
       <TouchQuickAccess
         isMenu={isMenu}
         isEraser={isEraser}
+        isCustomRules={isCustomRules}
         modeIndex={modeIndex}
         dirIndex={menuDirIndex}
         touchTrigger={touchTrigger}
+        activeRule={activeRule}
         onEraserToggle={toggleEraser}
         onClear={clear}
         onFillSelect={onFillSelect}
+        onRuleSelect={applyDynamicRule}
         onTempPause={tempPause}
       />
 

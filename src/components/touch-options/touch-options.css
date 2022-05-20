@@ -1,7 +1,7 @@
 .touch-options-root {
   position: absolute;
   overflow: hidden;
-  z-index: 199;
+  z-index: 90;
   left: 20px; 
   right: 20px; 
   bottom: 0;
