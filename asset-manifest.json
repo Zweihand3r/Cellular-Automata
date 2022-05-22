@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Cellular-Automata/static/css/main.cec28c20.chunk.css",
-    "main.js": "/Cellular-Automata/static/js/main.4b52dd82.chunk.js",
-    "main.js.map": "/Cellular-Automata/static/js/main.4b52dd82.chunk.js.map",
+    "main.js": "/Cellular-Automata/static/js/main.dc7043fe.chunk.js",
+    "main.js.map": "/Cellular-Automata/static/js/main.dc7043fe.chunk.js.map",
     "runtime-main.js": "/Cellular-Automata/static/js/runtime-main.abb803cb.js",
     "runtime-main.js.map": "/Cellular-Automata/static/js/runtime-main.abb803cb.js.map",
     "static/js/2.a7dce90c.chunk.js": "/Cellular-Automata/static/js/2.a7dce90c.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.abb803cb.js",
     "static/js/2.a7dce90c.chunk.js",
     "static/css/main.cec28c20.chunk.css",
-    "static/js/main.4b52dd82.chunk.js"
+    "static/js/main.dc7043fe.chunk.js"
   ]
 }
