@@ -25,6 +25,7 @@ const World = (props) => {
   const [bgImgSrc, setBgImgSrc] = useState('')
   const [isResizing, setIsResizing] = useState(false)
   const [isSplash, setIsSplash] = useState(true)
+  const [altRender, setAltRender] = useState(false)
 
   const canvasRef = useRef(null)
   const canvasbgRef = useRef(null)
@@ -109,15 +110,21 @@ const World = (props) => {
       fLogTime = startTime
     }
 
-    const render = () => {
+    const _render = () => {
       findex += 1
 
       update(findex)
       draw(context, findex)
 
       logFps()
+    }
+
+    const render = () => {
+      _render()
       animationFrameId = window.requestAnimationFrame(render)
     }
+
+    const renderAlt = _render
 
     const logFps = () => {
       if (showFps) {
@@ -139,12 +146,18 @@ const World = (props) => {
       initFps()
     }
 
-    render()
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId)
+    if (altRender) {
+      const rid = setInterval(renderAlt, 1)
+      return () => {
+        clearInterval(rid)
+      }
+    } else {
+      render()
+      return () => {
+        window.cancelAnimationFrame(animationFrameId)
+      }
     }
-  }, [showFps])
+  }, [showFps, altRender])
 
   return (
     <div className='world'>
@@ -167,6 +180,8 @@ const World = (props) => {
       ) : (
         IS_MOBILE ? (
           <TouchControls 
+            altRender={altRender}
+
             onIsPlayingChanged={isPlayingChanged}
             onDraw={drawOnGrid}
             onErase={eraseOnGrid}
@@ -178,6 +193,7 @@ const World = (props) => {
   
             onShowFpsChange={toggleFps}
             onWrapChange={setGridWrap}
+            onAltRenderChange={setAltRender}
           />
         ) : (
           <Controls

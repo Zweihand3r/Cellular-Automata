@@ -1,6 +1,9 @@
 import React from 'react'
 
+const TOUCH_UPPER_PERCENT = .85
 const TAP_AND_HOLD_INTERVAL = 480
+const SWIPE_UP_DISTANCE = 120
+const SWIPE_UP_INTERVAL = 240
 
 let sx = 0, sy = 0, lx = 0, ly = 0, xi = 0, yi = 0
 let longPressTimeout = null, swipeUpStart = 0
@@ -25,7 +28,7 @@ const TouchReceiver = ({
     
     onTouch(lx, ly)
 
-    if (!isTouchOverride && ly > window.innerHeight * .85) {
+    if (!isTouchOverride && ly > window.innerHeight * TOUCH_UPPER_PERCENT) {
       swipeUpStart = Date.now()
     }
   }
@@ -37,6 +40,14 @@ const TouchReceiver = ({
       
       onTouchPointChange(e.touches[0].clientX, e.touches[0].clientY)
       return
+    }
+
+    if (swipeUpStart) {
+      if (Date.now() - swipeUpStart < SWIPE_UP_INTERVAL) {
+        lx = e.touches[0].clientX
+        ly = e.touches[0].clientY
+        return
+      }
     }
 
     const dx = e.touches[0].clientX - lx
@@ -85,7 +96,10 @@ const TouchReceiver = ({
       const ady = Math.abs(sy - ly)
       const timeElapsed = Date.now() - swipeUpStart
 
-      if (ady > 120 && timeElapsed < 240) {
+      if (
+        ady > SWIPE_UP_DISTANCE && 
+        timeElapsed < SWIPE_UP_INTERVAL
+      ) {
         onSwipeUp()
       }
 

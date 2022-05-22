@@ -3,7 +3,10 @@ import { TouchSwitch, TouchButton } from './touch-option-controls'
 
 import './touch-options.css'
 
-const TouchOptions = ({ isOptions, onShowFpsChange, onWrapChange, onClose }) => {
+const TouchOptions = ({ 
+  isOptions, altRender, 
+  onShowFpsChange, onWrapChange, onAltRenderChange, onClose 
+}) => {
   const [show, setShow] = useState(false)
   const [outPhase, setOutPhase] = useState(false)
 
@@ -88,16 +91,23 @@ const TouchOptions = ({ isOptions, onShowFpsChange, onWrapChange, onClose }) => 
             onCheckChange={toggleGridWrap} 
           />
 
+          <TouchSwitch
+            name='Faster Rendering'
+            checked={altRender}
+            inDelay={160}
+            onCheckChange={onAltRenderChange}
+          />
+
           <TouchButton 
             name={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'} 
-            inDelay={160} 
+            inDelay={200} 
             onClick={fullscreen} 
           />
 
           <TouchButton 
             name='Close OPTIONS' 
             extraMargin={true} 
-            inDelay={200} 
+            inDelay={240} 
             onClick={onClose} 
           />
         </div>

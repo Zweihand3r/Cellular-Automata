@@ -46,10 +46,11 @@ const MODES = [
 let arB = '3', arS = '23'
 
 const TouchControls = ({ 
+  altRender,
   onIsPlayingChanged,
   onDraw, onErase, onClear, onBrushDownChange, 
   onRuleSelect, onShadesSelect, onFillSelect,
-  onShowFpsChange, onWrapChange
+  onShowFpsChange, onWrapChange, onAltRenderChange
  }) => {
   const { showNotification } = useContext(NotificationContext)
 
@@ -269,8 +270,10 @@ const TouchControls = ({
 
       <TouchOptions 
         isOptions={isOptions}
+        altRender={altRender}
         onShowFpsChange={onShowFpsChange}
         onWrapChange={onWrapChange}
+        onAltRenderChange={onAltRenderChange}
         onClose={closeOptions}
       />
     </div>
